@@ -1,3 +1,4 @@
 <resources>
     <string name="chuck_name">Chuck</string>
+    <string name="chuck_notification_title">Chuck is logging</string>
 </resources>

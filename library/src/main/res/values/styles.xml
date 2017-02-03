@@ -1,0 +1,7 @@
+<resources>
+    <style name="ChuckTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#00BCD4</item>
+        <item name="colorPrimaryDark">#0097A7</item>
+        <item name="colorAccent">#FF9800</item>
+    </style>
+</resources>

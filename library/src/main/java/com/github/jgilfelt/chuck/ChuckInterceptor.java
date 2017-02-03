@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.LongSparseArray;
@@ -179,7 +180,8 @@ public final class ChuckInterceptor implements Interceptor {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                 .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), 0))
                 .setSmallIcon(R.drawable.chuck_ic_notification_black_24dp)
-                .setContentTitle("Chuck is logging");
+                .setColor(Color.parseColor("#00BCD4"))
+                .setContentTitle(context.getString(R.string.chuck_notification_title));
         NotificationCompat.InboxStyle inboxStyle =
                 new NotificationCompat.InboxStyle();
         int count = 0;

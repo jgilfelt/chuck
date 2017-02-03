@@ -8,6 +8,7 @@
             android:exported="false"/>
         <activity
             android:name=".ui.MainActivity"
+            android:theme="@style/ChuckTheme"
             android:label="@string/chuck_name"/>
     </application>
 </manifest>
