@@ -118,7 +118,9 @@ public final class ChuckInterceptor implements Interceptor {
         transaction.setResponseMessage(response.message());
 
         transaction.setResponseContentLength(responseBody.contentLength());
-        transaction.setResponseContentType(responseBody.contentType().toString());
+        if (responseBody.contentType() != null) {
+            transaction.setResponseContentType(responseBody.contentType().toString());
+        }
         transaction.setResponseHeaders(response.headers());
 
         transaction.setResponseBodyIsPlainText(HttpHeaders.hasBody(response) && !bodyEncoded(response.headers()));

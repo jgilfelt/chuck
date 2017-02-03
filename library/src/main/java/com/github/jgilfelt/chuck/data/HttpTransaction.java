@@ -181,7 +181,7 @@ public class HttpTransaction {
         this.url = url;
         Uri uri = Uri.parse(url);
         host = uri.getHost();
-        path = uri.getPath() + ((uri.getQuery() != null) ? uri.getQuery() : "");
+        path = uri.getPath() + ((uri.getQuery() != null) ? "?" + uri.getQuery() : "");
         scheme = uri.getScheme();
     }
 

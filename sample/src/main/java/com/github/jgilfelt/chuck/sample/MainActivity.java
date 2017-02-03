@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 SampleService.Httpbin httpbin = SampleService.getInstance(MainActivity.this);
-                Callback cb = new Callback<SampleService.RestData>() {
+                Callback<SampleService.RestData> cb = new Callback<SampleService.RestData>() {
                     @Override
                     public void onResponse(Call<SampleService.RestData> call, Response<SampleService.RestData> response) {
                         Toast.makeText(MainActivity.this, response.body().origin, Toast.LENGTH_SHORT).show();
@@ -32,11 +32,26 @@ public class MainActivity extends AppCompatActivity {
                     }
                 };
 
-                Call<SampleService.RestData> getCall = httpbin.get();
-                Call<SampleService.RestData> postCall = httpbin.post(new SampleService.RestData("fuck"));
+                Callback<Void> cbv = new Callback<Void>() {
+                    @Override public void onResponse(Call call, Response response) {}
+                    @Override public void onFailure(Call call, Throwable t) {}
+                };
 
-                getCall.enqueue(cb);
-                postCall.enqueue(cb);
+                httpbin.get().enqueue(cb);
+                httpbin.post(new SampleService.RestData("fuck post")).enqueue(cb);
+                httpbin.patch(new SampleService.RestData("fuck patch")).enqueue(cb);
+                httpbin.put(new SampleService.RestData("fuck put")).enqueue(cb);
+                httpbin.delete().enqueue(cb);
+                httpbin.status(201).enqueue(cbv);
+                httpbin.status(401).enqueue(cbv);
+                httpbin.status(500).enqueue(cbv);
+                httpbin.delay(5).enqueue(cbv);
+                httpbin.redirectTo("http://example.com").enqueue(cbv);
+                httpbin.redirect(3).enqueue(cbv);
+                httpbin.stream(500).enqueue(cbv);
+                httpbin.streamBytes(2048).enqueue(cbv);
+                httpbin.image("image/png").enqueue(cbv);
+
             }
         });
 
