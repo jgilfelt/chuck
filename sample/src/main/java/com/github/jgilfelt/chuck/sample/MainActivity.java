@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                 httpbin.status(201).enqueue(cbv);
                 httpbin.status(401).enqueue(cbv);
                 httpbin.status(500).enqueue(cbv);
-                httpbin.delay(5).enqueue(cbv);
+                httpbin.delay(15).enqueue(cbv);
                 httpbin.redirectTo("http://example.com").enqueue(cbv);
                 httpbin.redirect(3).enqueue(cbv);
                 httpbin.stream(500).enqueue(cbv);
