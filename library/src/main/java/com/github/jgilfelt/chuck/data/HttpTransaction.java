@@ -1,5 +1,7 @@
 package com.github.jgilfelt.chuck.data;
 
+import android.net.Uri;
+
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
@@ -23,6 +25,9 @@ public class HttpTransaction {
     private String protocol;
     private String method;
     private String url;
+    private String host;
+    private String path;
+    private String scheme;
 
     private Long requestContentLength;
     private String requestContentType;
@@ -170,6 +175,22 @@ public class HttpTransaction {
 
     public void setUrl(String url) {
         this.url = url;
+        Uri uri = Uri.parse(url);
+        host = uri.getHost();
+        path = uri.getPath() + ((uri.getQuery() != null) ? uri.getQuery() : "");
+        scheme = uri.getScheme();
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public String getScheme() {
+        return scheme;
     }
 
     public void setRequestHeaders(Headers headers) {

@@ -181,8 +181,8 @@ public final class ChuckInterceptor implements Interceptor {
         int count = 0;
         for (int i = transactionBuffer.size() - 1; i >= 0; i--) {
             if (count < 10) {
-                if (count == 0) mBuilder.setContentText(transactionBuffer.get(i).getUrl());
-                inboxStyle.addLine(transactionBuffer.get(i).getUrl());
+                if (count == 0) mBuilder.setContentText(transactionBuffer.get(i).getPath());
+                inboxStyle.addLine(transactionBuffer.get(i).getPath());
             }
             count++;
         }

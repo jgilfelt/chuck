@@ -9,7 +9,7 @@ import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 public class ChuckDbOpenHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "chuck.db";
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
     public ChuckDbOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION);

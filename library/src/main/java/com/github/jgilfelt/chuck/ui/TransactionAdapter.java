@@ -38,7 +38,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                 final HttpTransaction httpTransaction = cupboard().withCursor(cursor).get(HttpTransaction.class);
                 final ViewHolder holder = (ViewHolder) view.getTag();
                 holder.id.setText(String.valueOf(httpTransaction.getResponseCode()));
-                holder.content.setText(httpTransaction.getUrl());
+                holder.content.setText(httpTransaction.getPath());
                 holder.transaction = httpTransaction;
                 holder.view.setOnClickListener(new View.OnClickListener() {
                     @Override
