@@ -57,5 +57,7 @@ class SampleApiService {
         Call<Void> redirect(@Path("times") int times);
         @GET("/image")
         Call<Void> image(@Header("Accept") String accept);
+        @GET("/gzip")
+        Call<Void> gzip();
     }
 }

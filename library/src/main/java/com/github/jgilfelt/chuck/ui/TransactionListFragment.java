@@ -22,6 +22,7 @@ import com.github.jgilfelt.chuck.data.ChuckContentProvider;
 import com.github.jgilfelt.chuck.data.HttpTransaction;
 import com.github.jgilfelt.chuck.support.DividerItemDecoration;
 import com.github.jgilfelt.chuck.support.NotificationHelper;
+import com.github.jgilfelt.chuck.support.SQLiteUtils;
 
 /**
  * A fragment representing a list of Items.
@@ -96,6 +97,9 @@ public class TransactionListFragment extends Fragment implements LoaderManager.L
         if (item.getItemId() == R.id.clear) {
             getContext().getContentResolver().delete(ChuckContentProvider.TRANSACTION_URI, null, null);
             new NotificationHelper(getContext()).dismiss();
+            return true;
+        } else if (item.getItemId() == R.id.sql) {
+            SQLiteUtils.browseDatabase(getContext());
             return true;
         } else {
             return super.onOptionsItemSelected(item);

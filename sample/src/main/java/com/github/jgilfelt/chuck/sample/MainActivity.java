@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         api.stream(500).enqueue(cb);
         api.streamBytes(2048).enqueue(cb);
         api.image("image/png").enqueue(cb);
+        api.gzip().enqueue(cb);
     }
 
     private void launchChuckDirectly() {
