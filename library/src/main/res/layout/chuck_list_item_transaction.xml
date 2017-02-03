@@ -1,20 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:padding="12dp"
+    android:background="?android:attr/selectableItemBackground">
 
     <TextView
-        android:id="@+id/id"
+        android:id="@+id/host"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:textAppearance="?attr/textAppearanceListItem" />
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="40dp"
+        android:padding="4dp"
+        tools:text="example.com" />
 
     <TextView
-        android:id="@+id/content"
+        android:id="@+id/method"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:textAppearance="?attr/textAppearanceListItem" />
-</LinearLayout>
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignRight="@id/host"
+        android:padding="4dp"
+        tools:text="DELETE" />
+
+    <TextView
+        android:id="@+id/code"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/host"
+        android:padding="4dp"
+        android:textAppearance="?attr/textAppearanceListItem"
+        tools:text="200"/>
+
+    <TextView
+        android:id="@+id/path"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/code"
+        android:layout_below="@id/host"
+        android:padding="4dp"
+        android:textAppearance="?attr/textAppearanceListItem"
+        tools:text="/path/to/some/resource?goes=here"/>
+
+    <TextView
+        android:id="@+id/start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/code"
+        android:layout_below="@id/path"
+        android:padding="4dp"
+        tools:text="18:29:07" />
+
+    <TextView
+        android:id="@+id/duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/start"
+        android:layout_toRightOf="@id/start"
+        android:padding="4dp"
+        android:layout_marginLeft="16dp"
+        tools:text="8023 ms" />
+
+    <TextView
+        android:id="@+id/size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/start"
+        android:layout_toRightOf="@id/duration"
+        android:padding="4dp"
+        android:layout_marginLeft="16dp"
+        tools:text="16.45 KB" />
+
+</RelativeLayout>

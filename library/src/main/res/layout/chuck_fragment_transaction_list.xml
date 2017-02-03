@@ -6,6 +6,7 @@
     android:name="com.github.jgilfelt.chuck.ui.InteractionListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:scrollbars="vertical"
     app:layoutManager="LinearLayoutManager"
     tools:context="com.github.jgilfelt.chuck.ui.TransactionListFragment"
     tools:listitem="@layout/chuck_list_item_transaction" />

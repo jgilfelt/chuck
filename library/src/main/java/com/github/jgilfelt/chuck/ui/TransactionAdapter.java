@@ -13,9 +13,13 @@ import com.github.jgilfelt.chuck.R;
 import com.github.jgilfelt.chuck.data.HttpTransaction;
 import com.github.jgilfelt.chuck.ui.TransactionListFragment.OnListFragmentInteractionListener;
 
+import java.text.SimpleDateFormat;
+
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder> {
+
+    private static final SimpleDateFormat TIME_ONLY_FMT = new SimpleDateFormat("HH:mm:ss");
 
     private Context context;
     private final OnListFragmentInteractionListener listener;
@@ -37,8 +41,21 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             public void bindView(View view, final Context context, Cursor cursor) {
                 final HttpTransaction httpTransaction = cupboard().withCursor(cursor).get(HttpTransaction.class);
                 final ViewHolder holder = (ViewHolder) view.getTag();
-                holder.id.setText(String.valueOf(httpTransaction.getResponseCode()));
-                holder.content.setText(httpTransaction.getUrl());
+
+                holder.path.setText(httpTransaction.getPath());
+                holder.host.setText(httpTransaction.getHost());
+                holder.method.setText(httpTransaction.getMethod());
+                holder.start.setText(TIME_ONLY_FMT.format(httpTransaction.getDate()));
+                if (httpTransaction.getStatus() == HttpTransaction.Status.COMPLETE) {
+                    holder.code.setText(String.valueOf(httpTransaction.getResponseCode()));
+                    holder.duration.setText(httpTransaction.getTookMs() + " ms");
+                    holder.size.setText(httpTransaction.getResponseContentLength() + " bytes");
+                } else {
+                    holder.code.setText(null);
+                    holder.duration.setText(null);
+                    holder.size.setText(null);
+                }
+
                 holder.transaction = httpTransaction;
                 holder.view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -78,22 +95,27 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         return cursorAdapter.getCursor();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         public final View view;
-        public final TextView id;
-        public final TextView content;
-        public HttpTransaction transaction;
+        public final TextView code;
+        public final TextView path;
+        public final TextView host;
+        public final TextView method;
+        public final TextView start;
+        public final TextView duration;
+        public final TextView size;
+        HttpTransaction transaction;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             this.view = view;
-            id = (TextView) view.findViewById(R.id.id);
-            content = (TextView) view.findViewById(R.id.content);
-        }
-
-        @Override
-        public String toString() {
-            return super.toString() + " '" + content.getText() + "'";
+            code = (TextView) view.findViewById(R.id.code);
+            path = (TextView) view.findViewById(R.id.path);
+            host = (TextView) view.findViewById(R.id.host);
+            method = (TextView) view.findViewById(R.id.method);
+            start = (TextView) view.findViewById(R.id.start);
+            duration = (TextView) view.findViewById(R.id.duration);
+            size = (TextView) view.findViewById(R.id.size);
         }
     }
 }

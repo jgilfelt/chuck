@@ -22,6 +22,7 @@ import com.github.jgilfelt.chuck.ChuckInterceptor;
 import com.github.jgilfelt.chuck.R;
 import com.github.jgilfelt.chuck.data.ChuckContentProvider;
 import com.github.jgilfelt.chuck.data.HttpTransaction;
+import com.github.jgilfelt.chuck.support.DividerItemDecoration;
 
 /**
  * A fragment representing a list of Items.
@@ -54,6 +55,8 @@ public class TransactionListFragment extends Fragment implements LoaderManager.L
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            recyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
+                    DividerItemDecoration.VERTICAL_LIST));
             adapter = new TransactionAdapter(getContext(), listener);
             recyclerView.setAdapter(adapter);
         }
