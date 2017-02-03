@@ -7,7 +7,7 @@
             android:authorities="${applicationId}.chuck.provider"
             android:exported="false"/>
         <activity
-            android:name=".ui.ChuckMainActivity"
-            android:label="@string/chuck"/>
+            android:name=".ui.MainActivity"
+            android:label="@string/chuck_name"/>
     </application>
 </manifest>

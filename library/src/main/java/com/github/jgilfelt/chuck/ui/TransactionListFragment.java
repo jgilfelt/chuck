@@ -38,7 +38,7 @@ public class TransactionListFragment extends Fragment implements LoaderManager.L
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_transaction_list, container, false);
+        View view = inflater.inflate(R.layout.chuck_fragment_transaction_list, container, false);
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;

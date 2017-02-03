@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.github.jgilfelt.chuck.ui.ChuckMainActivity;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -52,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.chuck).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, ChuckMainActivity.class));
+                startActivity(new Intent(MainActivity.this, com.github.jgilfelt.chuck.ui.MainActivity.class));
             }
         });
 

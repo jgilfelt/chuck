@@ -11,7 +11,7 @@ import android.util.LongSparseArray;
 
 import com.github.jgilfelt.chuck.data.ChuckContentProvider;
 import com.github.jgilfelt.chuck.data.HttpTransaction;
-import com.github.jgilfelt.chuck.ui.ChuckMainActivity;
+import com.github.jgilfelt.chuck.ui.MainActivity;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -175,8 +175,8 @@ public final class ChuckInterceptor implements Interceptor {
 
     private synchronized void showNotification() {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-                .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, ChuckMainActivity.class), 0))
-                .setSmallIcon(R.drawable.ic_chuck_notification_black_24dp)
+                .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), 0))
+                .setSmallIcon(R.drawable.chuck_ic_notification_black_24dp)
                 .setContentTitle("Chuck is logging");
         NotificationCompat.InboxStyle inboxStyle =
                 new NotificationCompat.InboxStyle();

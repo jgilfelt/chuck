@@ -9,7 +9,7 @@ import com.github.jgilfelt.chuck.data.HttpTransaction;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
-public class ChuckMainActivity extends AppCompatActivity implements TransactionListFragment.OnListFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements TransactionListFragment.OnListFragmentInteractionListener {
 
     // TODO
     static {
@@ -19,7 +19,7 @@ public class ChuckMainActivity extends AppCompatActivity implements TransactionL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chuck_main);
+        setContentView(R.layout.chuck_activity_main);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, TransactionListFragment.newInstance())

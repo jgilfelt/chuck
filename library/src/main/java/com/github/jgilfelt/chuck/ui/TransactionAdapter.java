@@ -27,7 +27,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         cursorAdapter = new CursorAdapter(TransactionAdapter.this.context, null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER) {
             @Override
             public View newView(Context context, Cursor cursor, ViewGroup parent) {
-                View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_transaction, parent, false);
+                View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.chuck_list_item_transaction, parent, false);
                 ViewHolder holder = new ViewHolder(itemView);
                 itemView.setTag(holder);
                 return itemView;
