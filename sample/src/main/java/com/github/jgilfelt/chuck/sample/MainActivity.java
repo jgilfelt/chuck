@@ -32,12 +32,6 @@ public class MainActivity extends AppCompatActivity {
                 launchChuckDirectly();
             }
         });
-        findViewById(R.id.browse_sql).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SQLiteUtils.browseDatabase(MainActivity.this);
-            }
-        });
     }
 
     private OkHttpClient getClient(Context context) {

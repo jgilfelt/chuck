@@ -98,7 +98,7 @@ public class TransactionListFragment extends Fragment implements LoaderManager.L
             getContext().getContentResolver().delete(ChuckContentProvider.TRANSACTION_URI, null, null);
             new NotificationHelper(getContext()).dismiss();
             return true;
-        } else if (item.getItemId() == R.id.sql) {
+        } else if (item.getItemId() == R.id.browse_sql) {
             SQLiteUtils.browseDatabase(getContext());
             return true;
         } else {
