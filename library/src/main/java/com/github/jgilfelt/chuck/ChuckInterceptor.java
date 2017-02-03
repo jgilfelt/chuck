@@ -38,8 +38,8 @@ import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public final class ChuckInterceptor implements Interceptor {
 
+    public static final int NOTIFICATION_ID = 1138;
     private static final Charset UTF8 = Charset.forName("UTF-8");
-    private static final int NOTIFICATION_ID = 1138;
 
     private static LongSparseArray<HttpTransaction> transactionBuffer = new LongSparseArray<>();
 
@@ -225,6 +225,4 @@ public final class ChuckInterceptor implements Interceptor {
         String contentEncoding = headers.get("Content-Encoding");
         return contentEncoding != null && !contentEncoding.equalsIgnoreCase("identity");
     }
-
-
 }

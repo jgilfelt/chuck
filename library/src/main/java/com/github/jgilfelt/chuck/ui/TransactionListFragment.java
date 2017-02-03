@@ -1,5 +1,6 @@
 package com.github.jgilfelt.chuck.ui;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -11,9 +12,13 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.jgilfelt.chuck.ChuckInterceptor;
 import com.github.jgilfelt.chuck.R;
 import com.github.jgilfelt.chuck.data.ChuckContentProvider;
 import com.github.jgilfelt.chuck.data.HttpTransaction;
@@ -33,6 +38,12 @@ public class TransactionListFragment extends Fragment implements LoaderManager.L
 
     public static TransactionListFragment newInstance() {
         return new TransactionListFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -70,6 +81,24 @@ public class TransactionListFragment extends Fragment implements LoaderManager.L
     public void onDetach() {
         super.onDetach();
         listener = null;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.chuck_main, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.clear) {
+            getContext().getContentResolver().delete(ChuckContentProvider.TRANSACTION_URI, null, null);
+            NotificationManager mgr = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            mgr.cancel(ChuckInterceptor.NOTIFICATION_ID);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
