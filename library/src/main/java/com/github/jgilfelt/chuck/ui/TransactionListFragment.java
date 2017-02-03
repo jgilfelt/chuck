@@ -1,6 +1,5 @@
 package com.github.jgilfelt.chuck.ui;
 
-import android.app.NotificationManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -18,11 +17,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.jgilfelt.chuck.ChuckInterceptor;
 import com.github.jgilfelt.chuck.R;
 import com.github.jgilfelt.chuck.data.ChuckContentProvider;
 import com.github.jgilfelt.chuck.data.HttpTransaction;
 import com.github.jgilfelt.chuck.support.DividerItemDecoration;
+import com.github.jgilfelt.chuck.support.NotificationHelper;
 
 /**
  * A fragment representing a list of Items.
@@ -96,8 +95,7 @@ public class TransactionListFragment extends Fragment implements LoaderManager.L
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.clear) {
             getContext().getContentResolver().delete(ChuckContentProvider.TRANSACTION_URI, null, null);
-            NotificationManager mgr = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-            mgr.cancel(ChuckInterceptor.NOTIFICATION_ID);
+            new NotificationHelper(getContext()).dismiss();
             return true;
         } else {
             return super.onOptionsItemSelected(item);

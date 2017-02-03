@@ -1,18 +1,12 @@
 package com.github.jgilfelt.chuck;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
-import android.support.v4.app.NotificationCompat;
-import android.util.LongSparseArray;
 
 import com.github.jgilfelt.chuck.data.ChuckContentProvider;
 import com.github.jgilfelt.chuck.data.HttpTransaction;
-import com.github.jgilfelt.chuck.ui.MainActivity;
+import com.github.jgilfelt.chuck.support.NotificationHelper;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -38,13 +32,10 @@ import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public final class ChuckInterceptor implements Interceptor {
 
-    public static final int NOTIFICATION_ID = 1138;
     private static final Charset UTF8 = Charset.forName("UTF-8");
 
-    private static LongSparseArray<HttpTransaction> transactionBuffer = new LongSparseArray<>();
-
     private Context context;
-    private NotificationManager notificationManager;
+    private NotificationHelper notificationHelper;
 
     // TODO
     static {
@@ -53,7 +44,7 @@ public final class ChuckInterceptor implements Interceptor {
 
     public ChuckInterceptor(Context context) {
         this.context = context.getApplicationContext();
-        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationHelper = new NotificationHelper(this.context);
     }
 
     @Override public Response intercept(Chain chain) throws IOException {
@@ -158,44 +149,14 @@ public final class ChuckInterceptor implements Interceptor {
         ContentValues values = cupboard().withEntity(HttpTransaction.class).toContentValues(transaction);
         Uri uri = context.getContentResolver().insert(ChuckContentProvider.TRANSACTION_URI, values);
         transaction.setId(Long.valueOf(uri.getLastPathSegment()));
-        addToBuffer(transaction);
-        showNotification();
+        notificationHelper.show(transaction);
         return uri;
     }
 
     private int update(HttpTransaction transaction, Uri uri) {
-        addToBuffer(transaction);
-        showNotification();
+        notificationHelper.show(transaction);
         ContentValues values = cupboard().withEntity(HttpTransaction.class).toContentValues(transaction);
         return context.getContentResolver().update(uri, values, null, null);
-    }
-
-    private synchronized void addToBuffer(HttpTransaction transaction) {
-        transactionBuffer.put(transaction.getId(), transaction);
-        if (transactionBuffer.size() > 10) {
-            transactionBuffer.remove(0);
-        }
-    }
-
-    private synchronized void showNotification() {
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-                .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), 0))
-                .setSmallIcon(R.drawable.chuck_ic_notification_black_24dp)
-                .setColor(Color.parseColor("#00BCD4"))
-                .setContentTitle(context.getString(R.string.chuck_notification_title));
-        NotificationCompat.InboxStyle inboxStyle =
-                new NotificationCompat.InboxStyle();
-        int count = 0;
-        for (int i = transactionBuffer.size() - 1; i >= 0; i--) {
-            if (count < 10) {
-                if (count == 0) mBuilder.setContentText(transactionBuffer.valueAt(i).getNotificationText());
-                inboxStyle.addLine(transactionBuffer.valueAt(i).getNotificationText());
-            }
-            count++;
-        }
-        mBuilder.setNumber(count);
-        mBuilder.setStyle(inboxStyle);
-        notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
     /**
