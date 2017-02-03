@@ -234,7 +234,14 @@ public class HttpTransaction {
     }
 
     public String getNotificationText() {
-        return ((responseCode != null) ? String.valueOf(responseCode) : " . . . ") + " " + path;
+        switch (getStatus()) {
+            case FAILED:
+                return " ! ! !  " + path;
+            case REQUESTED:
+                return " . . .  " + path;
+            default:
+                return String.valueOf(responseCode) + " " + path;
+        }
     }
 
     private List<HttpHeader> toHttpHeaderList(Headers headers) {
