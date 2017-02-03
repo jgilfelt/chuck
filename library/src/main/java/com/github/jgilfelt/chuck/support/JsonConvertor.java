@@ -1,4 +1,4 @@
-package com.github.jgilfelt.chuck.data;
+package com.github.jgilfelt.chuck.support;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -23,5 +23,4 @@ public class JsonConvertor {
         }
         return gson;
     }
-
 }

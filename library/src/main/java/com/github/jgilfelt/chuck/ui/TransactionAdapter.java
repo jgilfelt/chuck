@@ -13,13 +13,9 @@ import com.github.jgilfelt.chuck.R;
 import com.github.jgilfelt.chuck.data.HttpTransaction;
 import com.github.jgilfelt.chuck.ui.TransactionListFragment.OnListFragmentInteractionListener;
 
-import java.text.SimpleDateFormat;
-
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder> {
-
-    private static final SimpleDateFormat TIME_ONLY_FMT = new SimpleDateFormat("HH:mm:ss");
 
     private Context context;
     private final OnListFragmentInteractionListener listener;
@@ -45,11 +41,11 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                 holder.path.setText(httpTransaction.getPath());
                 holder.host.setText(httpTransaction.getHost());
                 holder.method.setText(httpTransaction.getMethod());
-                holder.start.setText(TIME_ONLY_FMT.format(httpTransaction.getDate()));
+                holder.start.setText(httpTransaction.getStartTimeString());
                 if (httpTransaction.getStatus() == HttpTransaction.Status.COMPLETE) {
                     holder.code.setText(String.valueOf(httpTransaction.getResponseCode()));
-                    holder.duration.setText(httpTransaction.getTookMs() + " ms");
-                    holder.size.setText(httpTransaction.getResponseContentLength() + " bytes");
+                    holder.duration.setText(httpTransaction.getDurationString());
+                    holder.size.setText(httpTransaction.getSizeString());
                 } else {
                     holder.code.setText(null);
                     holder.duration.setText(null);

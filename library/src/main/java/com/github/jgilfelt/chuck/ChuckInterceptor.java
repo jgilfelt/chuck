@@ -146,6 +146,7 @@ public final class ChuckInterceptor implements Interceptor {
             } else {
                 transaction.setResponseBodyIsPlainText(false);
             }
+            transaction.setResponseContentLength(buffer.size());
         }
 
         update(transaction, transactionUri);

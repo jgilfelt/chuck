@@ -2,11 +2,14 @@ package com.github.jgilfelt.chuck.data;
 
 import android.net.Uri;
 
+import com.github.jgilfelt.chuck.support.JsonConvertor;
 import com.google.gson.reflect.TypeToken;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.Headers;
 
@@ -17,6 +20,8 @@ public class HttpTransaction {
         COMPLETE,
         FAILED
     }
+
+    private static final SimpleDateFormat TIME_ONLY_FMT = new SimpleDateFormat("HH:mm:ss", Locale.US);
 
     private Long _id;
     private Date date;
@@ -233,6 +238,20 @@ public class HttpTransaction {
         }
     }
 
+    public String getStartTimeString() {
+        return TIME_ONLY_FMT.format(date);
+    }
+
+    public String getDurationString() {
+        return tookMs + " ms";
+    }
+
+    public String getSizeString() {
+        long reqBytes = (requestContentLength != null) ? requestContentLength : 0;
+        long resBytes = (responseContentLength != null) ? responseContentLength : 0;
+        return humanReadableByteCount(reqBytes + resBytes, true);
+    }
+
     public String getNotificationText() {
         switch (getStatus()) {
             case FAILED:
@@ -250,5 +269,13 @@ public class HttpTransaction {
             httpHeaders.add(new HttpHeader(headers.name(i), headers.value(i)));
         }
         return httpHeaders;
+    }
+
+    private String humanReadableByteCount(long bytes, boolean si) {
+        int unit = si ? 1000 : 1024;
+        if (bytes < unit) return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
+        return String.format(Locale.US, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 }
