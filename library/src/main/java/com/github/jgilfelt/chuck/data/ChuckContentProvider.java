@@ -41,11 +41,13 @@ public class ChuckContentProvider extends ContentProvider {
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
         switch (matcher.match(uri)) {
             case TRANSACTIONS:
-                return cupboard().withDatabase(db).query(HttpTransaction.class).
+                Cursor cursor = cupboard().withDatabase(db).query(HttpTransaction.class).
                         withProjection(projection).
                         withSelection(selection, selectionArgs).
                         orderBy(sortOrder).
                         getCursor();
+                cursor.setNotificationUri(getContext().getContentResolver(), uri);
+                return cursor;
             case TRANSACTION:
                 return cupboard().withDatabase(db).query(HttpTransaction.class).
                         byId(ContentUris.parseId(uri)).
