@@ -10,36 +10,29 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.github.jgilfelt.chuck.sample.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:id="@+id/textView" />
-
     <Button
-        android:text="Httpbin"
+        android:text="@string/do_http_activity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/httpbin" />
+        android:id="@+id/do_http" />
 
     <Button
-        android:text="Browse SQLite"
+        android:text="@string/browse_sqlite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/httpbin"
+        android:layout_below="@+id/do_http"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/sql" />
+        android:id="@+id/browse_sql" />
 
     <Button
-        android:text="Launch Chuck"
+        android:text="@string/launch_chuck_directly"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/sql"
+        android:layout_below="@+id/browse_sql"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/chuck" />
+        android:id="@+id/launch_chuck_directly" />
 </RelativeLayout>

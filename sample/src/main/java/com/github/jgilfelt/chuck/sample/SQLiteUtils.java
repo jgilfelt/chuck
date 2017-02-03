@@ -11,9 +11,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
 
-public class DevModeUtils {
+class SQLiteUtils {
 
-    public static void browseSQLiteDatabase(Context context) {
+    static void browseDatabase(Context context) {
         if (isIntentResolvable(context, getSQLiteDebuggerAppIntent("/"))) {
             String path = extractDatabase(context);
             if (path != null) {
@@ -60,5 +60,4 @@ public class DevModeUtils {
     private static boolean isIntentResolvable(Context context, Intent intent) {
         return context.getPackageManager().resolveActivity(intent, 0) != null;
     }
-
 }
