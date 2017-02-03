@@ -76,6 +76,7 @@ public class TransactionListFragment extends Fragment implements LoaderManager.L
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         CursorLoader loader = new CursorLoader(getContext());
         loader.setUri(ChuckContentProvider.TRANSACTION_URI);
+        loader.setSortOrder("date DESC");
         return loader;
     }
 

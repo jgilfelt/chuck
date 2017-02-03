@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
+import android.util.LongSparseArray;
 
 import com.github.jgilfelt.chuck.data.ChuckContentProvider;
 import com.github.jgilfelt.chuck.data.HttpTransaction;
@@ -16,9 +17,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Connection;
@@ -41,7 +40,7 @@ public final class ChuckInterceptor implements Interceptor {
     private static final Charset UTF8 = Charset.forName("UTF-8");
     private static final int NOTIFICATION_ID = 1138;
 
-    private static List<HttpTransaction> transactionBuffer = new ArrayList<>();
+    private static LongSparseArray<HttpTransaction> transactionBuffer = new LongSparseArray<>();
 
     private Context context;
     private NotificationManager notificationManager;
@@ -152,9 +151,12 @@ public final class ChuckInterceptor implements Interceptor {
     }
 
     private Uri create(HttpTransaction transaction) {
-        showNotification();
         ContentValues values = cupboard().withEntity(HttpTransaction.class).toContentValues(transaction);
-        return context.getContentResolver().insert(ChuckContentProvider.TRANSACTION_URI, values);
+        Uri uri = context.getContentResolver().insert(ChuckContentProvider.TRANSACTION_URI, values);
+        transaction.setId(Long.valueOf(uri.getLastPathSegment()));
+        addToBuffer(transaction);
+        showNotification();
+        return uri;
     }
 
     private int update(HttpTransaction transaction, Uri uri) {
@@ -165,7 +167,7 @@ public final class ChuckInterceptor implements Interceptor {
     }
 
     private synchronized void addToBuffer(HttpTransaction transaction) {
-        transactionBuffer.add(transaction);
+        transactionBuffer.put(transaction.getId(), transaction);
         if (transactionBuffer.size() > 10) {
             transactionBuffer.remove(0);
         }
@@ -174,15 +176,15 @@ public final class ChuckInterceptor implements Interceptor {
     private synchronized void showNotification() {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                 .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, ChuckMainActivity.class), 0))
-                .setSmallIcon(R.drawable.ic_android_black_24dp)
+                .setSmallIcon(R.drawable.ic_chuck_notification_black_24dp)
                 .setContentTitle("Chuck is logging");
         NotificationCompat.InboxStyle inboxStyle =
                 new NotificationCompat.InboxStyle();
         int count = 0;
         for (int i = transactionBuffer.size() - 1; i >= 0; i--) {
             if (count < 10) {
-                if (count == 0) mBuilder.setContentText(transactionBuffer.get(i).getPath());
-                inboxStyle.addLine(transactionBuffer.get(i).getPath());
+                if (count == 0) mBuilder.setContentText(transactionBuffer.valueAt(i).getNotificationText());
+                inboxStyle.addLine(transactionBuffer.valueAt(i).getNotificationText());
             }
             count++;
         }
