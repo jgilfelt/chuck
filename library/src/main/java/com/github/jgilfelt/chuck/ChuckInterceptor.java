@@ -131,9 +131,7 @@ public final class ChuckInterceptor implements Interceptor {
                 }
             }
             if (isPlaintext(buffer)) {
-                if (contentLength > 0) {
-                    transaction.setResponseBody(buffer.clone().readString(charset));
-                }
+                transaction.setResponseBody(buffer.clone().readString(charset));
             } else {
                 transaction.setResponseBodyIsPlainText(false);
             }
