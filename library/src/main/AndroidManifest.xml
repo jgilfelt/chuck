@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.github.jgilfelt.chuck">
+    <application>
+        <provider
+            android:name=".data.ChuckContentProvider"
+            android:authorities="${applicationId}.chuck.provider"
+            android:exported="false"/>
+        <activity
+            android:name=".ui.ChuckMainActivity"
+            android:label="@string/chuck"/>
+    </application>
+</manifest>
