@@ -1,8 +1,8 @@
 package com.github.jgilfelt.chuck.ui;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.github.jgilfelt.chuck.R;
 import com.github.jgilfelt.chuck.data.HttpTransaction;
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements TransactionListFr
     }
 
     @Override
-    public void onListFragmentInteraction(HttpTransaction item) {
-        Toast.makeText(this, item.getUrl() + " tapped", Toast.LENGTH_SHORT).show();
+    public void onListFragmentInteraction(HttpTransaction transaction) {
+        startActivity(new Intent(this, TransactionActivity.class));
     }
 }
