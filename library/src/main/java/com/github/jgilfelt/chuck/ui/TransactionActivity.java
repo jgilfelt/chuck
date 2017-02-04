@@ -101,9 +101,9 @@ public class TransactionActivity extends AppCompatActivity implements LoaderMana
 
     private void setupViewPager(ViewPager viewPager) {
         adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(new OverviewFragment(), "Overview");
-        adapter.addFragment(new OverviewFragment(), "Request");
-        adapter.addFragment(new OverviewFragment(), "Response");
+        adapter.addFragment(new TransactionOverviewFragment(), "Overview");
+        adapter.addFragment(TransactionPayloadFragment.newInstance(TransactionPayloadFragment.TYPE_REQUEST), "Request");
+        adapter.addFragment(TransactionPayloadFragment.newInstance(TransactionPayloadFragment.TYPE_RESPONSE), "Response");
         viewPager.setAdapter(adapter);
     }
 

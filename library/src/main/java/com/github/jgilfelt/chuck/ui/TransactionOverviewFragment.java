@@ -11,13 +11,13 @@ import android.widget.TextView;
 import com.github.jgilfelt.chuck.R;
 import com.github.jgilfelt.chuck.data.HttpTransaction;
 
-public class OverviewFragment extends Fragment implements TransactionFragment {
+public class TransactionOverviewFragment extends Fragment implements TransactionFragment {
 
     TextView url;
 
     private HttpTransaction transaction;
 
-    public OverviewFragment() {
+    public TransactionOverviewFragment() {
     }
 
     @Override
@@ -29,7 +29,7 @@ public class OverviewFragment extends Fragment implements TransactionFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.chuck_fragment_overview, container, false);
+        View view = inflater.inflate(R.layout.chuck_fragment_transaction_overview, container, false);
         url = (TextView) view.findViewById(R.id.url);
         return view;
     }
