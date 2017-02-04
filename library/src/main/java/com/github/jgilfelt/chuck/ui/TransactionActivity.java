@@ -20,13 +20,13 @@ import android.support.v7.widget.Toolbar;
 import com.github.jgilfelt.chuck.R;
 import com.github.jgilfelt.chuck.data.ChuckContentProvider;
 import com.github.jgilfelt.chuck.data.HttpTransaction;
+import com.github.jgilfelt.chuck.data.LocalCupboard;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.jgilfelt.chuck.ui.TransactionPayloadFragment.TYPE_REQUEST;
 import static com.github.jgilfelt.chuck.ui.TransactionPayloadFragment.TYPE_RESPONSE;
-import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public class TransactionActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -82,7 +82,7 @@ public class TransactionActivity extends AppCompatActivity implements LoaderMana
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        transaction = cupboard().withCursor(data).get(HttpTransaction.class);
+        transaction = LocalCupboard.getInstance().withCursor(data).get(HttpTransaction.class);
         populateUI();
     }
 

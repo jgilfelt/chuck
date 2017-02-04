@@ -6,14 +6,13 @@ import android.support.v7.widget.Toolbar;
 
 import com.github.jgilfelt.chuck.R;
 import com.github.jgilfelt.chuck.data.HttpTransaction;
-
-import static nl.qbusict.cupboard.CupboardFactory.cupboard;
+import com.github.jgilfelt.chuck.data.LocalCupboard;
 
 public class MainActivity extends AppCompatActivity implements TransactionListFragment.OnListFragmentInteractionListener {
 
     // TODO
     static {
-        cupboard().register(HttpTransaction.class);
+        LocalCupboard.getInstance().register(HttpTransaction.class);
     }
 
     @Override

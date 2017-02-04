@@ -6,6 +6,7 @@ import android.net.Uri;
 
 import com.github.jgilfelt.chuck.data.ChuckContentProvider;
 import com.github.jgilfelt.chuck.data.HttpTransaction;
+import com.github.jgilfelt.chuck.data.LocalCupboard;
 import com.github.jgilfelt.chuck.support.NotificationHelper;
 
 import java.io.EOFException;
@@ -26,8 +27,6 @@ import okhttp3.internal.http.HttpHeaders;
 import okio.Buffer;
 import okio.BufferedSource;
 
-import static nl.qbusict.cupboard.CupboardFactory.cupboard;
-
 public final class ChuckInterceptor implements Interceptor {
 
     private static final Charset UTF8 = Charset.forName("UTF-8");
@@ -37,7 +36,7 @@ public final class ChuckInterceptor implements Interceptor {
 
     // TODO
     static {
-        cupboard().register(HttpTransaction.class);
+        LocalCupboard.getInstance().register(HttpTransaction.class);
     }
 
     public ChuckInterceptor(Context context) {
@@ -138,7 +137,7 @@ public final class ChuckInterceptor implements Interceptor {
     }
 
     private Uri create(HttpTransaction transaction) {
-        ContentValues values = cupboard().withEntity(HttpTransaction.class).toContentValues(transaction);
+        ContentValues values = LocalCupboard.getInstance().withEntity(HttpTransaction.class).toContentValues(transaction);
         Uri uri = context.getContentResolver().insert(ChuckContentProvider.TRANSACTION_URI, values);
         transaction.setId(Long.valueOf(uri.getLastPathSegment()));
         notificationHelper.show(transaction);
@@ -147,7 +146,7 @@ public final class ChuckInterceptor implements Interceptor {
 
     private int update(HttpTransaction transaction, Uri uri) {
         notificationHelper.show(transaction);
-        ContentValues values = cupboard().withEntity(HttpTransaction.class).toContentValues(transaction);
+        ContentValues values = LocalCupboard.getInstance().withEntity(HttpTransaction.class).toContentValues(transaction);
         return context.getContentResolver().update(uri, values, null, null);
     }
 

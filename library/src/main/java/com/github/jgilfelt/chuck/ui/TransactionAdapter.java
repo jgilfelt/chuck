@@ -11,9 +11,8 @@ import android.widget.TextView;
 
 import com.github.jgilfelt.chuck.R;
 import com.github.jgilfelt.chuck.data.HttpTransaction;
+import com.github.jgilfelt.chuck.data.LocalCupboard;
 import com.github.jgilfelt.chuck.ui.TransactionListFragment.OnListFragmentInteractionListener;
-
-import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder> {
 
@@ -35,7 +34,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
             @Override
             public void bindView(View view, final Context context, Cursor cursor) {
-                final HttpTransaction httpTransaction = cupboard().withCursor(cursor).get(HttpTransaction.class);
+                final HttpTransaction httpTransaction = LocalCupboard.getInstance().withCursor(cursor).get(HttpTransaction.class);
                 final ViewHolder holder = (ViewHolder) view.getTag();
 
                 holder.path.setText(httpTransaction.getPath());

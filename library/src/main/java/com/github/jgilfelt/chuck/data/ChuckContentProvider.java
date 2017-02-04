@@ -10,8 +10,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
-import static nl.qbusict.cupboard.CupboardFactory.cupboard;
-
 public class ChuckContentProvider extends ContentProvider {
 
     public static Uri TRANSACTION_URI;
@@ -42,14 +40,14 @@ public class ChuckContentProvider extends ContentProvider {
         Cursor cursor = null;
         switch (matcher.match(uri)) {
             case TRANSACTIONS:
-                cursor = cupboard().withDatabase(db).query(HttpTransaction.class).
+                cursor = LocalCupboard.getInstance().withDatabase(db).query(HttpTransaction.class).
                         withProjection(projection).
                         withSelection(selection, selectionArgs).
                         orderBy(sortOrder).
                         getCursor();
                 break;
             case TRANSACTION:
-                cursor = cupboard().withDatabase(db).query(HttpTransaction.class).
+                cursor = LocalCupboard.getInstance().withDatabase(db).query(HttpTransaction.class).
                         byId(ContentUris.parseId(uri)).
                         getCursor();
                 break;
@@ -70,7 +68,7 @@ public class ChuckContentProvider extends ContentProvider {
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
         switch (matcher.match(uri)) {
             case TRANSACTIONS:
-                long id = db.insert(cupboard().getTable(HttpTransaction.class), null, contentValues);
+                long id = db.insert(LocalCupboard.getInstance().getTable(HttpTransaction.class), null, contentValues);
                 if (id > 0) {
                     getContext().getContentResolver().notifyChange(uri, null);
                     return ContentUris.withAppendedId(TRANSACTION_URI, id);
@@ -85,10 +83,10 @@ public class ChuckContentProvider extends ContentProvider {
         int result = 0;
         switch (matcher.match(uri)) {
             case TRANSACTIONS:
-                result = db.delete(cupboard().getTable(HttpTransaction.class), selection, selectionArgs);
+                result = db.delete(LocalCupboard.getInstance().getTable(HttpTransaction.class), selection, selectionArgs);
                 break;
             case TRANSACTION:
-                result = db.delete(cupboard().getTable(HttpTransaction.class),
+                result = db.delete(LocalCupboard.getInstance().getTable(HttpTransaction.class),
                         "_id = ?", new String[]{ uri.getPathSegments().get(1) });
                 break;
         }
@@ -104,10 +102,10 @@ public class ChuckContentProvider extends ContentProvider {
         int result = 0;
         switch (matcher.match(uri)) {
             case TRANSACTIONS:
-                result = db.update(cupboard().getTable(HttpTransaction.class), contentValues, selection, selectionArgs);
+                result = db.update(LocalCupboard.getInstance().getTable(HttpTransaction.class), contentValues, selection, selectionArgs);
                 break;
             case TRANSACTION:
-                result = db.update(cupboard().getTable(HttpTransaction.class), contentValues,
+                result = db.update(LocalCupboard.getInstance().getTable(HttpTransaction.class), contentValues,
                         "_id = ?", new String[]{ uri.getPathSegments().get(1) });
                 break;
         }
