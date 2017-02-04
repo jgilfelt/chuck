@@ -15,11 +15,9 @@ import java.nio.charset.UnsupportedCharsetException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Connection;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
-import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -53,14 +51,10 @@ public final class ChuckInterceptor implements Interceptor {
         RequestBody requestBody = request.body();
         boolean hasRequestBody = requestBody != null;
 
-        Connection connection = chain.connection();
-        Protocol protocol = connection != null ? connection.protocol() : Protocol.HTTP_1_1;
-
         HttpTransaction transaction = new HttpTransaction();
         transaction.setDate(new Date());
 
         transaction.setMethod(request.method());
-        transaction.setProtocol(protocol.toString());
         transaction.setUrl(request.url().toString());
 
         transaction.setRequestHeaders(request.headers());
@@ -103,9 +97,9 @@ public final class ChuckInterceptor implements Interceptor {
         long tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs);
 
         ResponseBody responseBody = response.body();
-        long contentLength = responseBody.contentLength();
 
         transaction.setTookMs(tookMs);
+        transaction.setProtocol(response.protocol().toString());
         transaction.setResponseCode(response.code());
         transaction.setResponseMessage(response.message());
 

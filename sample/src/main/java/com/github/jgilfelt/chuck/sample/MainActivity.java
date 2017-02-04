@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private OkHttpClient getClient(Context context) {
         return new OkHttpClient.Builder()
                 .addInterceptor(new ChuckInterceptor(context)) // <- Add ChuckInterceptor in your OkHttp client builder
-                .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                 .build();
     }
 
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         api.status(500).enqueue(cb);
         api.delay(9).enqueue(cb);
         api.delay(15).enqueue(cb);
-        api.redirectTo("http://example.com").enqueue(cb);
+        api.redirectTo("https://http2.akamai.com").enqueue(cb); // h2
         api.redirect(3).enqueue(cb);
         api.stream(500).enqueue(cb);
         api.streamBytes(2048).enqueue(cb);
