@@ -3,4 +3,7 @@
     <string name="chuck_notification_title">Chuck is logging</string>
     <string name="chuck_clear">Clear</string>
     <string name="chuck_browse_sql_database">Browse SQLite database</string>
+    <string name="chuck_overview">Overview</string>
+    <string name="chuck_request">Request</string>
+    <string name="chuck_response">Response</string>
 </resources>

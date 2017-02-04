@@ -24,6 +24,8 @@ import com.github.jgilfelt.chuck.data.HttpTransaction;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.jgilfelt.chuck.ui.TransactionPayloadFragment.TYPE_REQUEST;
+import static com.github.jgilfelt.chuck.ui.TransactionPayloadFragment.TYPE_RESPONSE;
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public class TransactionActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -101,9 +103,9 @@ public class TransactionActivity extends AppCompatActivity implements LoaderMana
 
     private void setupViewPager(ViewPager viewPager) {
         adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(new TransactionOverviewFragment(), "Overview");
-        adapter.addFragment(TransactionPayloadFragment.newInstance(TransactionPayloadFragment.TYPE_REQUEST), "Request");
-        adapter.addFragment(TransactionPayloadFragment.newInstance(TransactionPayloadFragment.TYPE_RESPONSE), "Response");
+        adapter.addFragment(new TransactionOverviewFragment(), getString(R.string.chuck_overview));
+        adapter.addFragment(TransactionPayloadFragment.newInstance(TYPE_REQUEST), getString(R.string.chuck_request));
+        adapter.addFragment(TransactionPayloadFragment.newInstance(TYPE_RESPONSE), getString(R.string.chuck_response));
         viewPager.setAdapter(adapter);
     }
 
