@@ -1,6 +1,5 @@
 package com.github.jgilfelt.chuck.ui;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -32,6 +31,6 @@ public class MainActivity extends AppCompatActivity implements TransactionListFr
 
     @Override
     public void onListFragmentInteraction(HttpTransaction transaction) {
-        startActivity(new Intent(this, TransactionActivity.class));
+        TransactionActivity.start(this, transaction.getId());
     }
 }

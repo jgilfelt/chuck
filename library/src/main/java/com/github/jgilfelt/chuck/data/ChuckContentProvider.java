@@ -39,21 +39,25 @@ public class ChuckContentProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
+        Cursor cursor = null;
         switch (matcher.match(uri)) {
             case TRANSACTIONS:
-                Cursor cursor = cupboard().withDatabase(db).query(HttpTransaction.class).
+                cursor = cupboard().withDatabase(db).query(HttpTransaction.class).
                         withProjection(projection).
                         withSelection(selection, selectionArgs).
                         orderBy(sortOrder).
                         getCursor();
-                cursor.setNotificationUri(getContext().getContentResolver(), uri);
-                return cursor;
+                break;
             case TRANSACTION:
-                return cupboard().withDatabase(db).query(HttpTransaction.class).
+                cursor = cupboard().withDatabase(db).query(HttpTransaction.class).
                         byId(ContentUris.parseId(uri)).
                         getCursor();
+                break;
         }
-        return null;
+        if (cursor != null) {
+            cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        }
+        return cursor;
     }
 
     @Override

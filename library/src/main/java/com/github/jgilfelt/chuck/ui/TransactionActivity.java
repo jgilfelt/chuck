@@ -1,9 +1,16 @@
 package com.github.jgilfelt.chuck.ui;
 
+import android.content.ContentUris;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -11,18 +18,35 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
 import com.github.jgilfelt.chuck.R;
+import com.github.jgilfelt.chuck.data.ChuckContentProvider;
+import com.github.jgilfelt.chuck.data.HttpTransaction;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransactionActivity extends AppCompatActivity {
+import static nl.qbusict.cupboard.CupboardFactory.cupboard;
+
+public class TransactionActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    private static final String ARG_TRANSACTION_ID = "transaction_id";
+
+    public static void start(Context context, long transactionId) {
+        Intent intent = new Intent(context, TransactionActivity.class);
+        intent.putExtra(ARG_TRANSACTION_ID, transactionId);
+        context.startActivity(intent);
+    }
+
+    Toolbar toolbar;
+
+    private long transactionId;
+    private HttpTransaction transaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chuck_activity_transaction);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         final ActionBar ab = getSupportActionBar();
@@ -35,6 +59,40 @@ public class TransactionActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        transactionId = getIntent().getLongExtra(ARG_TRANSACTION_ID, 0);
+        getSupportLoaderManager().initLoader(0, null, this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getSupportLoaderManager().restartLoader(0, null, this);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        CursorLoader loader = new CursorLoader(this);
+        loader.setUri(ContentUris.withAppendedId(ChuckContentProvider.TRANSACTION_URI, transactionId));
+        return loader;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        transaction = cupboard().withCursor(data).get(HttpTransaction.class);
+        populateUI();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+    }
+
+    private void populateUI() {
+        if (transaction != null) {
+            toolbar.setTitle(transaction.getMethod() + " " + transaction.getPath());
+            toolbar.setSubtitle(transaction.getResponseCode() + " " + transaction.getResponseMessage());
+            // TODO ...
+        }
     }
 
     private void setupViewPager(ViewPager viewPager) {
