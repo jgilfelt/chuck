@@ -8,6 +8,6 @@ import com.github.jgilfelt.chuck.ui.MainActivity;
 public class Chuck {
 
     public static Intent getLaunchIntent(Context context) {
-        return new Intent(context, MainActivity.class);
+        return new Intent(context, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     }
 }

@@ -9,6 +9,8 @@
         <activity
             android:name=".ui.MainActivity"
             android:theme="@style/ChuckTheme"
+            android:launchMode="singleTask"
+            android:taskAffinity="com.github.jgilfelt.chuck.task"
             android:label="@string/chuck_name"/>
     </application>
 </manifest>

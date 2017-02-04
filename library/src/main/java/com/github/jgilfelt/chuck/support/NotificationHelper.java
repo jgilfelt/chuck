@@ -3,14 +3,13 @@ package com.github.jgilfelt.chuck.support;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 import android.util.LongSparseArray;
 
+import com.github.jgilfelt.chuck.Chuck;
 import com.github.jgilfelt.chuck.R;
 import com.github.jgilfelt.chuck.data.HttpTransaction;
-import com.github.jgilfelt.chuck.ui.MainActivity;
 
 public class NotificationHelper {
 
@@ -30,7 +29,7 @@ public class NotificationHelper {
     public synchronized void show(HttpTransaction transaction) {
         addToBuffer(transaction);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-                .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), 0))
+                .setContentIntent(PendingIntent.getActivity(context, 0, Chuck.getLaunchIntent(context), 0))
                 .setSmallIcon(R.drawable.chuck_ic_notification_black_24dp)
                 .setColor(Color.parseColor("#00BCD4"))
                 .setContentTitle(context.getString(R.string.chuck_notification_title));
