@@ -2,6 +2,7 @@ package com.github.jgilfelt.chuck.data;
 
 import android.net.Uri;
 
+import com.github.jgilfelt.chuck.support.FormatUtils;
 import com.github.jgilfelt.chuck.support.JsonConvertor;
 import com.google.gson.reflect.TypeToken;
 
@@ -94,6 +95,10 @@ public class HttpTransaction {
         return requestBody;
     }
 
+    public String getFormattedRequestBody() {
+        return formatBody(requestBody, requestContentType);
+    }
+
     public void setRequestBody(String requestBody) {
         this.requestBody = requestBody;
     }
@@ -124,6 +129,10 @@ public class HttpTransaction {
 
     public String getResponseBody() {
         return responseBody;
+    }
+
+    public String getFormattedResponseBody() {
+        return formatBody(responseBody, responseContentType);
     }
 
     public void setResponseBody(String responseBody) {
@@ -216,7 +225,7 @@ public class HttpTransaction {
     }
 
     public String getRequestHeadersString(boolean withMarkup) {
-        return getHeaderString(getRequestHeaders(), withMarkup);
+        return FormatUtils.formatHeaders(getRequestHeaders(), withMarkup);
     }
 
     public void setResponseHeaders(Headers headers) {
@@ -233,7 +242,7 @@ public class HttpTransaction {
     }
 
     public String getResponseHeadersString(boolean withMarkup) {
-        return getHeaderString(getResponseHeaders(), withMarkup);
+        return FormatUtils.formatHeaders(getResponseHeaders(), withMarkup);
     }
 
     public Status getStatus() {
@@ -257,7 +266,7 @@ public class HttpTransaction {
     public String getSizeString() {
         long reqBytes = (requestContentLength != null) ? requestContentLength : 0;
         long resBytes = (responseContentLength != null) ? responseContentLength : 0;
-        return humanReadableByteCount(reqBytes + resBytes, true);
+        return FormatUtils.formatByteCount(reqBytes + resBytes, true);
     }
 
     public String getNotificationText() {
@@ -279,22 +288,13 @@ public class HttpTransaction {
         return httpHeaders;
     }
 
-    private String getHeaderString(List<HttpHeader> httpHeaders, boolean withMarkup) {
-        String out = "";
-        if (httpHeaders != null) {
-            for (HttpHeader header : httpHeaders) {
-                out += ((withMarkup) ? "<b>" : "") + header.getName() + ": " + ((withMarkup) ? "</b>" : "") +
-                        header.getValue() + ((withMarkup) ? "<br />" : "\n");
-            }
+    private String formatBody(String body, String contentType) {
+        if (contentType != null && contentType.toLowerCase().contains("json")) {
+            return FormatUtils.formatJson(body);
+        } else if (contentType != null && contentType.toLowerCase().contains("xml")) {
+            return FormatUtils.formatXml(body);
+        } else {
+            return body;
         }
-        return out;
-    }
-
-    private String humanReadableByteCount(long bytes, boolean si) {
-        int unit = si ? 1000 : 1024;
-        if (bytes < unit) return bytes + " B";
-        int exp = (int) (Math.log(bytes) / Math.log(unit));
-        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
-        return String.format(Locale.US, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 }

@@ -59,5 +59,7 @@ class SampleApiService {
         Call<Void> image(@Header("Accept") String accept);
         @GET("/gzip")
         Call<Void> gzip();
+        @GET("/xml")
+        Call<Void> xml();
     }
 }

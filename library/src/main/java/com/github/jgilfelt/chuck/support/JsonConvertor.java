@@ -17,6 +17,7 @@ public class JsonConvertor {
     public static Gson getInstance() {
         if (gson == null) {
             gson = new GsonBuilder()
+                    .setPrettyPrinting()
                     .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                     .registerTypeAdapter(Date.class, new DateTypeAdapter())
                     .create();
