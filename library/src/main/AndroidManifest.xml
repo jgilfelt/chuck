@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.github.jgilfelt.chuck">
-
     <application>
         <provider
             android:name=".data.ChuckContentProvider"
             android:authorities="${applicationId}.chuck.provider"
             android:exported="false" />
-
         <activity
             android:name=".ui.MainActivity"
             android:label="@string/chuck_name"
             android:launchMode="singleTask"
             android:taskAffinity="com.github.jgilfelt.chuck.task"
             android:theme="@style/ChuckTheme" />
-
         <activity android:name=".ui.TransactionActivity"
-            android:theme="@style/ChuckTheme" />
+            android:theme="@style/ChuckTheme"
+            android:parentActivityName=".ui.MainActivity"/>
     </application>
-
 </manifest>
