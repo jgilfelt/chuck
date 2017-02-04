@@ -3,7 +3,4 @@
     <string name="chuck_notification_title">Chuck is logging</string>
     <string name="chuck_clear">Clear</string>
     <string name="chuck_browse_sql_database">Browse SQLite database</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

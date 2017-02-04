@@ -37,6 +37,7 @@ public class TransactionActivity extends AppCompatActivity implements LoaderMana
     }
 
     Toolbar toolbar;
+    Adapter adapter;
 
     private long transactionId;
     private HttpTransaction transaction;
@@ -92,33 +93,36 @@ public class TransactionActivity extends AppCompatActivity implements LoaderMana
             toolbar.setTitle(transaction.getMethod() + " " + transaction.getPath());
             toolbar.setSubtitle(transaction.getResponseCode() + " " + transaction.getResponseMessage());
             // TODO ...
+            for (TransactionFragment fragment : adapter.fragments) {
+                fragment.transactionUpdated(transaction);
+            }
         }
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(PlaceholderFragment.newInstance("a", "b"), "Overview");
-        adapter.addFragment(PlaceholderFragment.newInstance("a", "b"), "Request");
-        adapter.addFragment(PlaceholderFragment.newInstance("a", "b"), "Response");
+        adapter = new Adapter(getSupportFragmentManager());
+        adapter.addFragment(new OverviewFragment(), "Overview");
+        adapter.addFragment(new OverviewFragment(), "Request");
+        adapter.addFragment(new OverviewFragment(), "Response");
         viewPager.setAdapter(adapter);
     }
 
     static class Adapter extends FragmentPagerAdapter {
-        private final List<Fragment> fragments = new ArrayList<>();
+        final List<TransactionFragment> fragments = new ArrayList<>();
         private final List<String> fragmentTitles = new ArrayList<>();
 
         Adapter(FragmentManager fm) {
             super(fm);
         }
 
-        void addFragment(Fragment fragment, String title) {
+        void addFragment(TransactionFragment fragment, String title) {
             fragments.add(fragment);
             fragmentTitles.add(title);
         }
 
         @Override
         public Fragment getItem(int position) {
-            return fragments.get(position);
+            return (Fragment) fragments.get(position);
         }
 
         @Override
