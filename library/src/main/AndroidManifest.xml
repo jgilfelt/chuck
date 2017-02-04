@@ -16,7 +16,7 @@
             android:theme="@style/ChuckTheme" />
 
         <activity android:name=".ui.TransactionActivity"
-            android:theme="@style/ChuckTheme2" />
+            android:theme="@style/ChuckTheme" />
     </application>
 
 </manifest>
