@@ -1,6 +1,5 @@
 package com.github.jgilfelt.chuck.ui;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
@@ -8,7 +7,7 @@ import com.github.jgilfelt.chuck.R;
 import com.github.jgilfelt.chuck.data.HttpTransaction;
 import com.github.jgilfelt.chuck.data.LocalCupboard;
 
-public class MainActivity extends AppCompatActivity implements TransactionListFragment.OnListFragmentInteractionListener {
+public class MainActivity extends ChuckBaseActivity implements TransactionListFragment.OnListFragmentInteractionListener {
 
     // TODO
     static {

@@ -13,7 +13,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
@@ -28,7 +27,7 @@ import java.util.List;
 import static com.github.jgilfelt.chuck.ui.TransactionPayloadFragment.TYPE_REQUEST;
 import static com.github.jgilfelt.chuck.ui.TransactionPayloadFragment.TYPE_RESPONSE;
 
-public class TransactionActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class TransactionActivity extends ChuckBaseActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String ARG_TRANSACTION_ID = "transaction_id";
 

@@ -10,6 +10,7 @@ import android.util.LongSparseArray;
 import com.github.jgilfelt.chuck.Chuck;
 import com.github.jgilfelt.chuck.R;
 import com.github.jgilfelt.chuck.data.HttpTransaction;
+import com.github.jgilfelt.chuck.ui.ChuckBaseActivity;
 
 public class NotificationHelper {
 
@@ -28,24 +29,29 @@ public class NotificationHelper {
 
     public synchronized void show(HttpTransaction transaction) {
         addToBuffer(transaction);
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-                .setContentIntent(PendingIntent.getActivity(context, 0, Chuck.getLaunchIntent(context), 0))
-                .setSmallIcon(R.drawable.chuck_ic_notification_black_24dp)
-                .setColor(Color.parseColor("#00BCD4"))
-                .setContentTitle(context.getString(R.string.chuck_notification_title));
-        NotificationCompat.InboxStyle inboxStyle =
-                new NotificationCompat.InboxStyle();
-        int count = 0;
-        for (int i = transactionBuffer.size() - 1; i >= 0; i--) {
-            if (count < BUFFER_SIZE) {
-                if (count == 0) mBuilder.setContentText(transactionBuffer.valueAt(i).getNotificationText());
-                inboxStyle.addLine(transactionBuffer.valueAt(i).getNotificationText());
+        if (!ChuckBaseActivity.isInForeground()) {
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+                    .setContentIntent(PendingIntent.getActivity(context, 0, Chuck.getLaunchIntent(context), 0))
+                    .setSmallIcon(R.drawable.chuck_ic_notification_black_24dp)
+                    .setColor(Color.parseColor("#00BCD4"))
+                    .setContentTitle(context.getString(R.string.chuck_notification_title));
+            NotificationCompat.InboxStyle inboxStyle =
+                    new NotificationCompat.InboxStyle();
+            int count = 0;
+            for (int i = transactionBuffer.size() - 1; i >= 0; i--) {
+                if (count < BUFFER_SIZE) {
+                    if (count == 0)
+                        mBuilder.setContentText(transactionBuffer.valueAt(i).getNotificationText());
+                    inboxStyle.addLine(transactionBuffer.valueAt(i).getNotificationText());
+                }
+                count++;
             }
-            count++;
+            mBuilder.setAutoCancel(true);
+            mBuilder.setStyle(inboxStyle);
+            notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        } else {
+            dismiss();
         }
-        mBuilder.setNumber(count);
-        mBuilder.setStyle(inboxStyle);
-        notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
     public void dismiss() {
