@@ -27,7 +27,7 @@ import java.util.List;
 import static com.github.jgilfelt.chuck.ui.TransactionPayloadFragment.TYPE_REQUEST;
 import static com.github.jgilfelt.chuck.ui.TransactionPayloadFragment.TYPE_RESPONSE;
 
-public class TransactionActivity extends ChuckBaseActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class TransactionActivity extends BaseChuckActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String ARG_TRANSACTION_ID = "transaction_id";
 

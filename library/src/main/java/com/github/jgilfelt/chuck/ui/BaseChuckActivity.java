@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.github.jgilfelt.chuck.support.ActivityTransitionTimer;
 import com.github.jgilfelt.chuck.support.NotificationHelper;
 
-public abstract class ChuckBaseActivity extends AppCompatActivity {
+public abstract class BaseChuckActivity extends AppCompatActivity {
 
     private static boolean inForeground;
 

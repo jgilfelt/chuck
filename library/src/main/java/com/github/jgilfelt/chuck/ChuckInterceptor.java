@@ -34,11 +34,6 @@ public final class ChuckInterceptor implements Interceptor {
     private Context context;
     private NotificationHelper notificationHelper;
 
-    // TODO
-    static {
-        LocalCupboard.getInstance().register(HttpTransaction.class);
-    }
-
     public ChuckInterceptor(Context context) {
         this.context = context.getApplicationContext();
         notificationHelper = new NotificationHelper(this.context);

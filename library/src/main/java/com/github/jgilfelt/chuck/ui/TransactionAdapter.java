@@ -14,13 +14,13 @@ import com.github.jgilfelt.chuck.data.HttpTransaction;
 import com.github.jgilfelt.chuck.data.LocalCupboard;
 import com.github.jgilfelt.chuck.ui.TransactionListFragment.OnListFragmentInteractionListener;
 
-public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder> {
+class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder> {
 
     private Context context;
     private final OnListFragmentInteractionListener listener;
     private CursorAdapter cursorAdapter;
 
-    public TransactionAdapter(Context context, OnListFragmentInteractionListener listener) {
+    TransactionAdapter(Context context, OnListFragmentInteractionListener listener) {
         this.listener = listener;
         this.context = context;
         cursorAdapter = new CursorAdapter(TransactionAdapter.this.context, null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER) {
@@ -36,7 +36,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             public void bindView(View view, final Context context, Cursor cursor) {
                 final HttpTransaction httpTransaction = LocalCupboard.getInstance().withCursor(cursor).get(HttpTransaction.class);
                 final ViewHolder holder = (ViewHolder) view.getTag();
-
                 holder.path.setText(httpTransaction.getPath());
                 holder.host.setText(httpTransaction.getHost());
                 holder.method.setText(httpTransaction.getMethod());
@@ -50,7 +49,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                     holder.duration.setText(null);
                     holder.size.setText(null);
                 }
-
                 holder.transaction = httpTransaction;
                 holder.view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -81,13 +79,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         return new ViewHolder(v);
     }
 
-    public void swapCursor(Cursor newCursor) {
+    void swapCursor(Cursor newCursor) {
         cursorAdapter.swapCursor(newCursor);
         notifyDataSetChanged();
-    }
-
-    public Cursor getCursor() {
-        return cursorAdapter.getCursor();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

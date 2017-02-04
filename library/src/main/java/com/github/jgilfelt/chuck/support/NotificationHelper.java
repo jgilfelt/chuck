@@ -10,7 +10,7 @@ import android.util.LongSparseArray;
 import com.github.jgilfelt.chuck.Chuck;
 import com.github.jgilfelt.chuck.R;
 import com.github.jgilfelt.chuck.data.HttpTransaction;
-import com.github.jgilfelt.chuck.ui.ChuckBaseActivity;
+import com.github.jgilfelt.chuck.ui.BaseChuckActivity;
 
 public class NotificationHelper {
 
@@ -29,7 +29,7 @@ public class NotificationHelper {
 
     public synchronized void show(HttpTransaction transaction) {
         addToBuffer(transaction);
-        if (!ChuckBaseActivity.isInForeground()) {
+        if (!BaseChuckActivity.isInForeground()) {
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                     .setContentIntent(PendingIntent.getActivity(context, 0, Chuck.getLaunchIntent(context), 0))
                     .setSmallIcon(R.drawable.chuck_ic_notification_black_24dp)
