@@ -33,10 +33,17 @@ public final class ChuckInterceptor implements Interceptor {
 
     private Context context;
     private NotificationHelper notificationHelper;
+    private boolean showNotification;
 
     public ChuckInterceptor(Context context) {
         this.context = context.getApplicationContext();
         notificationHelper = new NotificationHelper(this.context);
+        showNotification = true;
+    }
+
+    public ChuckInterceptor showNotification(boolean show) {
+        showNotification = show;
+        return this;
     }
 
     @Override public Response intercept(Chain chain) throws IOException {
@@ -135,12 +142,16 @@ public final class ChuckInterceptor implements Interceptor {
         ContentValues values = LocalCupboard.getInstance().withEntity(HttpTransaction.class).toContentValues(transaction);
         Uri uri = context.getContentResolver().insert(ChuckContentProvider.TRANSACTION_URI, values);
         transaction.setId(Long.valueOf(uri.getLastPathSegment()));
-        notificationHelper.show(transaction);
+        if (showNotification) {
+            notificationHelper.show(transaction);
+        }
         return uri;
     }
 
     private int update(HttpTransaction transaction, Uri uri) {
-        notificationHelper.show(transaction);
+        if (showNotification) {
+            notificationHelper.show(transaction);
+        }
         ContentValues values = LocalCupboard.getInstance().withEntity(HttpTransaction.class).toContentValues(transaction);
         return context.getContentResolver().update(uri, values, null, null);
     }
