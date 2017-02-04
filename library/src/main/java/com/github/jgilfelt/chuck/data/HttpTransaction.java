@@ -215,6 +215,10 @@ public class HttpTransaction {
                 new TypeToken<List<HttpHeader>>(){}.getType());
     }
 
+    public String getRequestHeadersString(boolean withMarkup) {
+        return getHeaderString(getRequestHeaders(), withMarkup);
+    }
+
     public void setResponseHeaders(Headers headers) {
         setResponseHeaders(toHttpHeaderList(headers));
     }
@@ -226,6 +230,10 @@ public class HttpTransaction {
     public List<HttpHeader> getResponseHeaders() {
         return JsonConvertor.getInstance().fromJson(responseHeaders,
                 new TypeToken<List<HttpHeader>>(){}.getType());
+    }
+
+    public String getResponseHeadersString(boolean withMarkup) {
+        return getHeaderString(getResponseHeaders(), withMarkup);
     }
 
     public Status getStatus() {
@@ -269,6 +277,17 @@ public class HttpTransaction {
             httpHeaders.add(new HttpHeader(headers.name(i), headers.value(i)));
         }
         return httpHeaders;
+    }
+
+    private String getHeaderString(List<HttpHeader> httpHeaders, boolean withMarkup) {
+        String out = "";
+        if (httpHeaders != null) {
+            for (HttpHeader header : httpHeaders) {
+                out += ((withMarkup) ? "<b>" : "") + header.getName() + ": " + ((withMarkup) ? "</b>" : "") +
+                        header.getValue() + ((withMarkup) ? "<br />" : "\n");
+            }
+        }
+        return out;
     }
 
     private String humanReadableByteCount(long bytes, boolean si) {

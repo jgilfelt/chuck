@@ -3,6 +3,8 @@ package com.github.jgilfelt.chuck.ui;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,7 @@ public class TransactionPayloadFragment extends Fragment implements TransactionF
     private static final String ARG_TYPE = "type";
 
     TextView headers;
+    TextView body;
 
     private int type;
     private HttpTransaction transaction;
@@ -46,6 +49,7 @@ public class TransactionPayloadFragment extends Fragment implements TransactionF
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.chuck_fragment_transaction_payload, container, false);
         headers = (TextView) view.findViewById(R.id.headers);
+        body = (TextView) view.findViewById(R.id.body);
         return view;
     }
 
@@ -65,14 +69,19 @@ public class TransactionPayloadFragment extends Fragment implements TransactionF
         if (isAdded() && transaction != null) {
             switch (type) {
                 case TYPE_REQUEST:
-                    headers.setText("Request: " + transaction.getRequestContentLength() + " b");
+                    setText(transaction.getRequestHeadersString(true), transaction.getRequestBody());
                     break;
                 case TYPE_RESPONSE:
-                    headers.setText("Response: " + transaction.getResponseContentLength() + " b");
+                    setText(transaction.getResponseHeadersString(true), transaction.getResponseBody());
                     break;
             }
-            // TODO
         }
+    }
+
+    private void setText(String headersString, String bodyString) {
+        headers.setVisibility((TextUtils.isEmpty(headersString) ? View.GONE : View.VISIBLE));
+        headers.setText(Html.fromHtml(headersString));
+        body.setText(bodyString);
     }
 
 }
