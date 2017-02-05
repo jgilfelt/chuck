@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.0"
     defaultConfig {
-        applicationId "com.github.jgilfelt.chuck.sample"
+        applicationId "com.readystatesoftware.chuck.sample"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1

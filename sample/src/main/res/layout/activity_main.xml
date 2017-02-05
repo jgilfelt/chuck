@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.github.jgilfelt.chuck.sample.MainActivity">
+    tools:context="com.readystatesoftware.chuck.sample.MainActivity">
 
     <Button
         android:text="@string/do_http_activity"

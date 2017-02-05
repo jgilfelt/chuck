@@ -8,5 +8,5 @@
     android:layout_height="match_parent"
     android:scrollbars="vertical"
     app:layoutManager="LinearLayoutManager"
-    tools:context="com.github.jgilfelt.chuck.ui.TransactionListFragment"
+    tools:context="com.readystatesoftware.chuck.ui.TransactionListFragment"
     tools:listitem="@layout/chuck_list_item_transaction" />
