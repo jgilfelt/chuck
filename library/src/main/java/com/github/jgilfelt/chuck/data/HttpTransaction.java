@@ -265,18 +265,44 @@ public class HttpTransaction {
         }
     }
 
-    public String getStartTimeString() {
+    public String getRequestStartTimeString() {
         return TIME_ONLY_FMT.format(requestDate);
     }
 
-    public String getDurationString() {
-        return tookMs + " ms";
+    public String getRequestDateString() {
+        return (requestDate != null) ? requestDate.toString() : null;
     }
 
-    public String getSizeString() {
+    public String getResponseDateString() {
+        return (responseDate != null) ? responseDate.toString() : null;
+    }
+
+    public String getDurationString() {
+        return (tookMs != null) ? + tookMs + " ms" : null;
+    }
+
+    public String getRequestSizeString() {
+        return formatBytes((requestContentLength != null) ? requestContentLength : 0);
+    }
+    public String getResponseSizeString() {
+        return (responseContentLength != null) ? formatBytes(responseContentLength) : null;
+    }
+
+    public String getTotalSizeString() {
         long reqBytes = (requestContentLength != null) ? requestContentLength : 0;
         long resBytes = (responseContentLength != null) ? responseContentLength : 0;
-        return FormatUtils.formatByteCount(reqBytes + resBytes, true);
+        return formatBytes(reqBytes + resBytes);
+    }
+
+    public String getResponseSummaryText() {
+        switch (getStatus()) {
+            case FAILED:
+                return error;
+            case REQUESTED:
+                return null;
+            default:
+                return String.valueOf(responseCode) + " " + responseMessage;
+        }
     }
 
     public String getNotificationText() {
@@ -288,6 +314,10 @@ public class HttpTransaction {
             default:
                 return String.valueOf(responseCode) + " " + path;
         }
+    }
+
+    public boolean isSsl() {
+        return scheme.toLowerCase().equals("https");
     }
 
     private List<HttpHeader> toHttpHeaderList(Headers headers) {
@@ -306,5 +336,9 @@ public class HttpTransaction {
         } else {
             return body;
         }
+    }
+
+    private String formatBytes(long bytes) {
+        return FormatUtils.formatByteCount(bytes, true);
     }
 }

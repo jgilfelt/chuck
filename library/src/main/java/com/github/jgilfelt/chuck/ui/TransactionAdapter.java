@@ -39,11 +39,11 @@ class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHol
                 holder.path.setText(httpTransaction.getPath());
                 holder.host.setText(httpTransaction.getHost());
                 holder.method.setText(httpTransaction.getMethod());
-                holder.start.setText(httpTransaction.getStartTimeString());
+                holder.start.setText(httpTransaction.getRequestStartTimeString());
                 if (httpTransaction.getStatus() == HttpTransaction.Status.COMPLETE) {
                     holder.code.setText(String.valueOf(httpTransaction.getResponseCode()));
                     holder.duration.setText(httpTransaction.getDurationString());
-                    holder.size.setText(httpTransaction.getSizeString());
+                    holder.size.setText(httpTransaction.getTotalSizeString());
                 } else {
                     holder.code.setText(null);
                     holder.duration.setText(null);

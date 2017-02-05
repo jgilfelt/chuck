@@ -92,8 +92,7 @@ public class TransactionActivity extends BaseChuckActivity implements LoaderMana
     private void populateUI() {
         if (transaction != null) {
             toolbar.setTitle(transaction.getMethod() + " " + transaction.getPath());
-            toolbar.setSubtitle(transaction.getResponseCode() + " " + transaction.getResponseMessage());
-            // TODO ...
+            toolbar.setSubtitle(transaction.getResponseSummaryText());
             for (TransactionFragment fragment : adapter.fragments) {
                 fragment.transactionUpdated(transaction);
             }

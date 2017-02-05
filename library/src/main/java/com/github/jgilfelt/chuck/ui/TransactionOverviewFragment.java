@@ -73,14 +73,14 @@ public class TransactionOverviewFragment extends Fragment implements Transaction
             method.setText(transaction.getMethod());
             protocol.setText(transaction.getProtocol());
             status.setText(transaction.getStatus().toString());
-            response.setText(transaction.getResponseCode() + " " + transaction.getResponseMessage());
-            ssl.setText((transaction.getScheme().equals("https") ? R.string.chuck_yes : R.string.chuck_no));
-            requestTime.setText(transaction.getRequestDate().toString());
-            responseTime.setText("");
+            response.setText(transaction.getResponseSummaryText());
+            ssl.setText((transaction.isSsl() ? R.string.chuck_yes : R.string.chuck_no));
+            requestTime.setText(transaction.getRequestDateString());
+            responseTime.setText(transaction.getResponseDateString());
             duration.setText(transaction.getDurationString());
-//            requestSize.setText(transaction.getRequestContentLength().toString());
-//            responseSize.setText(transaction.getResponseContentLength().toString());
-            totalSize.setText(transaction.getSizeString());
+            requestSize.setText(transaction.getRequestSizeString());
+            responseSize.setText(transaction.getResponseSizeString());
+            totalSize.setText(transaction.getTotalSizeString());
         }
     }
 }
