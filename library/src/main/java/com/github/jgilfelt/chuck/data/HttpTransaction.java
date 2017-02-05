@@ -266,7 +266,7 @@ public class HttpTransaction {
     }
 
     public String getRequestStartTimeString() {
-        return TIME_ONLY_FMT.format(requestDate);
+        return (requestDate != null) ? TIME_ONLY_FMT.format(requestDate) : null;
     }
 
     public String getRequestDateString() {
