@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.github.jgilfelt.chuck.R;
 import com.github.jgilfelt.chuck.data.ChuckContentProvider;
@@ -44,7 +45,7 @@ public class TransactionActivity extends BaseChuckActivity implements LoaderMana
         context.startActivity(intent);
     }
 
-    Toolbar toolbar;
+    TextView title;
     Adapter adapter;
 
     private long transactionId;
@@ -55,8 +56,9 @@ public class TransactionActivity extends BaseChuckActivity implements LoaderMana
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chuck_activity_transaction);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        title = (TextView) findViewById(R.id.toolbar_title);
 
         final ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
@@ -118,8 +120,7 @@ public class TransactionActivity extends BaseChuckActivity implements LoaderMana
 
     private void populateUI() {
         if (transaction != null) {
-            toolbar.setTitle(transaction.getMethod() + " " + transaction.getPath());
-            toolbar.setSubtitle(transaction.getResponseSummaryText());
+            title.setText(transaction.getMethod() + " " + transaction.getPath());
             for (TransactionFragment fragment : adapter.fragments) {
                 fragment.transactionUpdated(transaction);
             }

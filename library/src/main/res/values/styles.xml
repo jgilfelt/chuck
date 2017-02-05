@@ -14,4 +14,10 @@
         <item name="android:layout_weight">1</item>
         <item name="android:textIsSelectable">true</item>
     </style>
+
+    <style name="Chuck.TextAppearance.TransactionTitle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:gravity">top</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:maxLines">2</item>
+    </style>
 </resources>
