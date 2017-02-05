@@ -23,6 +23,7 @@ import com.github.jgilfelt.chuck.R;
 import com.github.jgilfelt.chuck.data.ChuckContentProvider;
 import com.github.jgilfelt.chuck.data.HttpTransaction;
 import com.github.jgilfelt.chuck.data.LocalCupboard;
+import com.github.jgilfelt.chuck.support.FormatUtils;
 import com.github.jgilfelt.chuck.support.SimpleOnPageChangedListener;
 
 import java.util.ArrayList;
@@ -88,10 +89,10 @@ public class TransactionActivity extends BaseChuckActivity implements LoaderMana
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.share_text) {
-            // TODO
+            share(FormatUtils.getShareText(this, transaction));
             return true;
         } else if (item.getItemId() == R.id.share_curl) {
-            // TODO
+            share(FormatUtils.getShareCurlCommand(transaction));
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -138,6 +139,14 @@ public class TransactionActivity extends BaseChuckActivity implements LoaderMana
             }
         });
         viewPager.setCurrentItem(selectedTabPosition);
+    }
+
+    private void share(String content) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, content);
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, null));
     }
 
     static class Adapter extends FragmentPagerAdapter {

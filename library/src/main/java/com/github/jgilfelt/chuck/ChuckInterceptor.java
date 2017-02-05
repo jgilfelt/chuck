@@ -99,6 +99,7 @@ public final class ChuckInterceptor implements Interceptor {
 
         ResponseBody responseBody = response.body();
 
+        transaction.setRequestHeaders(response.request().headers()); // include headers added later in the chain
         transaction.setResponseDate(new Date());
         transaction.setTookMs(tookMs);
         transaction.setProtocol(response.protocol().toString());

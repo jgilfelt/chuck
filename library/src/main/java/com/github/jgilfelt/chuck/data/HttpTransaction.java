@@ -18,9 +18,9 @@ import okhttp3.Headers;
 public class HttpTransaction {
 
     public enum Status {
-        REQUESTED,
-        COMPLETE,
-        FAILED
+        Requested,
+        Complete,
+        Failed
     }
 
     private static final SimpleDateFormat TIME_ONLY_FMT = new SimpleDateFormat("HH:mm:ss", Locale.US);
@@ -257,11 +257,11 @@ public class HttpTransaction {
 
     public Status getStatus() {
         if (error != null) {
-            return Status.FAILED;
+            return Status.Failed;
         } else if (responseCode == null) {
-            return Status.REQUESTED;
+            return Status.Requested;
         } else {
-            return Status.COMPLETE;
+            return Status.Complete;
         }
     }
 
@@ -296,9 +296,9 @@ public class HttpTransaction {
 
     public String getResponseSummaryText() {
         switch (getStatus()) {
-            case FAILED:
+            case Failed:
                 return error;
-            case REQUESTED:
+            case Requested:
                 return null;
             default:
                 return String.valueOf(responseCode) + " " + responseMessage;
@@ -307,9 +307,9 @@ public class HttpTransaction {
 
     public String getNotificationText() {
         switch (getStatus()) {
-            case FAILED:
+            case Failed:
                 return " ! ! !  " + path;
-            case REQUESTED:
+            case Requested:
                 return " . . .  " + path;
             default:
                 return String.valueOf(responseCode) + " " + path;
