@@ -1,8 +1,8 @@
 <resources>
     <style name="Chuck.Theme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">#00BCD4</item>
-        <item name="colorPrimaryDark">#0097A7</item>
-        <item name="colorAccent">#FF9800</item>
+        <item name="colorPrimary">@color/chuck_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/chuck_colorPrimaryDark</item>
+        <item name="colorAccent">@color/chuck_colorAccent</item>
     </style>
 
     <style name="Chuck.TextAppearance.Label" parent="android:TextAppearance.Small">

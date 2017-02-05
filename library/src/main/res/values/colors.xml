@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="chuck_colorPrimary">#00BCD4</color>
+    <color name="chuck_colorPrimaryDark">#0097A7</color>
+    <color name="chuck_colorAccent">#FF9800</color>
+</resources>
