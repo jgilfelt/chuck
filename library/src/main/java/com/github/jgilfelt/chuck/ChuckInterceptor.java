@@ -68,8 +68,8 @@ public final class ChuckInterceptor implements Interceptor {
             }
         }
 
-        transaction.setRequestBodyIsPlainText(hasRequestBody && !bodyEncoded(request.headers()));
-        if (transaction.requestBodyIsPlainText()) {
+        transaction.setRequestBodyIsPlainText(!bodyEncoded(request.headers()));
+        if (hasRequestBody && transaction.requestBodyIsPlainText()) {
             Buffer buffer = new Buffer();
             requestBody.writeTo(buffer);
             Charset charset = UTF8;
@@ -99,7 +99,7 @@ public final class ChuckInterceptor implements Interceptor {
 
         ResponseBody responseBody = response.body();
 
-        transaction.setRequestHeaders(response.request().headers()); // include headers added later in the chain
+        transaction.setRequestHeaders(response.request().headers()); // includes headers added later in the chain
         transaction.setResponseDate(new Date());
         transaction.setTookMs(tookMs);
         transaction.setProtocol(response.protocol().toString());
@@ -112,8 +112,8 @@ public final class ChuckInterceptor implements Interceptor {
         }
         transaction.setResponseHeaders(response.headers());
 
-        transaction.setResponseBodyIsPlainText(HttpHeaders.hasBody(response) && !bodyEncoded(response.headers()));
-        if (transaction.responseBodyIsPlainText()) {
+        transaction.setResponseBodyIsPlainText(!bodyEncoded(response.headers()));
+        if (HttpHeaders.hasBody(response) && transaction.responseBodyIsPlainText()) {
             BufferedSource source = responseBody.source();
             source.request(Long.MAX_VALUE);
             Buffer buffer = source.buffer();

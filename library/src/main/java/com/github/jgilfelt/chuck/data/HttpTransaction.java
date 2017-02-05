@@ -41,7 +41,7 @@ public class HttpTransaction {
     private String requestContentType;
     private String requestHeaders;
     private String requestBody;
-    private boolean requestBodyIsPlainText;
+    private boolean requestBodyIsPlainText = true;
 
     private Integer responseCode;
     private String responseMessage;
@@ -51,7 +51,7 @@ public class HttpTransaction {
     private String responseContentType;
     private String responseHeaders;
     private String responseBody;
-    private boolean responseBodyIsPlainText;
+    private boolean responseBodyIsPlainText = true;
 
     public Long getId() {
         return _id;

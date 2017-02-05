@@ -22,4 +22,5 @@
     <string name="chuck_share">Share</string>
     <string name="chuck_share_as_text">Share as text</string>
     <string name="chuck_share_as_curl">Share as curl command</string>
+    <string name="chuck_body_omitted">(encoded or binary body omitted)</string>
 </resources>
