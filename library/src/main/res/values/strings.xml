@@ -6,4 +6,17 @@
     <string name="chuck_overview">Overview</string>
     <string name="chuck_request">Request</string>
     <string name="chuck_response">Response</string>
+    <string name="chuck_url">URL</string>
+    <string name="chuck_method">Method</string>
+    <string name="chuck_protocol">Protocol</string>
+    <string name="chuck_status">Status</string>
+    <string name="chuck_ssl">SSL</string>
+    <string name="chuck_request_time">Request time</string>
+    <string name="chuck_response_time">Response time</string>
+    <string name="chuck_duration">Duration</string>
+    <string name="chuck_request_size">Request size</string>
+    <string name="chuck_response_size">Response size</string>
+    <string name="chuck_total_size">Total size</string>
+    <string name="chuck_yes">Yes</string>
+    <string name="chuck_no">No</string>
 </resources>

@@ -69,10 +69,12 @@ public class TransactionPayloadFragment extends Fragment implements TransactionF
         if (isAdded() && transaction != null) {
             switch (type) {
                 case TYPE_REQUEST:
-                    setText(transaction.getRequestHeadersString(true), transaction.getFormattedRequestBody());
+                    setText(transaction.getRequestHeadersString(true),
+                            transaction.getFormattedRequestBody());
                     break;
                 case TYPE_RESPONSE:
-                    setText(transaction.getResponseHeadersString(true), transaction.getFormattedResponseBody());
+                    setText(transaction.getResponseHeadersString(true),
+                            transaction.getFormattedResponseBody());
                     break;
             }
         }
@@ -83,5 +85,4 @@ public class TransactionPayloadFragment extends Fragment implements TransactionF
         headers.setText(Html.fromHtml(headersString));
         body.setText(bodyString);
     }
-
 }
