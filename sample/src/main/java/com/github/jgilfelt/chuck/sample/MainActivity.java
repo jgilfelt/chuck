@@ -59,11 +59,21 @@ public class MainActivity extends AppCompatActivity {
         api.delay(15).enqueue(cb);
         api.redirectTo("https://http2.akamai.com").enqueue(cb); // h2
         api.redirect(3).enqueue(cb);
+        api.redirectRelative(2).enqueue(cb);
+        api.redirectAbsolute(4).enqueue(cb);
         api.stream(500).enqueue(cb);
         api.streamBytes(2048).enqueue(cb);
         api.image("image/png").enqueue(cb);
         api.gzip().enqueue(cb);
         api.xml().enqueue(cb);
+        api.utf8().enqueue(cb);
+        api.deflate().enqueue(cb);
+        api.cookieSet("v").enqueue(cb);
+        api.basicAuth("me", "pass").enqueue(cb);
+        api.drip(512, 5, 1, 200).enqueue(cb);
+        api.deny().enqueue(cb);
+        api.cache("Mon").enqueue(cb);
+        api.cache(30).enqueue(cb);
     }
 
     private void launchChuckDirectly() {

@@ -55,11 +55,31 @@ class SampleApiService {
         Call<Void> redirectTo(@Query("url") String url);
         @GET("/redirect/{times}")
         Call<Void> redirect(@Path("times") int times);
+        @GET("/relative-redirect/{times}")
+        Call<Void> redirectRelative(@Path("times") int times);
+        @GET("/absolute-redirect/{times}")
+        Call<Void> redirectAbsolute(@Path("times") int times);
         @GET("/image")
         Call<Void> image(@Header("Accept") String accept);
         @GET("/gzip")
         Call<Void> gzip();
         @GET("/xml")
         Call<Void> xml();
+        @GET("/encoding/utf8")
+        Call<Void> utf8();
+        @GET("/deflate")
+        Call<Void> deflate();
+        @GET("/cookies/set")
+        Call<Void> cookieSet(@Query("k1") String value);
+        @GET("/basic-auth/{user}/{passwd}")
+        Call<Void> basicAuth(@Path("user") String user, @Path("passwd") String passwd);
+        @GET("/drip")
+        Call<Void> drip(@Query("numbytes") int bytes, @Query("duration") int seconds, @Query("delay") int delay, @Query("code") int code);
+        @GET("/deny")
+        Call<Void> deny();
+        @GET("/cache")
+        Call<Void> cache(@Header("If-Modified-Since") String ifModifiedSince);
+        @GET("/cache/{seconds}")
+        Call<Void> cache(@Path("seconds") int seconds);
     }
 }
