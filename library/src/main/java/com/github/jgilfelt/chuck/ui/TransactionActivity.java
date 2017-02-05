@@ -20,6 +20,7 @@ import com.github.jgilfelt.chuck.R;
 import com.github.jgilfelt.chuck.data.ChuckContentProvider;
 import com.github.jgilfelt.chuck.data.HttpTransaction;
 import com.github.jgilfelt.chuck.data.LocalCupboard;
+import com.github.jgilfelt.chuck.support.SimpleOnPageChangedListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,8 @@ import static com.github.jgilfelt.chuck.ui.TransactionPayloadFragment.TYPE_RESPO
 public class TransactionActivity extends BaseChuckActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String ARG_TRANSACTION_ID = "transaction_id";
+
+    private static int selectedTabPosition = 0;
 
     public static void start(Context context, long transactionId) {
         Intent intent = new Intent(context, TransactionActivity.class);
@@ -105,6 +108,13 @@ public class TransactionActivity extends BaseChuckActivity implements LoaderMana
         adapter.addFragment(TransactionPayloadFragment.newInstance(TYPE_REQUEST), getString(R.string.chuck_request));
         adapter.addFragment(TransactionPayloadFragment.newInstance(TYPE_RESPONSE), getString(R.string.chuck_response));
         viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new SimpleOnPageChangedListener() {
+            @Override
+            public void onPageSelected(int position) {
+                selectedTabPosition = position;
+            }
+        });
+        viewPager.setCurrentItem(selectedTabPosition);
     }
 
     static class Adapter extends FragmentPagerAdapter {
