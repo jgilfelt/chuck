@@ -91,7 +91,7 @@ public final class ChuckInterceptor implements Interceptor {
         try {
             response = chain.proceed(request);
         } catch (Exception e) {
-            transaction.setError(e.getMessage());
+            transaction.setError(e.toString());
             update(transaction, transactionUri);
             throw e;
         }
