@@ -11,7 +11,7 @@
         android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:padding="4dp"
+        android:padding="2dp"
         android:textAppearance="@style/Chuck.TextAppearance.ListItem"
         tools:text="200"/>
 
@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/code"
-        android:padding="4dp"
+        android:padding="2dp"
         android:textAppearance="@style/Chuck.TextAppearance.ListItem"
         tools:text="GET /path/to/some/resource?goes=here"/>
 
@@ -30,15 +30,16 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/path"
         android:layout_toRightOf="@id/code"
-        android:padding="4dp"
+        android:padding="2dp"
         tools:text="example.com" />
 
     <ImageView
-        android:layout_width="18dp"
-        android:layout_height="18dp"
+        android:id="@+id/ssl"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
         android:layout_toRightOf="@id/host"
         android:layout_below="@id/path"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="4dp"
         android:src="@drawable/chuck_ic_https_grey_24dp"/>
 
     <LinearLayout
@@ -52,14 +53,14 @@
             android:id="@+id/start"
             android:layout_width="72dp"
             android:layout_height="wrap_content"
-            android:padding="4dp"
+            android:padding="2dp"
             tools:text="18:29:07" />
 
         <TextView
             android:id="@+id/duration"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:padding="4dp"
+            android:padding="2dp"
             android:gravity="right"
             tools:text="8023 ms" />
 
@@ -68,7 +69,7 @@
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:gravity="right"
-            android:padding="4dp"
+            android:padding="2dp"
             tools:text="16.45 KB" />
 
     </LinearLayout>

@@ -3,4 +3,11 @@
     <color name="chuck_colorPrimary">#00BCD4</color>
     <color name="chuck_colorPrimaryDark">#0097A7</color>
     <color name="chuck_colorAccent">#FF9800</color>
+
+    <color name="chuck_status_default">#212121</color>
+    <color name="chuck_status_requested">#9E9E9E</color>
+    <color name="chuck_status_error">#F44336</color>
+    <color name="chuck_status_500">#B71C1C</color>
+    <color name="chuck_status_400">#FF9800</color>
+    <color name="chuck_status_300">#0D47A1</color>
 </resources>

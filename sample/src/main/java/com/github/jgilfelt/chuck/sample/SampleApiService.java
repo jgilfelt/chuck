@@ -18,7 +18,7 @@ class SampleApiService {
 
     static HttpbinApi getInstance(OkHttpClient client) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://httpbin.org")
+                .baseUrl("https://httpbin.org")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();

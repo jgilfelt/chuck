@@ -1,12 +1,14 @@
 package com.github.jgilfelt.chuck.ui;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.jgilfelt.chuck.R;
@@ -20,9 +22,24 @@ class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHol
     private final OnListFragmentInteractionListener listener;
     private CursorAdapter cursorAdapter;
 
+    private int colorDefault;
+    private int colorRequested;
+    private int colorError;
+    private int color500;
+    private int color400;
+    private int color300;
+
     TransactionAdapter(Context context, OnListFragmentInteractionListener listener) {
         this.listener = listener;
         this.context = context;
+        final Resources res = context.getResources();
+        colorDefault = res.getColor(R.color.chuck_status_default);
+        colorRequested = res.getColor(R.color.chuck_status_requested);
+        colorError = res.getColor(R.color.chuck_status_error);
+        color500 = res.getColor(R.color.chuck_status_500);
+        color400 = res.getColor(R.color.chuck_status_400);
+        color300 = res.getColor(R.color.chuck_status_300);
+
         cursorAdapter = new CursorAdapter(TransactionAdapter.this.context, null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER) {
             @Override
             public View newView(Context context, Cursor cursor, ViewGroup parent) {
@@ -39,6 +56,7 @@ class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHol
                 holder.path.setText(transaction.getMethod() + " " + transaction.getPath());
                 holder.host.setText(transaction.getHost());
                 holder.start.setText(transaction.getRequestStartTimeString());
+                holder.ssl.setVisibility(transaction.isSsl() ? View.VISIBLE : View.GONE);
                 if (transaction.getStatus() == HttpTransaction.Status.Complete) {
                     holder.code.setText(String.valueOf(transaction.getResponseCode()));
                     holder.duration.setText(transaction.getDurationString());
@@ -48,6 +66,10 @@ class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHol
                     holder.duration.setText(null);
                     holder.size.setText(null);
                 }
+                if (transaction.getStatus() == HttpTransaction.Status.Failed) {
+                    holder.code.setText("!!!");
+                }
+                setStatusColor(holder, transaction);
                 holder.transaction = transaction;
                 holder.view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -57,6 +79,25 @@ class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHol
                         }
                     }
                 });
+            }
+
+            private void setStatusColor(ViewHolder holder, HttpTransaction transaction) {
+                int color;
+                if (transaction.getStatus() == HttpTransaction.Status.Failed) {
+                    color = colorError;
+                } else if (transaction.getStatus() == HttpTransaction.Status.Requested) {
+                    color = colorRequested;
+                } else if (transaction.getResponseCode() >= 500) {
+                    color = color500;
+                } else if (transaction.getResponseCode() >= 400) {
+                    color = color400;
+                } else if (transaction.getResponseCode() >= 300) {
+                    color = color300;
+                } else {
+                    color = colorDefault;
+                }
+                holder.code.setTextColor(color);
+                holder.path.setTextColor(color);
             }
         };
     }
@@ -91,6 +132,7 @@ class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHol
         public final TextView start;
         public final TextView duration;
         public final TextView size;
+        public final ImageView ssl;
         HttpTransaction transaction;
 
         ViewHolder(View view) {
@@ -102,6 +144,7 @@ class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHol
             start = (TextView) view.findViewById(R.id.start);
             duration = (TextView) view.findViewById(R.id.duration);
             size = (TextView) view.findViewById(R.id.size);
+            ssl = (ImageView) view.findViewById(R.id.ssl);
         }
     }
 }
