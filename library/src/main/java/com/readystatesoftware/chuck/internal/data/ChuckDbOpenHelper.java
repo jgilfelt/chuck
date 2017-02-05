@@ -4,12 +4,12 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class ChuckDbOpenHelper extends SQLiteOpenHelper {
+class ChuckDbOpenHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "chuck.db";
     private static final int VERSION = 3;
 
-    public ChuckDbOpenHelper(Context context) {
+    ChuckDbOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION);
     }
 
