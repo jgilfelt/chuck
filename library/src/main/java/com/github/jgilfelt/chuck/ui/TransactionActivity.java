@@ -15,6 +15,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.github.jgilfelt.chuck.R;
 import com.github.jgilfelt.chuck.data.ChuckContentProvider;
@@ -73,6 +76,26 @@ public class TransactionActivity extends BaseChuckActivity implements LoaderMana
     protected void onResume() {
         super.onResume();
         getSupportLoaderManager().restartLoader(0, null, this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.chuck_transaction, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.share_text) {
+            // TODO
+            return true;
+        } else if (item.getItemId() == R.id.share_curl) {
+            // TODO
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

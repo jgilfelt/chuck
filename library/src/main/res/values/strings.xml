@@ -19,4 +19,7 @@
     <string name="chuck_total_size">Total size</string>
     <string name="chuck_yes">Yes</string>
     <string name="chuck_no">No</string>
+    <string name="chuck_share">Share</string>
+    <string name="chuck_share_as_text">Share as text</string>
+    <string name="chuck_share_as_curl">Share as curl command</string>
 </resources>
