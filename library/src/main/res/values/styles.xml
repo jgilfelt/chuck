@@ -5,6 +5,10 @@
         <item name="colorAccent">@color/chuck_colorAccent</item>
     </style>
 
+    <style name="Chuck.TextAppearance.ListItem" parent="android:TextAppearance">
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="Chuck.TextAppearance.Label" parent="android:TextAppearance.Small">
         <item name="android:textStyle">bold</item>
     </style>

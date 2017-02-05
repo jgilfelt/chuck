@@ -3,7 +3,6 @@ package com.github.jgilfelt.chuck.support;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 import android.util.LongSparseArray;
 
@@ -32,7 +31,7 @@ public class NotificationHelper {
         if (!BaseChuckActivity.isInForeground()) {
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                     .setContentIntent(PendingIntent.getActivity(context, 0, Chuck.getLaunchIntent(context), 0))
-                    .setSmallIcon(R.drawable.chuck_ic_notification_black_24dp)
+                    .setSmallIcon(R.drawable.chuck_ic_notification_white_24dp)
                     .setColor(context.getResources().getColor(R.color.chuck_colorPrimary))
                     .setContentTitle(context.getString(R.string.chuck_notification_title));
             NotificationCompat.InboxStyle inboxStyle =

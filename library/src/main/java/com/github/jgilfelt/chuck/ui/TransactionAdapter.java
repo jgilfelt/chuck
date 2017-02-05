@@ -34,22 +34,21 @@ class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHol
 
             @Override
             public void bindView(View view, final Context context, Cursor cursor) {
-                final HttpTransaction httpTransaction = LocalCupboard.getInstance().withCursor(cursor).get(HttpTransaction.class);
+                final HttpTransaction transaction = LocalCupboard.getInstance().withCursor(cursor).get(HttpTransaction.class);
                 final ViewHolder holder = (ViewHolder) view.getTag();
-                holder.path.setText(httpTransaction.getPath());
-                holder.host.setText(httpTransaction.getHost());
-                holder.method.setText(httpTransaction.getMethod());
-                holder.start.setText(httpTransaction.getRequestStartTimeString());
-                if (httpTransaction.getStatus() == HttpTransaction.Status.Complete) {
-                    holder.code.setText(String.valueOf(httpTransaction.getResponseCode()));
-                    holder.duration.setText(httpTransaction.getDurationString());
-                    holder.size.setText(httpTransaction.getTotalSizeString());
+                holder.path.setText(transaction.getMethod() + " " + transaction.getPath());
+                holder.host.setText(transaction.getHost());
+                holder.start.setText(transaction.getRequestStartTimeString());
+                if (transaction.getStatus() == HttpTransaction.Status.Complete) {
+                    holder.code.setText(String.valueOf(transaction.getResponseCode()));
+                    holder.duration.setText(transaction.getDurationString());
+                    holder.size.setText(transaction.getTotalSizeString());
                 } else {
                     holder.code.setText(null);
                     holder.duration.setText(null);
                     holder.size.setText(null);
                 }
-                holder.transaction = httpTransaction;
+                holder.transaction = transaction;
                 holder.view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -89,7 +88,6 @@ class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHol
         public final TextView code;
         public final TextView path;
         public final TextView host;
-        public final TextView method;
         public final TextView start;
         public final TextView duration;
         public final TextView size;
@@ -101,7 +99,6 @@ class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHol
             code = (TextView) view.findViewById(R.id.code);
             path = (TextView) view.findViewById(R.id.path);
             host = (TextView) view.findViewById(R.id.host);
-            method = (TextView) view.findViewById(R.id.method);
             start = (TextView) view.findViewById(R.id.start);
             duration = (TextView) view.findViewById(R.id.duration);
             size = (TextView) view.findViewById(R.id.size);

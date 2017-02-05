@@ -7,32 +7,12 @@
     android:background="?android:attr/selectableItemBackground">
 
     <TextView
-        android:id="@+id/host"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="40dp"
-        android:padding="4dp"
-        tools:text="example.com" />
-
-    <TextView
-        android:id="@+id/method"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignRight="@id/host"
-        android:padding="4dp"
-        tools:text="DELETE" />
-
-    <TextView
         android:id="@+id/code"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@id/host"
         android:padding="4dp"
-        android:textAppearance="?attr/textAppearanceListItem"
+        android:textAppearance="@style/Chuck.TextAppearance.ListItem"
         tools:text="200"/>
 
     <TextView
@@ -40,38 +20,57 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/code"
-        android:layout_below="@id/host"
         android:padding="4dp"
-        android:textAppearance="?attr/textAppearanceListItem"
-        tools:text="/path/to/some/resource?goes=here"/>
+        android:textAppearance="@style/Chuck.TextAppearance.ListItem"
+        tools:text="GET /path/to/some/resource?goes=here"/>
 
     <TextView
-        android:id="@+id/start"
+        android:id="@+id/host"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/code"
         android:layout_below="@id/path"
+        android:layout_toRightOf="@id/code"
         android:padding="4dp"
-        tools:text="18:29:07" />
+        tools:text="example.com" />
 
-    <TextView
-        android:id="@+id/duration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/start"
-        android:layout_toRightOf="@id/start"
-        android:padding="4dp"
-        android:layout_marginLeft="16dp"
-        tools:text="8023 ms" />
+    <ImageView
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_toRightOf="@id/host"
+        android:layout_below="@id/path"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/chuck_ic_https_grey_24dp"/>
 
-    <TextView
-        android:id="@+id/size"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/start"
-        android:layout_toRightOf="@id/duration"
-        android:padding="4dp"
-        android:layout_marginLeft="16dp"
-        tools:text="16.45 KB" />
+    <LinearLayout
+        android:id="@+id/meta"
+        android:layout_below="@id/host"
+        android:layout_marginLeft="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/start"
+            android:layout_width="72dp"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            tools:text="18:29:07" />
+
+        <TextView
+            android:id="@+id/duration"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:gravity="right"
+            tools:text="8023 ms" />
+
+        <TextView
+            android:id="@+id/size"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:padding="4dp"
+            tools:text="16.45 KB" />
+
+    </LinearLayout>
 
 </RelativeLayout>
