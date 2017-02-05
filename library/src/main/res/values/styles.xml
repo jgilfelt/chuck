@@ -1,7 +1,17 @@
 <resources>
-    <style name="ChuckTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Chuck.Theme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">#00BCD4</item>
         <item name="colorPrimaryDark">#0097A7</item>
         <item name="colorAccent">#FF9800</item>
+    </style>
+
+    <style name="Chuck.TextAppearance.Label" parent="android:TextAppearance.Small">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Chuck.TextAppearance.Value" parent="android:TextAppearance.Small">
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textIsSelectable">true</item>
     </style>
 </resources>

@@ -11,9 +11,9 @@
             android:label="@string/chuck_name"
             android:launchMode="singleTask"
             android:taskAffinity="com.github.jgilfelt.chuck.task"
-            android:theme="@style/ChuckTheme" />
+            android:theme="@style/Chuck.Theme" />
         <activity android:name=".ui.TransactionActivity"
-            android:theme="@style/ChuckTheme"
+            android:theme="@style/Chuck.Theme"
             android:parentActivityName=".ui.MainActivity"/>
     </application>
 </manifest>
