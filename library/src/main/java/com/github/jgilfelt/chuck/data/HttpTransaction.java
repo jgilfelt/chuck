@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import nl.qbusict.cupboard.annotation.Index;
 import okhttp3.Headers;
 
 public class HttpTransaction {
@@ -25,7 +26,8 @@ public class HttpTransaction {
     private static final SimpleDateFormat TIME_ONLY_FMT = new SimpleDateFormat("HH:mm:ss", Locale.US);
 
     private Long _id;
-    private Date date;
+    @Index private Date requestDate;
+    private Date responseDate;
     private Long tookMs;
 
     private String protocol;
@@ -59,12 +61,20 @@ public class HttpTransaction {
         _id = id;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getRequestDate() {
+        return requestDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setRequestDate(Date requestDate) {
+        this.requestDate = requestDate;
+    }
+
+    public Date getResponseDate() {
+        return responseDate;
+    }
+
+    public void setResponseDate(Date responseDate) {
+        this.responseDate = responseDate;
     }
 
     public String getError() {
@@ -256,7 +266,7 @@ public class HttpTransaction {
     }
 
     public String getStartTimeString() {
-        return TIME_ONLY_FMT.format(date);
+        return TIME_ONLY_FMT.format(requestDate);
     }
 
     public String getDurationString() {

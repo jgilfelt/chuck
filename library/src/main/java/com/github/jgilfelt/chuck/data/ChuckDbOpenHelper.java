@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class ChuckDbOpenHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "chuck.db";
-    private static final int VERSION = 2;
+    private static final int VERSION = 3;
 
     public ChuckDbOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION);
@@ -15,11 +15,11 @@ public class ChuckDbOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        LocalCupboard.getInstance().withDatabase(db).createTables();
+        LocalCupboard.getAnnotatedInstance().withDatabase(db).createTables();
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        LocalCupboard.getInstance().withDatabase(db).upgradeTables();
+        LocalCupboard.getAnnotatedInstance().withDatabase(db).upgradeTables();
     }
 }

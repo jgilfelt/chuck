@@ -53,7 +53,7 @@ public final class ChuckInterceptor implements Interceptor {
         boolean hasRequestBody = requestBody != null;
 
         HttpTransaction transaction = new HttpTransaction();
-        transaction.setDate(new Date());
+        transaction.setRequestDate(new Date());
 
         transaction.setMethod(request.method());
         transaction.setUrl(request.url().toString());
@@ -99,6 +99,7 @@ public final class ChuckInterceptor implements Interceptor {
 
         ResponseBody responseBody = response.body();
 
+        transaction.setResponseDate(new Date());
         transaction.setTookMs(tookMs);
         transaction.setProtocol(response.protocol().toString());
         transaction.setResponseCode(response.code());

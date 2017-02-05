@@ -18,6 +18,12 @@ public class LocalCupboard {
         return cupboard;
     }
 
+    public static Cupboard getAnnotatedInstance() {
+        return new CupboardBuilder(getInstance())
+                .useAnnotations()
+                .build();
+    }
+
     private LocalCupboard() {
     }
 }
