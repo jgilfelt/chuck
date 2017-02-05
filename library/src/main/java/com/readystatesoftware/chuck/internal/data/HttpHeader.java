@@ -1,4 +1,4 @@
-package com.readystatesoftware.chuck.data;
+package com.readystatesoftware.chuck.internal.data;
 
 public class HttpHeader {
 

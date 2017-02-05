@@ -1,4 +1,4 @@
-package com.readystatesoftware.chuck.support;
+package com.readystatesoftware.chuck.internal.support;
 
 import java.util.Timer;
 import java.util.TimerTask;

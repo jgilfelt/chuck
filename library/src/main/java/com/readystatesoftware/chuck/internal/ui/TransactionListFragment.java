@@ -1,4 +1,4 @@
-package com.readystatesoftware.chuck.ui;
+package com.readystatesoftware.chuck.internal.ui;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -18,11 +18,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.readystatesoftware.chuck.R;
-import com.readystatesoftware.chuck.data.ChuckContentProvider;
-import com.readystatesoftware.chuck.data.HttpTransaction;
-import com.readystatesoftware.chuck.support.DividerItemDecoration;
-import com.readystatesoftware.chuck.support.NotificationHelper;
-import com.readystatesoftware.chuck.support.SQLiteUtils;
+import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
+import com.readystatesoftware.chuck.internal.data.HttpTransaction;
+import com.readystatesoftware.chuck.internal.support.DividerItemDecoration;
+import com.readystatesoftware.chuck.internal.support.NotificationHelper;
+import com.readystatesoftware.chuck.internal.support.SQLiteUtils;
 
 public class TransactionListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 

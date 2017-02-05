@@ -1,9 +1,9 @@
-package com.readystatesoftware.chuck.data;
+package com.readystatesoftware.chuck.internal.data;
 
 import android.net.Uri;
 
-import com.readystatesoftware.chuck.support.FormatUtils;
-import com.readystatesoftware.chuck.support.JsonConvertor;
+import com.readystatesoftware.chuck.internal.support.FormatUtils;
+import com.readystatesoftware.chuck.internal.support.JsonConvertor;
 import com.google.gson.reflect.TypeToken;
 
 import java.text.SimpleDateFormat;

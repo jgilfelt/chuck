@@ -1,4 +1,4 @@
-package com.readystatesoftware.chuck.support;
+package com.readystatesoftware.chuck.internal.support;
 
 import android.support.v4.view.ViewPager;
 

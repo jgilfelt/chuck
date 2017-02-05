@@ -1,4 +1,4 @@
-package com.readystatesoftware.chuck.support;
+package com.readystatesoftware.chuck.internal.support;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;

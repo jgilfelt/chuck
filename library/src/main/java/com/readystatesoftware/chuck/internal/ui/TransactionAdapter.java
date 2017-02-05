@@ -1,4 +1,4 @@
-package com.readystatesoftware.chuck.ui;
+package com.readystatesoftware.chuck.internal.ui;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -12,9 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.readystatesoftware.chuck.R;
-import com.readystatesoftware.chuck.data.HttpTransaction;
-import com.readystatesoftware.chuck.data.LocalCupboard;
-import com.readystatesoftware.chuck.ui.TransactionListFragment.OnListFragmentInteractionListener;
+import com.readystatesoftware.chuck.internal.data.HttpTransaction;
+import com.readystatesoftware.chuck.internal.data.LocalCupboard;
+import com.readystatesoftware.chuck.internal.ui.TransactionListFragment.OnListFragmentInteractionListener;
 
 class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder> {
 

@@ -3,7 +3,7 @@ package com.readystatesoftware.chuck;
 import android.content.Context;
 import android.content.Intent;
 
-import com.readystatesoftware.chuck.ui.MainActivity;
+import com.readystatesoftware.chuck.internal.ui.MainActivity;
 
 public class Chuck {
 

@@ -4,10 +4,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 
-import com.readystatesoftware.chuck.data.ChuckContentProvider;
-import com.readystatesoftware.chuck.data.HttpTransaction;
-import com.readystatesoftware.chuck.data.LocalCupboard;
-import com.readystatesoftware.chuck.support.NotificationHelper;
+import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
+import com.readystatesoftware.chuck.internal.data.HttpTransaction;
+import com.readystatesoftware.chuck.internal.data.LocalCupboard;
+import com.readystatesoftware.chuck.internal.support.NotificationHelper;
 
 import java.io.EOFException;
 import java.io.IOException;

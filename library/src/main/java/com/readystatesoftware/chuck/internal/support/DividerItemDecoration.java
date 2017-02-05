@@ -1,4 +1,4 @@
-package com.readystatesoftware.chuck.support;
+package com.readystatesoftware.chuck.internal.support;
 
 /*
  * Copyright (C) 2014 The Android Open Source Project

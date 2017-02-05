@@ -1,11 +1,11 @@
-package com.readystatesoftware.chuck.ui;
+package com.readystatesoftware.chuck.internal.ui;
 
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
 import com.readystatesoftware.chuck.R;
-import com.readystatesoftware.chuck.data.HttpTransaction;
+import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 
 public class MainActivity extends BaseChuckActivity implements TransactionListFragment.OnListFragmentInteractionListener {
 

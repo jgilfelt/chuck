@@ -1,4 +1,4 @@
-package com.readystatesoftware.chuck.data;
+package com.readystatesoftware.chuck.internal.data;
 
 import nl.qbusict.cupboard.Cupboard;
 import nl.qbusict.cupboard.CupboardBuilder;

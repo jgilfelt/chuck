@@ -1,11 +1,11 @@
-package com.readystatesoftware.chuck.support;
+package com.readystatesoftware.chuck.internal.support;
 
 import android.content.Context;
 import android.text.TextUtils;
 
 import com.readystatesoftware.chuck.R;
-import com.readystatesoftware.chuck.data.HttpHeader;
-import com.readystatesoftware.chuck.data.HttpTransaction;
+import com.readystatesoftware.chuck.internal.data.HttpHeader;
+import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 

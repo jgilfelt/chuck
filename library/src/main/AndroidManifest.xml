@@ -3,17 +3,17 @@
     package="com.readystatesoftware.chuck">
     <application>
         <provider
-            android:name="com.readystatesoftware.chuck.data.ChuckContentProvider"
+            android:name=".internal.data.ChuckContentProvider"
             android:authorities="${applicationId}.chuck.provider"
             android:exported="false" />
         <activity
-            android:name="com.readystatesoftware.chuck.ui.MainActivity"
+            android:name=".internal.ui.MainActivity"
             android:label="@string/chuck_name"
             android:launchMode="singleTask"
             android:taskAffinity="com.readystatesoftware.chuck.task"
             android:theme="@style/Chuck.Theme" />
-        <activity android:name="com.readystatesoftware.chuck.ui.TransactionActivity"
+        <activity android:name=".internal.ui.TransactionActivity"
             android:theme="@style/Chuck.Theme"
-            android:parentActivityName="com.readystatesoftware.chuck.ui.MainActivity"/>
+            android:parentActivityName=".internal.ui.MainActivity"/>
     </application>
 </manifest>

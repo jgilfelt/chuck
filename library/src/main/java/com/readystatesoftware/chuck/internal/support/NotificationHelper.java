@@ -1,4 +1,4 @@
-package com.readystatesoftware.chuck.support;
+package com.readystatesoftware.chuck.internal.support;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -8,8 +8,8 @@ import android.util.LongSparseArray;
 
 import com.readystatesoftware.chuck.Chuck;
 import com.readystatesoftware.chuck.R;
-import com.readystatesoftware.chuck.data.HttpTransaction;
-import com.readystatesoftware.chuck.ui.BaseChuckActivity;
+import com.readystatesoftware.chuck.internal.data.HttpTransaction;
+import com.readystatesoftware.chuck.internal.ui.BaseChuckActivity;
 
 
 public class NotificationHelper {

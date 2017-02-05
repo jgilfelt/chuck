@@ -1,4 +1,4 @@
-package com.readystatesoftware.chuck.ui;
+package com.readystatesoftware.chuck.internal.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.readystatesoftware.chuck.R;
-import com.readystatesoftware.chuck.data.HttpTransaction;
+import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 
 public class TransactionPayloadFragment extends Fragment implements TransactionFragment {
 
