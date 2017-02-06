@@ -51,9 +51,15 @@ public class MainActivity extends AppCompatActivity {
 
     private OkHttpClient getClient(Context context) {
         return new OkHttpClient.Builder()
-                .addInterceptor(new ChuckInterceptor(context)) // <- Add ChuckInterceptor in your OkHttp client builder
-                .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                // Add a ChuckInterceptor instance to your OkHttp client
+                .addInterceptor(new ChuckInterceptor(context))
+                .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                 .build();
+    }
+
+    private void launchChuckDirectly() {
+        // Optionally launch Chuck directly from your own app UI
+        startActivity(Chuck.getLaunchIntent(this));
     }
 
     private void doHttpActivity() {
@@ -72,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         api.status(500).enqueue(cb);
         api.delay(9).enqueue(cb);
         api.delay(15).enqueue(cb);
-        api.redirectTo("https://http2.akamai.com").enqueue(cb); // h2
+        api.redirectTo("https://http2.akamai.com").enqueue(cb);
         api.redirect(3).enqueue(cb);
         api.redirectRelative(2).enqueue(cb);
         api.redirectAbsolute(4).enqueue(cb);
@@ -89,9 +95,5 @@ public class MainActivity extends AppCompatActivity {
         api.deny().enqueue(cb);
         api.cache("Mon").enqueue(cb);
         api.cache(30).enqueue(cb);
-    }
-
-    private void launchChuckDirectly() {
-        startActivity(Chuck.getLaunchIntent(this)); // <- Call Chuck.getLaunchIntent to launch the Chuck UI directly
     }
 }
