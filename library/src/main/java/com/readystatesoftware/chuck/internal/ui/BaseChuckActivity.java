@@ -19,7 +19,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import com.readystatesoftware.chuck.internal.support.ActivityTransitionTimer;
 import com.readystatesoftware.chuck.internal.support.NotificationHelper;
 
 public abstract class BaseChuckActivity extends AppCompatActivity {
@@ -41,7 +40,6 @@ public abstract class BaseChuckActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        ActivityTransitionTimer.getInstance().startTimer();
         inForeground = true;
         notificationHelper.dismiss();
     }
@@ -49,10 +47,7 @@ public abstract class BaseChuckActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (ActivityTransitionTimer.getInstance().didTimeOut()) {
-            inForeground = false;
-        }
-        ActivityTransitionTimer.getInstance().stopTimer();
+        inForeground = false;
     }
 
 }

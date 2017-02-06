@@ -26,7 +26,6 @@ import com.readystatesoftware.chuck.R;
 import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 import com.readystatesoftware.chuck.internal.ui.BaseChuckActivity;
 
-
 public class NotificationHelper {
 
     private static final int NOTIFICATION_ID = 1138;
@@ -36,6 +35,17 @@ public class NotificationHelper {
 
     private Context context;
     private NotificationManager notificationManager;
+
+    public static synchronized void clearBuffer() {
+        transactionBuffer.clear();
+    }
+
+    private static synchronized void addToBuffer(HttpTransaction transaction) {
+        transactionBuffer.put(transaction.getId(), transaction);
+        if (transactionBuffer.size() > BUFFER_SIZE) {
+            transactionBuffer.remove(0);
+        }
+    }
 
     public NotificationHelper(Context context) {
         this.context = context;
@@ -55,8 +65,9 @@ public class NotificationHelper {
             int count = 0;
             for (int i = transactionBuffer.size() - 1; i >= 0; i--) {
                 if (count < BUFFER_SIZE) {
-                    if (count == 0)
+                    if (count == 0) {
                         mBuilder.setContentText(transactionBuffer.valueAt(i).getNotificationText());
+                    }
                     inboxStyle.addLine(transactionBuffer.valueAt(i).getNotificationText());
                 }
                 count++;
@@ -64,20 +75,10 @@ public class NotificationHelper {
             mBuilder.setAutoCancel(true);
             mBuilder.setStyle(inboxStyle);
             notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-        } else {
-            dismiss();
         }
     }
 
     public void dismiss() {
         notificationManager.cancel(NOTIFICATION_ID);
-        transactionBuffer.clear();
-    }
-
-    private synchronized void addToBuffer(HttpTransaction transaction) {
-        transactionBuffer.put(transaction.getId(), transaction);
-        if (transactionBuffer.size() > BUFFER_SIZE) {
-            transactionBuffer.remove(0);
-        }
     }
 }

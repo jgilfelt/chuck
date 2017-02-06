@@ -105,7 +105,7 @@ public class TransactionListFragment extends Fragment implements LoaderManager.L
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.clear) {
             getContext().getContentResolver().delete(ChuckContentProvider.TRANSACTION_URI, null, null);
-            new NotificationHelper(getContext()).dismiss();
+            NotificationHelper.clearBuffer();
             return true;
         } else if (item.getItemId() == R.id.browse_sql) {
             SQLiteUtils.browseDatabase(getContext());
