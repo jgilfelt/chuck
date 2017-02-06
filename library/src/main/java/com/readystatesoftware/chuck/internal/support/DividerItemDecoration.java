@@ -1,5 +1,3 @@
-package com.readystatesoftware.chuck.internal.support;
-
 /*
  * Copyright (C) 2014 The Android Open Source Project
  *
@@ -15,6 +13,7 @@ package com.readystatesoftware.chuck.internal.support;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.readystatesoftware.chuck.internal.support;
 
 import android.content.Context;
 import android.content.res.TypedArray;
