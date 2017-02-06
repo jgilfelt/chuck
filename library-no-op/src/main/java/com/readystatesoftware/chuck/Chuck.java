@@ -18,6 +18,9 @@ package com.readystatesoftware.chuck;
 import android.content.Context;
 import android.content.Intent;
 
+/**
+ * No-op implementation.
+ */
 public class Chuck {
 
     public static Intent getLaunchIntent(Context context) {

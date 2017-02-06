@@ -42,6 +42,9 @@ import okhttp3.internal.http.HttpHeaders;
 import okio.Buffer;
 import okio.BufferedSource;
 
+/**
+ * An OkHttp Interceptor which persists and displays HTTP activity in your application for later inspection.
+ */
 public final class ChuckInterceptor implements Interceptor {
 
     private static final Charset UTF8 = Charset.forName("UTF-8");
@@ -50,12 +53,21 @@ public final class ChuckInterceptor implements Interceptor {
     private NotificationHelper notificationHelper;
     private boolean showNotification;
 
+    /**
+     * @param context The current Context.
+     */
     public ChuckInterceptor(Context context) {
         this.context = context.getApplicationContext();
         notificationHelper = new NotificationHelper(this.context);
         showNotification = true;
     }
 
+    /**
+     * Control whether a notification is shown while HTTP activity is recorded.
+     *
+     * @param show true to show a notification, false to suppress it.
+     * @return The {@link ChuckInterceptor} instance.
+     */
     public ChuckInterceptor showNotification(boolean show) {
         showNotification = show;
         return this;

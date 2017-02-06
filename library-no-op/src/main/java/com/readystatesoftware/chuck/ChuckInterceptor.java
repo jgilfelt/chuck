@@ -23,6 +23,9 @@ import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * No-op implementation.
+ */
 public class ChuckInterceptor implements Interceptor {
 
     public ChuckInterceptor(Context context) {
