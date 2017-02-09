@@ -16,6 +16,11 @@
  -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" >
+    <item android:id="@+id/search"
+        android:title="@string/chuck_search"
+        android:icon="@drawable/chuck_ic_search_white_24dp"
+        app:showAsAction="collapseActionView|ifRoom"
+        app:actionViewClass="android.support.v7.widget.SearchView" />
     <item android:title="@string/chuck_clear"
         android:id="@+id/clear"
         android:icon="@drawable/chuck_ic_delete_white_24dp"
