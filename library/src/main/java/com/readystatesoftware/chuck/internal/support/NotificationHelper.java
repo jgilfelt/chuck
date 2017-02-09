@@ -18,6 +18,7 @@ package com.readystatesoftware.chuck.internal.support;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.LongSparseArray;
 
@@ -32,18 +33,23 @@ public class NotificationHelper {
     private static final int BUFFER_SIZE = 10;
 
     private static LongSparseArray<HttpTransaction> transactionBuffer = new LongSparseArray<>();
+    private static int transactionCount;
 
     private Context context;
     private NotificationManager notificationManager;
 
     public static synchronized void clearBuffer() {
         transactionBuffer.clear();
+        transactionCount = 0;
     }
 
     private static synchronized void addToBuffer(HttpTransaction transaction) {
+        if (transaction.getStatus() == HttpTransaction.Status.Requested) {
+            transactionCount++;
+        }
         transactionBuffer.put(transaction.getId(), transaction);
         if (transactionBuffer.size() > BUFFER_SIZE) {
-            transactionBuffer.remove(0);
+            transactionBuffer.removeAt(0);
         }
     }
 
@@ -74,6 +80,11 @@ public class NotificationHelper {
             }
             mBuilder.setAutoCancel(true);
             mBuilder.setStyle(inboxStyle);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                mBuilder.setSubText(String.valueOf(transactionCount));
+            } else {
+                mBuilder.setNumber(transactionCount);
+            }
             notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
         }
     }
