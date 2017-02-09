@@ -18,6 +18,7 @@ package com.readystatesoftware.chuck.internal.support;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.LongSparseArray;
 
@@ -74,6 +75,11 @@ public class NotificationHelper {
             }
             mBuilder.setAutoCancel(true);
             mBuilder.setStyle(inboxStyle);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                mBuilder.setSubText(String.valueOf(count));
+            } else {
+                mBuilder.setNumber(count);
+            }
             notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
         }
     }
