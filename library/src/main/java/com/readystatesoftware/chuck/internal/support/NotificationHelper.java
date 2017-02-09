@@ -44,7 +44,7 @@ public class NotificationHelper {
     private static synchronized void addToBuffer(HttpTransaction transaction) {
         transactionBuffer.put(transaction.getId(), transaction);
         if (transactionBuffer.size() > BUFFER_SIZE) {
-            transactionBuffer.remove(0);
+            transactionBuffer.removeAt(0);
         }
     }
 
