@@ -127,7 +127,7 @@ public class TransactionListFragment extends Fragment implements
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         CursorLoader loader = new CursorLoader(getContext());
         loader.setUri(ChuckContentProvider.TRANSACTION_URI);
-        if (currentFilter != null) {
+        if (!TextUtils.isEmpty(currentFilter)) {
             if (TextUtils.isDigitsOnly(currentFilter)) {
                 loader.setSelection("responseCode LIKE ?");
                 loader.setSelectionArgs(new String[]{ currentFilter + "%" });
