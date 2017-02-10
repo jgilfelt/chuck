@@ -28,10 +28,21 @@ import okhttp3.Response;
  */
 public class ChuckInterceptor implements Interceptor {
 
+    public enum Period {
+        OneHour,
+        OneDay,
+        OneWeek,
+        Forever
+    }
+
     public ChuckInterceptor(Context context) {
     }
 
     public ChuckInterceptor showNotification(boolean show) {
+        return this;
+    }
+
+    public ChuckInterceptor retainDataFor(Period period) {
         return this;
     }
 

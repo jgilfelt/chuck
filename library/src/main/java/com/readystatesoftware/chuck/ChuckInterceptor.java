@@ -47,11 +47,31 @@ import okio.BufferedSource;
  */
 public final class ChuckInterceptor implements Interceptor {
 
+    public enum Period {
+        /**
+         * Retain data for the last hour.
+         */
+        OneHour,
+        /**
+         * Retain data for the last day.
+         */
+        OneDay,
+        /**
+         * Retain data for the last week.
+         */
+        OneWeek,
+        /**
+         * Retain data forever.
+         */
+        Forever
+    }
+
     private static final Charset UTF8 = Charset.forName("UTF-8");
 
     private Context context;
     private NotificationHelper notificationHelper;
     private boolean showNotification;
+    private Period retentionPeriod;
 
     /**
      * @param context The current Context.
@@ -60,6 +80,7 @@ public final class ChuckInterceptor implements Interceptor {
         this.context = context.getApplicationContext();
         notificationHelper = new NotificationHelper(this.context);
         showNotification = true;
+        retentionPeriod = Period.OneWeek;
     }
 
     /**
@@ -70,6 +91,18 @@ public final class ChuckInterceptor implements Interceptor {
      */
     public ChuckInterceptor showNotification(boolean show) {
         showNotification = show;
+        return this;
+    }
+
+    /**
+     * Set the retention period for HTTP transaction data captured by this interceptor.
+     * The default is one week.
+     *
+     * @param period the peroid for which to retain HTTP transaction data.
+     * @return The {@link ChuckInterceptor} instance.
+     */
+    public ChuckInterceptor retainDataFor(Period period) {
+        retentionPeriod = period;
         return this;
     }
 
