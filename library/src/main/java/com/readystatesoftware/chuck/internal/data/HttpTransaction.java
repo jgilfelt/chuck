@@ -17,9 +17,9 @@ package com.readystatesoftware.chuck.internal.data;
 
 import android.net.Uri;
 
+import com.google.gson.reflect.TypeToken;
 import com.readystatesoftware.chuck.internal.support.FormatUtils;
 import com.readystatesoftware.chuck.internal.support.JsonConvertor;
-import com.google.gson.reflect.TypeToken;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -57,6 +57,7 @@ public class HttpTransaction {
     private String requestHeaders;
     private String requestBody;
     private boolean requestBodyIsPlainText = true;
+    private boolean requestBodyIsTooBig = false;
 
     private Integer responseCode;
     private String responseMessage;
@@ -67,6 +68,7 @@ public class HttpTransaction {
     private String responseHeaders;
     private String responseBody;
     private boolean responseBodyIsPlainText = true;
+    private boolean responseBodyIsTooBig = false;
 
     public Long getId() {
         return _id;
@@ -136,6 +138,14 @@ public class HttpTransaction {
         this.requestBodyIsPlainText = requestBodyIsPlainText;
     }
 
+    public boolean requestBodyIsTooBig() {
+        return requestBodyIsTooBig;
+    }
+
+    public void setRequestBodyIsTooBig(boolean requestBodyIsTooBig) {
+        this.requestBodyIsTooBig = requestBodyIsTooBig;
+    }
+
     public Long getRequestContentLength() {
         return requestContentLength;
     }
@@ -170,6 +180,14 @@ public class HttpTransaction {
 
     public void setResponseBodyIsPlainText(boolean responseBodyIsPlainText) {
         this.responseBodyIsPlainText = responseBodyIsPlainText;
+    }
+
+    public boolean responseBodyIsTooBig() {
+        return responseBodyIsTooBig;
+    }
+
+    public void setResponseBodyIsTooBig(boolean responseBodyIsTooBig) {
+        this.responseBodyIsTooBig = responseBodyIsTooBig;
     }
 
     public Integer getResponseCode() {

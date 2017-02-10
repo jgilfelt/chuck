@@ -52,6 +52,7 @@ public final class ChuckInterceptor implements Interceptor {
     private Context context;
     private NotificationHelper notificationHelper;
     private boolean showNotification;
+    private int maxContentLength = Integer.MAX_VALUE;
 
     /**
      * @param context The current Context.
@@ -70,6 +71,19 @@ public final class ChuckInterceptor implements Interceptor {
      */
     public ChuckInterceptor showNotification(boolean show) {
         showNotification = show;
+        return this;
+    }
+
+    /**
+     * Control the max length for request and response content that will be retained.
+     * The transaction will still be recorded but the content itself will not be if it
+     * goes over the max length set.
+     *
+     * @param max the max length for request/response content.
+     * @return The {@link ChuckInterceptor} instance.
+     */
+    public ChuckInterceptor maxContentLength(int max) {
+        this.maxContentLength = max;
         return this;
     }
 
@@ -96,7 +110,12 @@ public final class ChuckInterceptor implements Interceptor {
         }
 
         transaction.setRequestBodyIsPlainText(!bodyEncoded(request.headers()));
-        if (hasRequestBody && transaction.requestBodyIsPlainText()) {
+
+        boolean requestTooBig = ((transaction.getRequestContentLength() != null) &&
+                (transaction.getRequestContentLength() > maxContentLength));
+        transaction.setRequestBodyIsTooBig(requestTooBig);
+
+        if (hasRequestBody && transaction.requestBodyIsPlainText() && !requestTooBig) {
             Buffer buffer = new Buffer();
             requestBody.writeTo(buffer);
             Charset charset = UTF8;
@@ -140,26 +159,35 @@ public final class ChuckInterceptor implements Interceptor {
         transaction.setResponseHeaders(response.headers());
 
         transaction.setResponseBodyIsPlainText(!bodyEncoded(response.headers()));
+
         if (HttpHeaders.hasBody(response) && transaction.responseBodyIsPlainText()) {
             BufferedSource source = responseBody.source();
             source.request(Long.MAX_VALUE);
             Buffer buffer = source.buffer();
-            Charset charset = UTF8;
-            MediaType contentType = responseBody.contentType();
-            if (contentType != null) {
-                try {
-                    charset = contentType.charset(UTF8);
-                } catch (UnsupportedCharsetException e) {
-                    update(transaction, transactionUri);
-                    return response;
+
+            transaction.setResponseContentLength(buffer.size());
+
+            boolean responseTooBig = ((transaction.getResponseContentLength() != null) &&
+                    (transaction.getResponseContentLength() > maxContentLength));
+            transaction.setResponseBodyIsTooBig(responseTooBig);
+
+            if (!responseTooBig) {
+                Charset charset = UTF8;
+                MediaType contentType = responseBody.contentType();
+                if (contentType != null) {
+                    try {
+                        charset = contentType.charset(UTF8);
+                    } catch (UnsupportedCharsetException e) {
+                        update(transaction, transactionUri);
+                        return response;
+                    }
+                }
+                if (isPlaintext(buffer)) {
+                    transaction.setResponseBody(buffer.clone().readString(charset));
+                } else {
+                    transaction.setResponseBodyIsPlainText(false);
                 }
             }
-            if (isPlaintext(buffer)) {
-                transaction.setResponseBody(buffer.clone().readString(charset));
-            } else {
-                transaction.setResponseBodyIsPlainText(false);
-            }
-            transaction.setResponseContentLength(buffer.size());
         }
 
         update(transaction, transactionUri);

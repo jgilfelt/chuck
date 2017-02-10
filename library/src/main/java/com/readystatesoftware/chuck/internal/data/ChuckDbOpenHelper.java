@@ -22,7 +22,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 class ChuckDbOpenHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "chuck.db";
-    private static final int VERSION = 3;
+    private static final int VERSION = 4;
 
     ChuckDbOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION);

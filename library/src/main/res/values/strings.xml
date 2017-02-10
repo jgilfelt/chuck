@@ -39,5 +39,6 @@
     <string name="chuck_share_as_text">Share as text</string>
     <string name="chuck_share_as_curl">Share as curl command</string>
     <string name="chuck_body_omitted">(encoded or binary body omitted)</string>
+    <string name="chuck_body_too_big">(Content too large for display)</string>
     <string name="chuck_search">Search</string>
 </resources>

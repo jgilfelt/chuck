@@ -105,16 +105,34 @@ public class FormatUtils {
         if (!TextUtils.isEmpty(headers)) {
             text += headers + "\n";
         }
-        text += (transaction.requestBodyIsPlainText()) ? v(transaction.getFormattedRequestBody()) :
-                context.getString(R.string.chuck_body_omitted);
+
+        if (transaction.requestBodyIsPlainText()) {
+            if (transaction.requestBodyIsTooBig()) {
+                text += context.getString(R.string.chuck_body_too_big);
+            } else {
+                text += v(transaction.getFormattedRequestBody());
+            }
+        } else {
+            text += context.getString(R.string.chuck_body_omitted);
+        }
+
         text += "\n\n";
         text += "---------- " + context.getString(R.string.chuck_response) + " ----------\n\n";
         headers = formatHeaders(transaction.getResponseHeaders(), false);
         if (!TextUtils.isEmpty(headers)) {
             text += headers + "\n";
         }
-        text += (transaction.responseBodyIsPlainText()) ? v(transaction.getFormattedResponseBody()) :
-                context.getString(R.string.chuck_body_omitted);
+
+        if (transaction.responseBodyIsPlainText()) {
+            if (transaction.responseBodyIsTooBig()) {
+                text += context.getString(R.string.chuck_body_too_big);
+            } else {
+                text += v(transaction.getFormattedResponseBody());
+            }
+        } else {
+            text += context.getString(R.string.chuck_body_omitted);
+        }
+
         return text;
     }
 
