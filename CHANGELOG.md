@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+Version 1.0.2 *(2017-02-10)*
+----------------------------
+
+ * Fix: Added Proguard rule for compat SearchView.
+ * Fix: Null search query displaying invalid results.
+
 Version 1.0.1 *(2017-02-09)*
 ----------------------------
 
