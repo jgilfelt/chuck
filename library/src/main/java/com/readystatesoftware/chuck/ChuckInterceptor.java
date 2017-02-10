@@ -23,6 +23,7 @@ import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
 import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 import com.readystatesoftware.chuck.internal.data.LocalCupboard;
 import com.readystatesoftware.chuck.internal.support.NotificationHelper;
+import com.readystatesoftware.chuck.internal.support.RetentionManager;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -51,27 +52,28 @@ public final class ChuckInterceptor implements Interceptor {
         /**
          * Retain data for the last hour.
          */
-        OneHour,
+        ONE_HOUR,
         /**
          * Retain data for the last day.
          */
-        OneDay,
+        ONE_DAY,
         /**
          * Retain data for the last week.
          */
-        OneWeek,
+        ONE_WEEK,
         /**
          * Retain data forever.
          */
-        Forever
+        FOREVER
     }
 
+    private static final Period DEFAULT_RETENTION = Period.ONE_WEEK;
     private static final Charset UTF8 = Charset.forName("UTF-8");
 
     private Context context;
     private NotificationHelper notificationHelper;
+    private RetentionManager retentionManager;
     private boolean showNotification;
-    private Period retentionPeriod;
 
     /**
      * @param context The current Context.
@@ -80,7 +82,7 @@ public final class ChuckInterceptor implements Interceptor {
         this.context = context.getApplicationContext();
         notificationHelper = new NotificationHelper(this.context);
         showNotification = true;
-        retentionPeriod = Period.OneWeek;
+        retentionManager = new RetentionManager(this.context, DEFAULT_RETENTION);
     }
 
     /**
@@ -102,7 +104,7 @@ public final class ChuckInterceptor implements Interceptor {
      * @return The {@link ChuckInterceptor} instance.
      */
     public ChuckInterceptor retainDataFor(Period period) {
-        retentionPeriod = period;
+        retentionManager = new RetentionManager(context, period);
         return this;
     }
 
@@ -207,6 +209,7 @@ public final class ChuckInterceptor implements Interceptor {
         if (showNotification) {
             notificationHelper.show(transaction);
         }
+        retentionManager.doMaintenance();
         return uri;
     }
 
