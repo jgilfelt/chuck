@@ -16,6 +16,7 @@
 package com.readystatesoftware.chuck.internal.ui;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,6 +24,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -33,7 +35,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.readystatesoftware.chuck.R;
 import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
 import com.readystatesoftware.chuck.internal.data.HttpTransaction;
@@ -47,6 +48,8 @@ public class TransactionListFragment extends Fragment implements
     private String currentFilter;
     private OnListFragmentInteractionListener listener;
     private TransactionAdapter adapter;
+    private String selectedStatus;
+    private int selectedStatusItem = -1;
 
     public TransactionListFragment() {}
 
@@ -115,7 +118,10 @@ public class TransactionListFragment extends Fragment implements
             getContext().getContentResolver().delete(ChuckContentProvider.TRANSACTION_URI, null, null);
             NotificationHelper.clearBuffer();
             return true;
-        } else if (item.getItemId() == R.id.browse_sql) {
+        } else if (item.getItemId() == R.id.filter) {
+            showFilters();
+            return true;
+        }  else if (item.getItemId() == R.id.browse_sql) {
             SQLiteUtils.browseDatabase(getContext());
             return true;
         } else {
@@ -123,18 +129,51 @@ public class TransactionListFragment extends Fragment implements
         }
     }
 
+    private void showFilters() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setSingleChoiceItems(R.array.status_codes, selectedStatusItem, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                selectedStatusItem = which;
+                selectedStatus = getResources().getStringArray(R.array.status_codes_values)[which];
+            }
+        });
+        builder.setTitle(R.string.chuck_filter_title);
+        builder.setPositiveButton(R.string.chuck_ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                getLoaderManager().restartLoader(0, null, TransactionListFragment.this);
+                dialog.dismiss();
+            }
+        });
+        builder.setNeutralButton(R.string.chuck_neutral_filter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                selectedStatus = null;
+                selectedStatusItem = -1;
+                getLoaderManager().restartLoader(0, null, TransactionListFragment.this);
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton(R.string.chuck_cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         CursorLoader loader = new CursorLoader(getContext());
         loader.setUri(ChuckContentProvider.TRANSACTION_URI);
-        if (!TextUtils.isEmpty(currentFilter)) {
-            if (TextUtils.isDigitsOnly(currentFilter)) {
-                loader.setSelection("responseCode LIKE ?");
-                loader.setSelectionArgs(new String[]{ currentFilter + "%" });
-            } else {
-                loader.setSelection("path LIKE ?");
-                loader.setSelectionArgs(new String[]{ "%" + currentFilter + "%" });
-            }
+        if (selectedStatus != null) {
+            loader.setSelection("responseCode LIKE ?");
+            loader.setSelectionArgs(new String[] { selectedStatus + "%" });
+        } else if (!TextUtils.isEmpty(currentFilter)) {
+            loader.setSelection("path LIKE ?");
+            loader.setSelectionArgs(new String[] { "%" + currentFilter + "%" });
         }
         loader.setSortOrder("requestDate DESC");
         return loader;
