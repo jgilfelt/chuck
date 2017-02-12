@@ -20,16 +20,25 @@ public class RetentionManager {
 
     private Context context;
     private long period;
+    private long cleanupFrequency;
     private SharedPreferences prefs;
 
     public RetentionManager(Context context, ChuckInterceptor.Period retentionPeriod) {
         this.context = context;
         period = toMillis(retentionPeriod);
         prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        cleanupFrequency = (retentionPeriod == ChuckInterceptor.Period.ONE_HOUR) ?
+                TimeUnit.MINUTES.toMillis(30) : TimeUnit.HOURS.toMillis(2);
     }
 
     public synchronized void doMaintenance() {
         long now = new Date().getTime();
+
+        Log.w(LOG_TAG, "now = " + new Date(now));
+        Log.w(LOG_TAG, "lastCleanup = " + new Date(getLastCleanup(now)));
+        Log.w(LOG_TAG, "period = " + period);
+        Log.w(LOG_TAG, "cleanupFrequency = " + cleanupFrequency);
+
         if (isCleanupDue(now)) {
             Log.i(LOG_TAG, "Performing data retention maintenance...");
             deleteSince(getThreshold(now));
@@ -56,7 +65,10 @@ public class RetentionManager {
     }
 
     private boolean isCleanupDue(long now) {
-        return (now - getLastCleanup(now)) > period;
+
+        Log.w(LOG_TAG, "now - getLastCleanup = " + String.valueOf(now - getLastCleanup(now)));
+
+        return (now - getLastCleanup(now)) > cleanupFrequency;
     }
 
     private long getThreshold(long now) {
