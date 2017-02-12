@@ -18,6 +18,7 @@
     <string name="chuck_name">Chuck</string>
     <string name="chuck_notification_title">Recording HTTP activity</string>
     <string name="chuck_clear">Clear</string>
+    <string name="chuck_filter">Filter</string>
     <string name="chuck_browse_sql_database">Browse SQLite database</string>
     <string name="chuck_overview">Overview</string>
     <string name="chuck_request">Request</string>
