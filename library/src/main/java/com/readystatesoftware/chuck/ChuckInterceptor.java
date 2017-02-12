@@ -178,11 +178,12 @@ public final class ChuckInterceptor implements Interceptor {
     }
 
     private int update(HttpTransaction transaction, Uri uri) {
-        if (showNotification) {
+        ContentValues values = LocalCupboard.getInstance().withEntity(HttpTransaction.class).toContentValues(transaction);
+        int updated = context.getContentResolver().update(uri, values, null, null);
+        if (showNotification && updated > 0) {
             notificationHelper.show(transaction);
         }
-        ContentValues values = LocalCupboard.getInstance().withEntity(HttpTransaction.class).toContentValues(transaction);
-        return context.getContentResolver().update(uri, values, null, null);
+        return updated;
     }
 
     /**
