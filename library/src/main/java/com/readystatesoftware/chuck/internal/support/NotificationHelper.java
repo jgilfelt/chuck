@@ -18,12 +18,14 @@ package com.readystatesoftware.chuck.internal.support;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.util.LongSparseArray;
-
 import com.readystatesoftware.chuck.Chuck;
 import com.readystatesoftware.chuck.R;
+import com.readystatesoftware.chuck.internal.ClearService;
 import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 import com.readystatesoftware.chuck.internal.ui.BaseChuckActivity;
 
@@ -85,8 +87,18 @@ public class NotificationHelper {
             } else {
                 mBuilder.setNumber(transactionCount);
             }
+            mBuilder.addAction(getClearAction());
             notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
         }
+    }
+
+    @NonNull
+    private NotificationCompat.Action getClearAction() {
+        CharSequence clearTitle = context.getString(R.string.chuck_clear);
+        Intent deleteIntent = new Intent(context, ClearService.class);
+        PendingIntent intent = PendingIntent.getService(context, 11, deleteIntent, PendingIntent.FLAG_ONE_SHOT);
+        return new NotificationCompat.Action(R.drawable.chuck_ic_delete_white_24dp,
+            clearTitle, intent);
     }
 
     public void dismiss() {

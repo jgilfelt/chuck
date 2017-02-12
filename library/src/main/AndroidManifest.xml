@@ -30,5 +30,6 @@
         <activity android:name=".internal.ui.TransactionActivity"
             android:theme="@style/Chuck.Theme"
             android:parentActivityName=".internal.ui.MainActivity"/>
+        <service android:name=".internal.ClearService" android:exported="false" />
     </application>
 </manifest>
