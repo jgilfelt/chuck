@@ -61,9 +61,6 @@ public class RetentionManager {
     }
 
     private boolean isCleanupDue(long now) {
-
-        Log.w(LOG_TAG, "now - getLastCleanup = " + String.valueOf(now - getLastCleanup(now)));
-
         return (now - getLastCleanup(now)) > cleanupFrequency;
     }
 
