@@ -38,6 +38,20 @@ public class HttpTransaction {
         Failed
     }
 
+    public static final String[] PARTIAL_PROJECTION = new String[] {
+            "_id",
+            "requestDate",
+            "tookMs",
+            "method",
+            "host",
+            "path",
+            "scheme",
+            "requestContentLength",
+            "responseCode",
+            "error",
+            "responseContentLength"
+    };
+
     private static final SimpleDateFormat TIME_ONLY_FMT = new SimpleDateFormat("HH:mm:ss", Locale.US);
 
     private Long _id;

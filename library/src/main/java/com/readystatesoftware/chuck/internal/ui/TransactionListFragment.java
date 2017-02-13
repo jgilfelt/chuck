@@ -136,6 +136,7 @@ public class TransactionListFragment extends Fragment implements
                 loader.setSelectionArgs(new String[]{ "%" + currentFilter + "%" });
             }
         }
+        loader.setProjection(HttpTransaction.PARTIAL_PROJECTION);
         loader.setSortOrder("requestDate DESC");
         return loader;
     }
