@@ -23,6 +23,7 @@ import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
 import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 import com.readystatesoftware.chuck.internal.data.LocalCupboard;
 import com.readystatesoftware.chuck.internal.support.NotificationHelper;
+import com.readystatesoftware.chuck.internal.support.RetentionManager;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -47,10 +48,31 @@ import okio.BufferedSource;
  */
 public final class ChuckInterceptor implements Interceptor {
 
+    public enum Period {
+        /**
+         * Retain data for the last hour.
+         */
+        ONE_HOUR,
+        /**
+         * Retain data for the last day.
+         */
+        ONE_DAY,
+        /**
+         * Retain data for the last week.
+         */
+        ONE_WEEK,
+        /**
+         * Retain data forever.
+         */
+        FOREVER
+    }
+
+    private static final Period DEFAULT_RETENTION = Period.ONE_WEEK;
     private static final Charset UTF8 = Charset.forName("UTF-8");
 
     private Context context;
     private NotificationHelper notificationHelper;
+    private RetentionManager retentionManager;
     private boolean showNotification;
 
     /**
@@ -60,6 +82,7 @@ public final class ChuckInterceptor implements Interceptor {
         this.context = context.getApplicationContext();
         notificationHelper = new NotificationHelper(this.context);
         showNotification = true;
+        retentionManager = new RetentionManager(this.context, DEFAULT_RETENTION);
     }
 
     /**
@@ -70,6 +93,18 @@ public final class ChuckInterceptor implements Interceptor {
      */
     public ChuckInterceptor showNotification(boolean show) {
         showNotification = show;
+        return this;
+    }
+
+    /**
+     * Set the retention period for HTTP transaction data captured by this interceptor.
+     * The default is one week.
+     *
+     * @param period the peroid for which to retain HTTP transaction data.
+     * @return The {@link ChuckInterceptor} instance.
+     */
+    public ChuckInterceptor retainDataFor(Period period) {
+        retentionManager = new RetentionManager(context, period);
         return this;
     }
 
@@ -174,6 +209,7 @@ public final class ChuckInterceptor implements Interceptor {
         if (showNotification) {
             notificationHelper.show(transaction);
         }
+        retentionManager.doMaintenance();
         return uri;
     }
 
