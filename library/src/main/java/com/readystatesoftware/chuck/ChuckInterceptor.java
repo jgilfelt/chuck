@@ -107,6 +107,7 @@ public final class ChuckInterceptor implements Interceptor {
      */
     public ChuckInterceptor maxContentLength(long max) {
         this.maxContentLength = max;
+        return this;
     }
   
     /**
