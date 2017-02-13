@@ -32,17 +32,13 @@ public class RetentionManager {
     }
 
     public synchronized void doMaintenance() {
-        long now = new Date().getTime();
-
-        Log.w(LOG_TAG, "now = " + new Date(now));
-        Log.w(LOG_TAG, "lastCleanup = " + new Date(getLastCleanup(now)));
-        Log.w(LOG_TAG, "period = " + period);
-        Log.w(LOG_TAG, "cleanupFrequency = " + cleanupFrequency);
-
-        if (isCleanupDue(now)) {
-            Log.i(LOG_TAG, "Performing data retention maintenance...");
-            deleteSince(getThreshold(now));
-            updateLastCleanup(now);
+        if (period > 0) {
+            long now = new Date().getTime();
+            if (isCleanupDue(now)) {
+                Log.i(LOG_TAG, "Performing data retention maintenance...");
+                deleteSince(getThreshold(now));
+                updateLastCleanup(now);
+            }
         }
     }
 
