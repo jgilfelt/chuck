@@ -52,7 +52,7 @@ public final class ChuckInterceptor implements Interceptor {
     private Context context;
     private NotificationHelper notificationHelper;
     private boolean showNotification;
-    private int maxContentLength = Integer.MAX_VALUE;
+    private long maxContentLength = Long.MAX_VALUE;
 
     /**
      * @param context The current Context.
@@ -82,7 +82,7 @@ public final class ChuckInterceptor implements Interceptor {
      * @param max the max length for request/response content.
      * @return The {@link ChuckInterceptor} instance.
      */
-    public ChuckInterceptor maxContentLength(int max) {
+    public ChuckInterceptor maxContentLength(long max) {
         this.maxContentLength = max;
         return this;
     }
