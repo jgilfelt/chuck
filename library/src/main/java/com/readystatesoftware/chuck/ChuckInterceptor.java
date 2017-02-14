@@ -194,8 +194,6 @@ public final class ChuckInterceptor implements Interceptor {
             source.request(Long.MAX_VALUE);
             Buffer buffer = source.buffer();
 
-            transaction.setResponseContentLength(buffer.size());
-
             Charset charset = UTF8;
             MediaType contentType = responseBody.contentType();
             if (contentType != null) {
@@ -211,6 +209,7 @@ public final class ChuckInterceptor implements Interceptor {
             } else {
                 transaction.setResponseBodyIsPlainText(false);
             }
+            transaction.setResponseContentLength(buffer.size());
         }
 
         update(transaction, transactionUri);
