@@ -98,11 +98,10 @@ public final class ChuckInterceptor implements Interceptor {
     }
 
     /**
-     * Control the max length for request and response content that will be retained.
-     * The transaction will still be recorded but the content itself will not be if it
-     * goes over the max length set.
+     * Set the maximum length for request and response content before it is truncated.
+     * Warning: setting this value too high may cause unexpected results.
      *
-     * @param max the max length for request/response content.
+     * @param max the maximum length (in bytes) for request/response content.
      * @return The {@link ChuckInterceptor} instance.
      */
     public ChuckInterceptor maxContentLength(long max) {
@@ -193,7 +192,6 @@ public final class ChuckInterceptor implements Interceptor {
             BufferedSource source = responseBody.source();
             source.request(Long.MAX_VALUE);
             Buffer buffer = source.buffer();
-
             Charset charset = UTF8;
             MediaType contentType = responseBody.contentType();
             if (contentType != null) {
@@ -269,18 +267,15 @@ public final class ChuckInterceptor implements Interceptor {
     private String readFromBuffer(Buffer buffer, Charset charset) {
         long bufferSize = buffer.size();
         long maxBytes = Math.min(bufferSize, maxContentLength);
-
         String body = "";
         try {
             body = buffer.readString(maxBytes, charset);
         } catch (EOFException e) {
             body += context.getString(R.string.chuck_body_unexpected_eof);
         }
-
         if (bufferSize > maxContentLength) {
             body += context.getString(R.string.chuck_body_content_truncated);
         }
-
         return body;
     }
 }
