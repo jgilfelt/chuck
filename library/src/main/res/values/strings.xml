@@ -18,6 +18,7 @@
     <string name="chuck_name">Chuck</string>
     <string name="chuck_notification_title">Recording HTTP activity</string>
     <string name="chuck_clear">Clear</string>
+    <string name="chuck_filter">Filter</string>
     <string name="chuck_browse_sql_database">Browse SQLite database</string>
     <string name="chuck_overview">Overview</string>
     <string name="chuck_request">Request</string>
@@ -40,4 +41,8 @@
     <string name="chuck_share_as_curl">Share as curl command</string>
     <string name="chuck_body_omitted">(encoded or binary body omitted)</string>
     <string name="chuck_search">Search</string>
+  <string name="chuck_filter_title">Status filter</string>
+  <string name="chuck_ok">OK</string>
+    <string name="chuck_cancel">Cancel</string>
+    <string name="chuck_neutral_filter">No filter</string>
 </resources>

@@ -21,6 +21,10 @@
         android:icon="@drawable/chuck_ic_search_white_24dp"
         app:showAsAction="collapseActionView|ifRoom"
         app:actionViewClass="android.support.v7.widget.SearchView" />
+    <item android:title="@string/chuck_filter"
+        android:id="@+id/filter"
+        android:icon="@drawable/chuck_ic_filter_list_white_24px"
+        app:showAsAction="always" />
     <item android:title="@string/chuck_clear"
         android:id="@+id/clear"
         android:icon="@drawable/chuck_ic_delete_white_24dp"
