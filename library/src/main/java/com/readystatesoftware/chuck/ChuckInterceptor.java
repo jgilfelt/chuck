@@ -74,7 +74,7 @@ public final class ChuckInterceptor implements Interceptor {
     private NotificationHelper notificationHelper;
     private RetentionManager retentionManager;
     private boolean showNotification;
-    private long maxContentLength = Long.MAX_VALUE;
+    private long maxContentLength = 250000L;
 
     /**
      * @param context The current Context.
@@ -146,11 +146,7 @@ public final class ChuckInterceptor implements Interceptor {
 
         transaction.setRequestBodyIsPlainText(!bodyEncoded(request.headers()));
 
-        boolean requestTooBig = ((transaction.getRequestContentLength() != null) &&
-                (transaction.getRequestContentLength() > maxContentLength));
-        transaction.setRequestBodyIsTooBig(requestTooBig);
-
-        if (hasRequestBody && transaction.requestBodyIsPlainText() && !requestTooBig) {
+        if (hasRequestBody && transaction.requestBodyIsPlainText()) {
             Buffer buffer = new Buffer();
             requestBody.writeTo(buffer);
             Charset charset = UTF8;
@@ -159,7 +155,7 @@ public final class ChuckInterceptor implements Interceptor {
                 charset = contentType.charset(UTF8);
             }
             if (isPlaintext(buffer)) {
-                transaction.setRequestBody(buffer.readString(charset));
+                transaction.setRequestBody(readFromBuffer(buffer, charset));
             } else {
                 transaction.setResponseBodyIsPlainText(false);
             }
@@ -202,26 +198,20 @@ public final class ChuckInterceptor implements Interceptor {
 
             transaction.setResponseContentLength(buffer.size());
 
-            boolean responseTooBig = ((transaction.getResponseContentLength() != null) &&
-                    (transaction.getResponseContentLength() > maxContentLength));
-            transaction.setResponseBodyIsTooBig(responseTooBig);
-
-            if (!responseTooBig) {
-                Charset charset = UTF8;
-                MediaType contentType = responseBody.contentType();
-                if (contentType != null) {
-                    try {
-                        charset = contentType.charset(UTF8);
-                    } catch (UnsupportedCharsetException e) {
-                        update(transaction, transactionUri);
-                        return response;
-                    }
+            Charset charset = UTF8;
+            MediaType contentType = responseBody.contentType();
+            if (contentType != null) {
+                try {
+                    charset = contentType.charset(UTF8);
+                } catch (UnsupportedCharsetException e) {
+                    update(transaction, transactionUri);
+                    return response;
                 }
-                if (isPlaintext(buffer)) {
-                    transaction.setResponseBody(buffer.clone().readString(charset));
-                } else {
-                    transaction.setResponseBodyIsPlainText(false);
-                }
+            }
+            if (isPlaintext(buffer)) {
+                transaction.setResponseBody(readFromBuffer(buffer.clone(), charset));
+            } else {
+                transaction.setResponseBodyIsPlainText(false);
             }
         }
 
@@ -277,5 +267,23 @@ public final class ChuckInterceptor implements Interceptor {
     private boolean bodyEncoded(Headers headers) {
         String contentEncoding = headers.get("Content-Encoding");
         return contentEncoding != null && !contentEncoding.equalsIgnoreCase("identity");
+    }
+
+    private String readFromBuffer(Buffer buffer, Charset charset) {
+        long bufferSize = buffer.size();
+        long maxBytes = Math.min(bufferSize, maxContentLength);
+
+        String body = "";
+        try {
+            body = buffer.readString(maxBytes, charset);
+        } catch (EOFException e) {
+            body += "\n\n--- Unexpected end of content ---";
+        }
+
+        if (bufferSize > maxContentLength) {
+            body += "\n\n--- Content truncated ---";
+        }
+
+        return body;
     }
 }

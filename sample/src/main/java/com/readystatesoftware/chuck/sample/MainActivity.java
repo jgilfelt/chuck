@@ -50,9 +50,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private OkHttpClient getClient(Context context) {
+        ChuckInterceptor chuckInterceptor = new ChuckInterceptor(context);
+        chuckInterceptor.maxContentLength(5);
         return new OkHttpClient.Builder()
                 // Add a ChuckInterceptor instance to your OkHttp client
-                .addInterceptor(new ChuckInterceptor(context))
+                .addInterceptor(chuckInterceptor)
                 .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                 .build();
     }

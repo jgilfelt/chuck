@@ -85,31 +85,23 @@ public class TransactionPayloadFragment extends Fragment implements TransactionF
             switch (type) {
                 case TYPE_REQUEST:
                     setText(transaction.getRequestHeadersString(true),
-                            transaction.getFormattedRequestBody(),
-                            transaction.requestBodyIsPlainText(),
-                            transaction.requestBodyIsTooBig());
+                            transaction.getFormattedRequestBody(), transaction.requestBodyIsPlainText());
                     break;
                 case TYPE_RESPONSE:
                     setText(transaction.getResponseHeadersString(true),
-                            transaction.getFormattedResponseBody(),
-                            transaction.responseBodyIsPlainText(),
-                            transaction.responseBodyIsTooBig());
+                            transaction.getFormattedResponseBody(), transaction.responseBodyIsPlainText());
                     break;
             }
         }
     }
 
-    private void setText(String headersString, String bodyString, boolean isPlainText, boolean isTooBig) {
+    private void setText(String headersString, String bodyString, boolean isPlainText) {
         headers.setVisibility((TextUtils.isEmpty(headersString) ? View.GONE : View.VISIBLE));
         headers.setText(Html.fromHtml(headersString));
         if (!isPlainText) {
             body.setText(getString(R.string.chuck_body_omitted));
         } else {
-            if (isTooBig) {
-                body.setText(getString(R.string.chuck_body_too_big));
-            } else {
-                body.setText(bodyString);
-            }
+            body.setText(bodyString);
         }
     }
 }
