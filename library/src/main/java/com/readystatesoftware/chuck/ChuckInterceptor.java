@@ -274,11 +274,11 @@ public final class ChuckInterceptor implements Interceptor {
         try {
             body = buffer.readString(maxBytes, charset);
         } catch (EOFException e) {
-            body += "\n\n--- Unexpected end of content ---";
+            body += context.getString(R.string.chuck_body_unexpected_eof);
         }
 
         if (bufferSize > maxContentLength) {
-            body += "\n\n--- Content truncated ---";
+            body += context.getString(R.string.chuck_body_content_truncated);
         }
 
         return body;
