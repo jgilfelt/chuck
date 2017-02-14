@@ -22,8 +22,8 @@ Add the dependency in your `build.gradle` file. Add it alongside the `no-op` var
 
 ```gradle
  dependencies {
-   debugCompile 'com.readystatesoftware.chuck:library:1.0.2'
-   releaseCompile 'com.readystatesoftware.chuck:library-no-op:1.0.2'
+   debugCompile 'com.readystatesoftware.chuck:library:1.0.3'
+   releaseCompile 'com.readystatesoftware.chuck:library-no-op:1.0.3'
  }
 ```
 
