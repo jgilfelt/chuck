@@ -74,6 +74,7 @@ public final class ChuckInterceptor implements Interceptor {
     private NotificationHelper notificationHelper;
     private RetentionManager retentionManager;
     private boolean showNotification;
+    private long maxContentLength = 250000L;
 
     /**
      * @param context The current Context.
@@ -96,6 +97,18 @@ public final class ChuckInterceptor implements Interceptor {
         return this;
     }
 
+    /**
+     * Set the maximum length for request and response content before it is truncated.
+     * Warning: setting this value too high may cause unexpected results.
+     *
+     * @param max the maximum length (in bytes) for request/response content.
+     * @return The {@link ChuckInterceptor} instance.
+     */
+    public ChuckInterceptor maxContentLength(long max) {
+        this.maxContentLength = max;
+        return this;
+    }
+  
     /**
      * Set the retention period for HTTP transaction data captured by this interceptor.
      * The default is one week.
@@ -140,7 +153,7 @@ public final class ChuckInterceptor implements Interceptor {
                 charset = contentType.charset(UTF8);
             }
             if (isPlaintext(buffer)) {
-                transaction.setRequestBody(buffer.readString(charset));
+                transaction.setRequestBody(readFromBuffer(buffer, charset));
             } else {
                 transaction.setResponseBodyIsPlainText(false);
             }
@@ -190,7 +203,7 @@ public final class ChuckInterceptor implements Interceptor {
                 }
             }
             if (isPlaintext(buffer)) {
-                transaction.setResponseBody(buffer.clone().readString(charset));
+                transaction.setResponseBody(readFromBuffer(buffer.clone(), charset));
             } else {
                 transaction.setResponseBodyIsPlainText(false);
             }
@@ -249,5 +262,20 @@ public final class ChuckInterceptor implements Interceptor {
     private boolean bodyEncoded(Headers headers) {
         String contentEncoding = headers.get("Content-Encoding");
         return contentEncoding != null && !contentEncoding.equalsIgnoreCase("identity");
+    }
+
+    private String readFromBuffer(Buffer buffer, Charset charset) {
+        long bufferSize = buffer.size();
+        long maxBytes = Math.min(bufferSize, maxContentLength);
+        String body = "";
+        try {
+            body = buffer.readString(maxBytes, charset);
+        } catch (EOFException e) {
+            body += context.getString(R.string.chuck_body_unexpected_eof);
+        }
+        if (bufferSize > maxContentLength) {
+            body += context.getString(R.string.chuck_body_content_truncated);
+        }
+        return body;
     }
 }
