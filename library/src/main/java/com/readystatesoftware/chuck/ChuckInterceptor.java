@@ -145,7 +145,6 @@ public final class ChuckInterceptor implements Interceptor {
         }
 
         transaction.setRequestBodyIsPlainText(!bodyEncoded(request.headers()));
-
         if (hasRequestBody && transaction.requestBodyIsPlainText()) {
             Buffer buffer = new Buffer();
             requestBody.writeTo(buffer);
@@ -190,7 +189,6 @@ public final class ChuckInterceptor implements Interceptor {
         transaction.setResponseHeaders(response.headers());
 
         transaction.setResponseBodyIsPlainText(!bodyEncoded(response.headers()));
-
         if (HttpHeaders.hasBody(response) && transaction.responseBodyIsPlainText()) {
             BufferedSource source = responseBody.source();
             source.request(Long.MAX_VALUE);
