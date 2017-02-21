@@ -42,6 +42,8 @@ import okhttp3.ResponseBody;
 import okhttp3.internal.http.HttpHeaders;
 import okio.Buffer;
 import okio.BufferedSource;
+import okio.GzipSource;
+import okio.Okio;
 
 /**
  * An OkHttp Interceptor which persists and displays HTTP activity in your application for later inspection.
@@ -145,6 +147,8 @@ public final class ChuckInterceptor implements Interceptor {
 
         transaction.setRequestBodyIsPlainText(!bodyEncoded(request.headers()));
         if (hasRequestBody && transaction.requestBodyIsPlainText()) {
+            //BufferedSource source = getNativeSource(new Buffer(), bodyGzipped(request.headers()));
+            //Buffer buffer = source.buffer();
             Buffer buffer = new Buffer();
             requestBody.writeTo(buffer);
             Charset charset = UTF8;
@@ -189,7 +193,7 @@ public final class ChuckInterceptor implements Interceptor {
 
         transaction.setResponseBodyIsPlainText(!bodyEncoded(response.headers()));
         if (HttpHeaders.hasBody(response) && transaction.responseBodyIsPlainText()) {
-            BufferedSource source = responseBody.source();
+            BufferedSource source = getNativeSource(responseBody.source(), bodyGzipped(response.headers()));
             source.request(Long.MAX_VALUE);
             Buffer buffer = source.buffer();
             Charset charset = UTF8;
@@ -261,7 +265,14 @@ public final class ChuckInterceptor implements Interceptor {
 
     private boolean bodyEncoded(Headers headers) {
         String contentEncoding = headers.get("Content-Encoding");
-        return contentEncoding != null && !contentEncoding.equalsIgnoreCase("identity");
+        return contentEncoding != null &&
+                !contentEncoding.equalsIgnoreCase("identity") &&
+                !contentEncoding.equalsIgnoreCase("gzip");
+    }
+
+    private boolean bodyGzipped(Headers headers) {
+        String contentEncoding = headers.get("Content-Encoding");
+        return "gzip".equalsIgnoreCase(contentEncoding);
     }
 
     private String readFromBuffer(Buffer buffer, Charset charset) {
@@ -277,5 +288,14 @@ public final class ChuckInterceptor implements Interceptor {
             body += context.getString(R.string.chuck_body_content_truncated);
         }
         return body;
+    }
+
+    private BufferedSource getNativeSource(BufferedSource input, boolean isGzipped) {
+        if (isGzipped) {
+            GzipSource source = new GzipSource(input);
+            return Okio.buffer(source);
+        } else {
+            return input;
+        }
     }
 }
