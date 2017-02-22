@@ -18,6 +18,7 @@ package com.readystatesoftware.chuck;
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
 import com.readystatesoftware.chuck.internal.data.HttpTransaction;
@@ -69,6 +70,7 @@ public final class ChuckInterceptor implements Interceptor {
         FOREVER
     }
 
+    private static final String LOG_TAG = "ChuckInterceptor";
     private static final Period DEFAULT_RETENTION = Period.ONE_WEEK;
     private static final Charset UTF8 = Charset.forName("UTF-8");
 
@@ -145,11 +147,10 @@ public final class ChuckInterceptor implements Interceptor {
             }
         }
 
-        transaction.setRequestBodyIsPlainText(!bodyEncoded(request.headers()));
+        transaction.setRequestBodyIsPlainText(!bodyHasUnsupportedEncoding(request.headers()));
         if (hasRequestBody && transaction.requestBodyIsPlainText()) {
             BufferedSource source = getNativeSource(new Buffer(), bodyGzipped(request.headers()));
             Buffer buffer = source.buffer();
-            //Buffer buffer = new Buffer();
             requestBody.writeTo(buffer);
             Charset charset = UTF8;
             MediaType contentType = requestBody.contentType();
@@ -191,10 +192,9 @@ public final class ChuckInterceptor implements Interceptor {
         }
         transaction.setResponseHeaders(response.headers());
 
-        transaction.setResponseBodyIsPlainText(!bodyEncoded(response.headers()));
+        transaction.setResponseBodyIsPlainText(!bodyHasUnsupportedEncoding(response.headers()));
         if (HttpHeaders.hasBody(response) && transaction.responseBodyIsPlainText()) {
-            BufferedSource source = getNativeSource(response, bodyGzipped(response.headers()));
-            //BufferedSource source = responseBody.source();
+            BufferedSource source = getNativeSource(response);
             source.request(Long.MAX_VALUE);
             Buffer buffer = source.buffer();
             Charset charset = UTF8;
@@ -264,7 +264,7 @@ public final class ChuckInterceptor implements Interceptor {
         }
     }
 
-    private boolean bodyEncoded(Headers headers) {
+    private boolean bodyHasUnsupportedEncoding(Headers headers) {
         String contentEncoding = headers.get("Content-Encoding");
         return contentEncoding != null &&
                 !contentEncoding.equalsIgnoreCase("identity") &&
@@ -300,11 +300,15 @@ public final class ChuckInterceptor implements Interceptor {
         }
     }
 
-    private BufferedSource getNativeSource(Response response, boolean isGzipped) throws IOException {
-        if (isGzipped) {
-            return getNativeSource(response.peekBody(maxContentLength).source(), true);
-        } else {
-            return response.body().source();
+    private BufferedSource getNativeSource(Response response) throws IOException {
+        if (bodyGzipped(response.headers())) {
+            BufferedSource source = response.peekBody(maxContentLength).source();
+            if (source.buffer().size() < maxContentLength) {
+                return getNativeSource(source, true);
+            } else {
+                Log.w(LOG_TAG, "gzip encoded response was too long");
+            }
         }
+        return response.body().source();
     }
 }
