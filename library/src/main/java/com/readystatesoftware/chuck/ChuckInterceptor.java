@@ -147,9 +147,9 @@ public final class ChuckInterceptor implements Interceptor {
 
         transaction.setRequestBodyIsPlainText(!bodyEncoded(request.headers()));
         if (hasRequestBody && transaction.requestBodyIsPlainText()) {
-            //BufferedSource source = getNativeSource(new Buffer(), bodyGzipped(request.headers()));
-            //Buffer buffer = source.buffer();
-            Buffer buffer = new Buffer();
+            BufferedSource source = getNativeSource(new Buffer(), bodyGzipped(request.headers()));
+            Buffer buffer = source.buffer();
+            //Buffer buffer = new Buffer();
             requestBody.writeTo(buffer);
             Charset charset = UTF8;
             MediaType contentType = requestBody.contentType();
@@ -193,7 +193,8 @@ public final class ChuckInterceptor implements Interceptor {
 
         transaction.setResponseBodyIsPlainText(!bodyEncoded(response.headers()));
         if (HttpHeaders.hasBody(response) && transaction.responseBodyIsPlainText()) {
-            BufferedSource source = getNativeSource(responseBody.source(), bodyGzipped(response.headers()));
+            BufferedSource source = getNativeSource(response, bodyGzipped(response.headers()));
+            //BufferedSource source = responseBody.source();
             source.request(Long.MAX_VALUE);
             Buffer buffer = source.buffer();
             Charset charset = UTF8;
@@ -296,6 +297,14 @@ public final class ChuckInterceptor implements Interceptor {
             return Okio.buffer(source);
         } else {
             return input;
+        }
+    }
+
+    private BufferedSource getNativeSource(Response response, boolean isGzipped) throws IOException {
+        if (isGzipped) {
+            return getNativeSource(response.peekBody(maxContentLength).source(), true);
+        } else {
+            return response.body().source();
         }
     }
 }
