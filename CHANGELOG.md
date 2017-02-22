@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 1.0.4 *(2017-02-22)*
+----------------------------
+
+ * New: Displays uncompressed gzip encoded request/response bodies when used as a network interceptor.
+
 Version 1.0.3 *(2017-02-14)*
 ----------------------------
 
