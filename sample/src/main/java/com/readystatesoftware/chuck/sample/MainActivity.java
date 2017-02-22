@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         SampleApiService.HttpbinApi api = SampleApiService.getInstance(getClient(this));
         Callback<Void> cb = new Callback<Void>() {
             @Override public void onResponse(Call call, Response response) {}
-            @Override public void onFailure(Call call, Throwable t) {}
+            @Override public void onFailure(Call call, Throwable t) { t.printStackTrace(); }
         };
         api.get().enqueue(cb);
         api.post(new SampleApiService.Data("posted")).enqueue(cb);
