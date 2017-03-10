@@ -18,10 +18,10 @@ public class RetentionManager {
 
     private static long lastCleanup;
 
-    private Context context;
-    private long period;
-    private long cleanupFrequency;
-    private SharedPreferences prefs;
+    private final Context context;
+    private final long period;
+    private final long cleanupFrequency;
+    private final SharedPreferences prefs;
 
     public RetentionManager(Context context, ChuckInterceptor.Period retentionPeriod) {
         this.context = context;

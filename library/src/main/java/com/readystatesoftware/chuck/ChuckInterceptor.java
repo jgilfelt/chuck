@@ -74,8 +74,8 @@ public final class ChuckInterceptor implements Interceptor {
     private static final Period DEFAULT_RETENTION = Period.ONE_WEEK;
     private static final Charset UTF8 = Charset.forName("UTF-8");
 
-    private Context context;
-    private NotificationHelper notificationHelper;
+    private final Context context;
+    private final NotificationHelper notificationHelper;
     private RetentionManager retentionManager;
     private boolean showNotification;
     private long maxContentLength = 250000L;

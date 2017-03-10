@@ -31,7 +31,7 @@ public class ChuckContentProvider extends ContentProvider {
 
     private static final int TRANSACTION = 0;
     private static final int TRANSACTIONS = 1;
-    private static UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
+    private static final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     private ChuckDbOpenHelper databaseHelper;
 

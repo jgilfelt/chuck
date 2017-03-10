@@ -17,8 +17,8 @@ package com.readystatesoftware.chuck.internal.data;
 
 public class HttpHeader {
 
-    private String name;
-    private String value;
+    private final String name;
+    private final String value;
 
     HttpHeader(String name, String value) {
         this.name = name;

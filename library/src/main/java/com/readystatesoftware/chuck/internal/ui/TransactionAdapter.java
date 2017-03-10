@@ -33,16 +33,16 @@ import com.readystatesoftware.chuck.internal.ui.TransactionListFragment.OnListFr
 
 class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder> {
 
-    private Context context;
+    private final Context context;
     private final OnListFragmentInteractionListener listener;
-    private CursorAdapter cursorAdapter;
+    private final CursorAdapter cursorAdapter;
 
-    private int colorDefault;
-    private int colorRequested;
-    private int colorError;
-    private int color500;
-    private int color400;
-    private int color300;
+    private final int colorDefault;
+    private final int colorRequested;
+    private final int colorError;
+    private final int color500;
+    private final int color400;
+    private final int color300;
 
     TransactionAdapter(Context context, OnListFragmentInteractionListener listener) {
         this.listener = listener;
