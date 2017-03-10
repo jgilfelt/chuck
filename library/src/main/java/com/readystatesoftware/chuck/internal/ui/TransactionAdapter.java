@@ -16,7 +16,6 @@
 package com.readystatesoftware.chuck.internal.ui;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.CursorAdapter;
