@@ -65,6 +65,7 @@ public class NotificationHelper {
         if (!BaseChuckActivity.isInForeground()) {
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                     .setContentIntent(PendingIntent.getActivity(context, 0, Chuck.getLaunchIntent(context), 0))
+                    .setLocalOnly(true)
                     .setSmallIcon(R.drawable.chuck_ic_notification_white_24dp)
                     .setColor(context.getResources().getColor(R.color.chuck_colorPrimary))
                     .setContentTitle(context.getString(R.string.chuck_notification_title));
