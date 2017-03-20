@@ -9,6 +9,10 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         consumerProguardFiles 'proguard-rules.pro'
     }
+
+    lintOptions {
+        disable "InvalidPackage"
+    }
 }
 
 dependencies {
