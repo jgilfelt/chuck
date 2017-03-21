@@ -73,10 +73,12 @@ public class NotificationHelper {
             int count = 0;
             for (int i = transactionBuffer.size() - 1; i >= 0; i--) {
                 if (count < BUFFER_SIZE) {
+                    HttpTransaction httpTransaction = transactionBuffer.valueAt(i);
+                    String notificationText = httpTransaction.getMethod() + " - " + httpTransaction.getNotificationText();
                     if (count == 0) {
-                        mBuilder.setContentText(transactionBuffer.valueAt(i).getNotificationText());
+                        mBuilder.setContentText(notificationText);
                     }
-                    inboxStyle.addLine(transactionBuffer.valueAt(i).getNotificationText());
+                    inboxStyle.addLine(notificationText);
                 }
                 count++;
             }
