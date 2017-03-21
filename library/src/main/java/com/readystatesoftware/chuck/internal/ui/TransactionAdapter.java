@@ -16,8 +16,8 @@
 package com.readystatesoftware.chuck.internal.ui;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.database.Cursor;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -33,27 +33,26 @@ import com.readystatesoftware.chuck.internal.ui.TransactionListFragment.OnListFr
 
 class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder> {
 
-    private Context context;
+    private final Context context;
     private final OnListFragmentInteractionListener listener;
-    private CursorAdapter cursorAdapter;
+    private final CursorAdapter cursorAdapter;
 
-    private int colorDefault;
-    private int colorRequested;
-    private int colorError;
-    private int color500;
-    private int color400;
-    private int color300;
+    private final int colorDefault;
+    private final int colorRequested;
+    private final int colorError;
+    private final int color500;
+    private final int color400;
+    private final int color300;
 
     TransactionAdapter(Context context, OnListFragmentInteractionListener listener) {
         this.listener = listener;
         this.context = context;
-        final Resources res = context.getResources();
-        colorDefault = res.getColor(R.color.chuck_status_default);
-        colorRequested = res.getColor(R.color.chuck_status_requested);
-        colorError = res.getColor(R.color.chuck_status_error);
-        color500 = res.getColor(R.color.chuck_status_500);
-        color400 = res.getColor(R.color.chuck_status_400);
-        color300 = res.getColor(R.color.chuck_status_300);
+        colorDefault = ContextCompat.getColor(context, R.color.chuck_status_default);
+        colorRequested = ContextCompat.getColor(context, R.color.chuck_status_requested);
+        colorError = ContextCompat.getColor(context, R.color.chuck_status_error);
+        color500 = ContextCompat.getColor(context, R.color.chuck_status_500);
+        color400 = ContextCompat.getColor(context, R.color.chuck_status_400);
+        color300 = ContextCompat.getColor(context, R.color.chuck_status_300);
 
         cursorAdapter = new CursorAdapter(TransactionAdapter.this.context, null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER) {
             @Override
