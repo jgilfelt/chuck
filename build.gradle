@@ -32,6 +32,5 @@ ext {
     buildToolsVersion = '25.0.2'
 
     supportLibVersion = '25.3.0'
-    retrofit2Version = '2.2.0'
     okhttp3Version = '3.6.0'
 }
