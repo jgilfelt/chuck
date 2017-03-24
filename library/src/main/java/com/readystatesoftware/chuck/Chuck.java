@@ -34,4 +34,13 @@ public class Chuck {
     public static Intent getLaunchIntent(Context context) {
         return new Intent(context, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     }
+
+    /**
+     * Returns whether this is a no operation instance of chuck.
+     *
+     * @return true if this is a no operation instance.
+     */
+    public static boolean isNoOp() {
+        return false;
+    }
 }
