@@ -84,38 +84,38 @@ public class FormatUtils {
     }
 
     public static String getShareText(Context context, HttpTransaction transaction) {
-        String text = "";
-        text += context.getString(R.string.chuck_url) + ": " + v(transaction.getUrl()) + "\n";
-        text += context.getString(R.string.chuck_method) + ": " + v(transaction.getMethod()) + "\n";
-        text += context.getString(R.string.chuck_protocol) + ": " + v(transaction.getProtocol()) + "\n";
-        text += context.getString(R.string.chuck_status) + ": " + v(transaction.getStatus().toString()) + "\n";
-        text += context.getString(R.string.chuck_response) + ": " + v(transaction.getResponseSummaryText()) + "\n";
-        text += context.getString(R.string.chuck_ssl) + ": " + v(context.getString(transaction.isSsl() ? R.string.chuck_yes : R.string.chuck_no)) + "\n";
-        text += "\n";
-        text += context.getString(R.string.chuck_request_time) + ": " + v(transaction.getRequestDateString()) + "\n";
-        text += context.getString(R.string.chuck_response_time) + ": " + v(transaction.getResponseDateString()) + "\n";
-        text += context.getString(R.string.chuck_duration) + ": " + v(transaction.getDurationString()) + "\n";
-        text += "\n";
-        text += context.getString(R.string.chuck_request_size) + ": " + v(transaction.getRequestSizeString()) + "\n";
-        text += context.getString(R.string.chuck_response_size) + ": " + v(transaction.getResponseSizeString()) + "\n";
-        text += context.getString(R.string.chuck_total_size) + ": " + v(transaction.getTotalSizeString()) + "\n";
-        text += "\n";
-        text += "---------- " + context.getString(R.string.chuck_request) + " ----------\n\n";
+        StringBuilder textBuilder = new StringBuilder();
+        textBuilder.append(context.getString(R.string.chuck_url)).append(": ").append(v(transaction.getUrl())).append("\n");
+        textBuilder.append(context.getString(R.string.chuck_method)).append(": ").append(v(transaction.getMethod())).append("\n");
+        textBuilder.append(context.getString(R.string.chuck_protocol)).append(": ").append(v(transaction.getProtocol())).append("\n");
+        textBuilder.append(context.getString(R.string.chuck_status)).append(": ").append(v(transaction.getStatus().toString())).append("\n");
+        textBuilder.append(context.getString(R.string.chuck_response)).append(": ").append(v(transaction.getResponseSummaryText())).append("\n");
+        textBuilder.append(context.getString(R.string.chuck_ssl)).append(": ").append(v(context.getString(transaction.isSsl() ? R.string.chuck_yes : R.string.chuck_no))).append("\n");
+        textBuilder.append("\n");
+        textBuilder.append(context.getString(R.string.chuck_request_time)).append(": ").append(v(transaction.getRequestDateString())).append("\n");
+        textBuilder.append(context.getString(R.string.chuck_response_time)).append(": ").append(v(transaction.getResponseDateString())).append("\n");
+        textBuilder.append(context.getString(R.string.chuck_duration)).append(": ").append(v(transaction.getDurationString())).append("\n");
+        textBuilder.append("\n");
+        textBuilder.append(context.getString(R.string.chuck_request_size)).append(": ").append(v(transaction.getRequestSizeString())).append("\n");
+        textBuilder.append(context.getString(R.string.chuck_response_size)).append(": ").append(v(transaction.getResponseSizeString())).append("\n");
+        textBuilder.append(context.getString(R.string.chuck_total_size)).append(": ").append(v(transaction.getTotalSizeString())).append("\n");
+        textBuilder.append("\n");
+        textBuilder.append("---------- ").append(context.getString(R.string.chuck_request)).append(" ----------\n\n");
         String headers = formatHeaders(transaction.getRequestHeaders(), false);
         if (!TextUtils.isEmpty(headers)) {
-            text += headers + "\n";
+            textBuilder.append(headers).append("\n");
         }
-        text += (transaction.requestBodyIsPlainText()) ? v(transaction.getFormattedRequestBody()) :
-                context.getString(R.string.chuck_body_omitted);
-        text += "\n\n";
-        text += "---------- " + context.getString(R.string.chuck_response) + " ----------\n\n";
+        textBuilder.append((transaction.requestBodyIsPlainText()) ? v(transaction.getFormattedRequestBody()) :
+                context.getString(R.string.chuck_body_omitted));
+        textBuilder.append("\n\n");
+        textBuilder.append("---------- ").append(context.getString(R.string.chuck_response)).append(" ----------\n\n");
         headers = formatHeaders(transaction.getResponseHeaders(), false);
         if (!TextUtils.isEmpty(headers)) {
-            text += headers + "\n";
+            textBuilder.append(headers).append("\n");
         }
-        text += (transaction.responseBodyIsPlainText()) ? v(transaction.getFormattedResponseBody()) :
-                context.getString(R.string.chuck_body_omitted);
-        return text;
+        textBuilder.append((transaction.responseBodyIsPlainText()) ? v(transaction.getFormattedResponseBody()) :
+                context.getString(R.string.chuck_body_omitted));
+        return textBuilder.toString();
     }
 
     public static String getShareCurlCommand(HttpTransaction transaction) {
