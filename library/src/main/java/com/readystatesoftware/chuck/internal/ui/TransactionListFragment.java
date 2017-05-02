@@ -15,7 +15,9 @@
  */
 package com.readystatesoftware.chuck.internal.ui;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -48,7 +50,8 @@ public class TransactionListFragment extends Fragment implements
     private OnListFragmentInteractionListener listener;
     private TransactionAdapter adapter;
 
-    public TransactionListFragment() {}
+    public TransactionListFragment() {
+    }
 
     public static TransactionListFragment newInstance() {
         return new TransactionListFragment();
@@ -112,8 +115,7 @@ public class TransactionListFragment extends Fragment implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.clear) {
-            getContext().getContentResolver().delete(ChuckContentProvider.TRANSACTION_URI, null, null);
-            NotificationHelper.clearBuffer();
+            showClearAllTransactionsDialog();
             return true;
         } else if (item.getItemId() == R.id.browse_sql) {
             SQLiteUtils.browseDatabase(getContext());
@@ -123,6 +125,27 @@ public class TransactionListFragment extends Fragment implements
         }
     }
 
+    private void showClearAllTransactionsDialog() {
+        new AlertDialog.Builder(getContext())
+                .setTitle(R.string.chuck_clear)
+                .setMessage(R.string.chuck_clear_dialog_message)
+                .setPositiveButton(R.string.chuck_clear, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        getContext().getContentResolver().delete(ChuckContentProvider.TRANSACTION_URI, null, null);
+                        NotificationHelper.clearBuffer();
+                    }
+                })
+                .setNegativeButton(R.string.chuck_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         CursorLoader loader = new CursorLoader(getContext());
@@ -130,10 +153,10 @@ public class TransactionListFragment extends Fragment implements
         if (!TextUtils.isEmpty(currentFilter)) {
             if (TextUtils.isDigitsOnly(currentFilter)) {
                 loader.setSelection("responseCode LIKE ?");
-                loader.setSelectionArgs(new String[]{ currentFilter + "%" });
+                loader.setSelectionArgs(new String[]{currentFilter + "%"});
             } else {
                 loader.setSelection("path LIKE ?");
-                loader.setSelectionArgs(new String[]{ "%" + currentFilter + "%" });
+                loader.setSelectionArgs(new String[]{"%" + currentFilter + "%"});
             }
         }
         loader.setProjection(HttpTransaction.PARTIAL_PROJECTION);

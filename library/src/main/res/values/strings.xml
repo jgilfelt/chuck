@@ -42,4 +42,6 @@
     <string name="chuck_search">Search</string>
     <string name="chuck_body_unexpected_eof">\n\n--- Unexpected end of content ---</string>
     <string name="chuck_body_content_truncated">\n\n--- Content truncated ---</string>
+    <string name="chuck_cancel">Cancel</string>
+    <string name="chuck_clear_dialog_message">Do you want to clear complete http call history from chuck ?</string>
 </resources>
