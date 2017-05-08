@@ -14,7 +14,7 @@
  ~ See the License for the specific language governing permissions and
  ~ limitations under the License.
  -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <style name="Chuck.Theme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/chuck_colorPrimary</item>
         <item name="colorPrimaryDark">@color/chuck_colorPrimaryDark</item>
@@ -37,7 +37,7 @@
 
     <style name="Chuck.TextAppearance.TransactionTitle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:gravity">top</item>
-        <item name="android:textSize">16dp</item>
+        <item name="android:textSize" tools:ignore="SpUsage">16dp</item>
         <item name="android:maxLines">2</item>
     </style>
 </resources>

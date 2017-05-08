@@ -18,7 +18,11 @@ package com.readystatesoftware.chuck.internal.support;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.LongSparseArray;
 
 import com.readystatesoftware.chuck.Chuck;
@@ -31,19 +35,24 @@ public class NotificationHelper {
     private static final int NOTIFICATION_ID = 1138;
     private static final int BUFFER_SIZE = 10;
 
-    private static LongSparseArray<HttpTransaction> transactionBuffer = new LongSparseArray<>();
+    private static final LongSparseArray<HttpTransaction> transactionBuffer = new LongSparseArray<>();
+    private static int transactionCount;
 
-    private Context context;
-    private NotificationManager notificationManager;
+    private final Context context;
+    private final NotificationManager notificationManager;
 
     public static synchronized void clearBuffer() {
         transactionBuffer.clear();
+        transactionCount = 0;
     }
 
     private static synchronized void addToBuffer(HttpTransaction transaction) {
+        if (transaction.getStatus() == HttpTransaction.Status.Requested) {
+            transactionCount++;
+        }
         transactionBuffer.put(transaction.getId(), transaction);
         if (transactionBuffer.size() > BUFFER_SIZE) {
-            transactionBuffer.remove(0);
+            transactionBuffer.removeAt(0);
         }
     }
 
@@ -57,8 +66,9 @@ public class NotificationHelper {
         if (!BaseChuckActivity.isInForeground()) {
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                     .setContentIntent(PendingIntent.getActivity(context, 0, Chuck.getLaunchIntent(context), 0))
+                    .setLocalOnly(true)
                     .setSmallIcon(R.drawable.chuck_ic_notification_white_24dp)
-                    .setColor(context.getResources().getColor(R.color.chuck_colorPrimary))
+                    .setColor(ContextCompat.getColor(context, R.color.chuck_colorPrimary))
                     .setContentTitle(context.getString(R.string.chuck_notification_title));
             NotificationCompat.InboxStyle inboxStyle =
                     new NotificationCompat.InboxStyle();
@@ -74,8 +84,23 @@ public class NotificationHelper {
             }
             mBuilder.setAutoCancel(true);
             mBuilder.setStyle(inboxStyle);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                mBuilder.setSubText(String.valueOf(transactionCount));
+            } else {
+                mBuilder.setNumber(transactionCount);
+            }
+            mBuilder.addAction(getClearAction());
             notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
         }
+    }
+
+    @NonNull
+    private NotificationCompat.Action getClearAction() {
+        CharSequence clearTitle = context.getString(R.string.chuck_clear);
+        Intent deleteIntent = new Intent(context, ClearTransactionsService.class);
+        PendingIntent intent = PendingIntent.getService(context, 11, deleteIntent, PendingIntent.FLAG_ONE_SHOT);
+        return new NotificationCompat.Action(R.drawable.chuck_ic_delete_white_24dp,
+            clearTitle, intent);
     }
 
     public void dismiss() {

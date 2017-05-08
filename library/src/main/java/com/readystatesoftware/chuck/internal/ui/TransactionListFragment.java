@@ -23,8 +23,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,12 +38,13 @@ import android.view.ViewGroup;
 import com.readystatesoftware.chuck.R;
 import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
 import com.readystatesoftware.chuck.internal.data.HttpTransaction;
-import com.readystatesoftware.chuck.internal.support.DividerItemDecoration;
 import com.readystatesoftware.chuck.internal.support.NotificationHelper;
 import com.readystatesoftware.chuck.internal.support.SQLiteUtils;
 
-public class TransactionListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class TransactionListFragment extends Fragment implements
+        SearchView.OnQueryTextListener, LoaderManager.LoaderCallbacks<Cursor> {
 
+    private String currentFilter;
     private OnListFragmentInteractionListener listener;
     private TransactionAdapter adapter;
 
@@ -65,7 +69,7 @@ public class TransactionListFragment extends Fragment implements LoaderManager.L
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
             recyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
-                    DividerItemDecoration.VERTICAL_LIST));
+                    DividerItemDecoration.VERTICAL));
             adapter = new TransactionAdapter(getContext(), listener);
             recyclerView.setAdapter(adapter);
         }
@@ -98,6 +102,10 @@ public class TransactionListFragment extends Fragment implements LoaderManager.L
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.chuck_main, menu);
+        MenuItem searchMenuItem = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) searchMenuItem.getActionView();
+        searchView.setOnQueryTextListener(this);
+        searchView.setIconifiedByDefault(true);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -119,6 +127,16 @@ public class TransactionListFragment extends Fragment implements LoaderManager.L
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         CursorLoader loader = new CursorLoader(getContext());
         loader.setUri(ChuckContentProvider.TRANSACTION_URI);
+        if (!TextUtils.isEmpty(currentFilter)) {
+            if (TextUtils.isDigitsOnly(currentFilter)) {
+                loader.setSelection("responseCode LIKE ?");
+                loader.setSelectionArgs(new String[]{ currentFilter + "%" });
+            } else {
+                loader.setSelection("path LIKE ?");
+                loader.setSelectionArgs(new String[]{ "%" + currentFilter + "%" });
+            }
+        }
+        loader.setProjection(HttpTransaction.PARTIAL_PROJECTION);
         loader.setSortOrder("requestDate DESC");
         return loader;
     }
@@ -131,6 +149,18 @@ public class TransactionListFragment extends Fragment implements LoaderManager.L
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         adapter.swapCursor(null);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        currentFilter = newText;
+        getLoaderManager().restartLoader(0, null, this);
+        return true;
     }
 
     public interface OnListFragmentInteractionListener {

@@ -26,12 +26,27 @@ import okhttp3.Response;
 /**
  * No-op implementation.
  */
-public class ChuckInterceptor implements Interceptor {
+public final class ChuckInterceptor implements Interceptor {
+
+    public enum Period {
+        ONE_HOUR,
+        ONE_DAY,
+        ONE_WEEK,
+        FOREVER
+    }
 
     public ChuckInterceptor(Context context) {
     }
 
     public ChuckInterceptor showNotification(boolean show) {
+        return this;
+    }
+
+    public ChuckInterceptor maxContentLength(long max) {
+        return this;
+    }
+
+    public ChuckInterceptor retainDataFor(Period period) {
         return this;
     }
 

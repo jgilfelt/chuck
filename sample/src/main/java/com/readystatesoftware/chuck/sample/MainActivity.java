@@ -17,6 +17,7 @@ package com.readystatesoftware.chuck.sample;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private OkHttpClient client;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewById(R.id.do_http).setOnClickListener(new View.OnClickListener() {
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         SampleApiService.HttpbinApi api = SampleApiService.getInstance(client);
         Callback<Void> cb = new Callback<Void>() {
             @Override public void onResponse(Call call, Response response) {}
-            @Override public void onFailure(Call call, Throwable t) {}
+            @Override public void onFailure(Call call, Throwable t) { t.printStackTrace(); }
         };
         api.get().enqueue(cb);
         api.post(new SampleApiService.Data("posted")).enqueue(cb);

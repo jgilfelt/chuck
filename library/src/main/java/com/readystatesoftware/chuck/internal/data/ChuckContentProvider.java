@@ -24,6 +24,8 @@ import android.content.pm.ProviderInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 public class ChuckContentProvider extends ContentProvider {
 
@@ -31,7 +33,7 @@ public class ChuckContentProvider extends ContentProvider {
 
     private static final int TRANSACTION = 0;
     private static final int TRANSACTIONS = 1;
-    private static UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
+    private static final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     private ChuckDbOpenHelper databaseHelper;
 
@@ -50,7 +52,10 @@ public class ChuckContentProvider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    @Nullable
+    public Cursor query(@NonNull Uri uri, @Nullable String[] projection,
+                        @Nullable String selection, @Nullable String[] selectionArgs,
+                        @Nullable String sortOrder) {
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
         Cursor cursor = null;
         switch (matcher.match(uri)) {
@@ -74,12 +79,14 @@ public class ChuckContentProvider extends ContentProvider {
     }
 
     @Override
-    public String getType(Uri uri) {
+    @Nullable
+    public String getType(@NonNull Uri uri) {
         return null;
     }
 
     @Override
-    public Uri insert(Uri uri, ContentValues contentValues) {
+    @Nullable
+    public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
         switch (matcher.match(uri)) {
             case TRANSACTIONS:
@@ -93,7 +100,7 @@ public class ChuckContentProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
         int result = 0;
         switch (matcher.match(uri)) {
@@ -112,7 +119,8 @@ public class ChuckContentProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
+    public int update(@NonNull Uri uri, @Nullable ContentValues contentValues,
+                      @Nullable String selection, @Nullable String[] selectionArgs) {
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
         int result = 0;
         switch (matcher.match(uri)) {
