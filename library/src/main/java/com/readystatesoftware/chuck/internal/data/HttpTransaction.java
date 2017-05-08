@@ -17,9 +17,9 @@ package com.readystatesoftware.chuck.internal.data;
 
 import android.net.Uri;
 
+import com.google.gson.reflect.TypeToken;
 import com.readystatesoftware.chuck.internal.support.FormatUtils;
 import com.readystatesoftware.chuck.internal.support.JsonConvertor;
-import com.google.gson.reflect.TypeToken;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,6 +31,14 @@ import nl.qbusict.cupboard.annotation.Index;
 import okhttp3.Headers;
 
 public class HttpTransaction {
+
+    public String getBitmap() {
+        return base64Image;
+    }
+
+    public void setBitmap(String bitmap) {
+        this.base64Image = bitmap;
+    }
 
     public enum Status {
         Requested,
@@ -67,6 +75,7 @@ public class HttpTransaction {
     private String responseHeaders;
     private String responseBody;
     private boolean responseBodyIsPlainText = true;
+    private String base64Image;
 
     public Long getId() {
         return _id;

@@ -15,14 +15,18 @@
  */
 package com.readystatesoftware.chuck.internal.ui;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.readystatesoftware.chuck.R;
@@ -40,6 +44,7 @@ public class TransactionPayloadFragment extends Fragment implements TransactionF
 
     private int type;
     private HttpTransaction transaction;
+    private ImageView image;
 
     public TransactionPayloadFragment() {
     }
@@ -65,6 +70,7 @@ public class TransactionPayloadFragment extends Fragment implements TransactionF
         View view = inflater.inflate(R.layout.chuck_fragment_transaction_payload, container, false);
         headers = (TextView) view.findViewById(R.id.headers);
         body = (TextView) view.findViewById(R.id.body);
+        image = (ImageView) view.findViewById(R.id.imageBody);
         return view;
     }
 
@@ -99,7 +105,15 @@ public class TransactionPayloadFragment extends Fragment implements TransactionF
         headers.setVisibility((TextUtils.isEmpty(headersString) ? View.GONE : View.VISIBLE));
         headers.setText(Html.fromHtml(headersString));
         if (!isPlainText) {
-            body.setText(getString(R.string.chuck_body_omitted));
+            Bitmap decodedByte;
+            try {
+                byte[] decodedString = Base64.decode(transaction.getBitmap(), Base64.DEFAULT);
+                decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            } catch (RuntimeException e ){
+                body.setText(R.string.chuck_body_omitted);
+                return;
+            }
+            image.setImageBitmap(decodedByte);
         } else {
             body.setText(bodyString);
         }

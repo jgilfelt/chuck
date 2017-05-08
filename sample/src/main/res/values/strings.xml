@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Chuck Sample</string>
     <string name="do_http_activity">Do HTTP activity</string>
+    <string name="get_image_activity">Get HTTP image activity</string>
     <string name="launch_chuck_directly">Launch Chuck directly</string>
 </resources>

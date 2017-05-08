@@ -33,11 +33,31 @@
         android:layout_alignParentStart="true"
         android:id="@+id/do_http" />
 
+
+
+    <Button
+        android:text="@string/get_image_activity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/do_http"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/get_image" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/get_image"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/image" />
+
+
     <Button
         android:text="@string/launch_chuck_directly"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/do_http"
+        android:layout_below="@+id/image"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:id="@+id/launch_chuck_directly" />

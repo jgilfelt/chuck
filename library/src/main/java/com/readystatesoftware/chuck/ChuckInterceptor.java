@@ -18,6 +18,9 @@ package com.readystatesoftware.chuck;
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.util.Base64;
 
 import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
 import com.readystatesoftware.chuck.internal.data.HttpTransaction;
@@ -31,6 +34,7 @@ import java.nio.charset.UnsupportedCharsetException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import hugo.weaving.DebugLog;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
@@ -73,13 +77,15 @@ public final class ChuckInterceptor implements Interceptor {
         return this;
     }
 
-    @Override public Response intercept(Chain chain) throws IOException {
+    @DebugLog
+    @Override
+    public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
 
         RequestBody requestBody = request.body();
         boolean hasRequestBody = requestBody != null;
 
-        HttpTransaction transaction = new HttpTransaction();
+        final HttpTransaction transaction = new HttpTransaction();
         transaction.setRequestDate(new Date());
 
         transaction.setMethod(request.method());
@@ -111,10 +117,10 @@ public final class ChuckInterceptor implements Interceptor {
             }
         }
 
-        Uri transactionUri = create(transaction);
+        final Uri transactionUri = create(transaction);
 
         long startNs = System.nanoTime();
-        Response response;
+        final Response response;
         try {
             response = chain.proceed(request);
         } catch (Exception e) {
@@ -122,10 +128,9 @@ public final class ChuckInterceptor implements Interceptor {
             update(transaction, transactionUri);
             throw e;
         }
-        long tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs);
+        final long tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs);
 
-        ResponseBody responseBody = response.body();
-
+        final ResponseBody responseBody = response.body();
         transaction.setRequestHeaders(response.request().headers()); // includes headers added later in the chain
         transaction.setResponseDate(new Date());
         transaction.setTookMs(tookMs);
@@ -143,7 +148,7 @@ public final class ChuckInterceptor implements Interceptor {
         if (HttpHeaders.hasBody(response) && transaction.responseBodyIsPlainText()) {
             BufferedSource source = responseBody.source();
             source.request(Long.MAX_VALUE);
-            Buffer buffer = source.buffer();
+            final Buffer buffer = source.buffer();
             Charset charset = UTF8;
             MediaType contentType = responseBody.contentType();
             if (contentType != null) {
@@ -157,6 +162,17 @@ public final class ChuckInterceptor implements Interceptor {
             if (isPlaintext(buffer)) {
                 transaction.setResponseBody(buffer.clone().readString(charset));
             } else {
+                //TODO whole interceptor should populate a transaction acync to avoid interupting the network call
+                HandlerThread thread = new HandlerThread(this.getClass().getCanonicalName());
+                thread.start();
+                new Handler(thread.getLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        final byte[] bytes = buffer.clone().readByteArray();
+                        transaction.setBitmap(Base64.encodeToString(bytes, Base64.DEFAULT));
+                    }
+                });
+
                 transaction.setResponseBodyIsPlainText(false);
             }
             transaction.setResponseContentLength(buffer.size());
@@ -164,8 +180,10 @@ public final class ChuckInterceptor implements Interceptor {
 
         update(transaction, transactionUri);
 
+
         return response;
     }
+
 
     private Uri create(HttpTransaction transaction) {
         ContentValues values = LocalCupboard.getInstance().withEntity(HttpTransaction.class).toContentValues(transaction);
@@ -213,4 +231,6 @@ public final class ChuckInterceptor implements Interceptor {
         String contentEncoding = headers.get("Content-Encoding");
         return contentEncoding != null && !contentEncoding.equalsIgnoreCase("identity");
     }
+
+
 }
