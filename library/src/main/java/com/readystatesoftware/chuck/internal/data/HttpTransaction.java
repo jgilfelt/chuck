@@ -32,6 +32,14 @@ import okhttp3.Headers;
 
 public class HttpTransaction {
 
+    public String getBitmap() {
+        return base64Image;
+    }
+
+    public void setBitmap(String bitmap) {
+        this.base64Image = bitmap;
+    }
+
     public enum Status {
         Requested,
         Complete,
@@ -81,6 +89,7 @@ public class HttpTransaction {
     private String responseHeaders;
     private String responseBody;
     private boolean responseBodyIsPlainText = true;
+    private String base64Image;
 
     public Long getId() {
         return _id;

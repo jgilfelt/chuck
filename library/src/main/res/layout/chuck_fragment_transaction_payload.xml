@@ -39,6 +39,11 @@
             android:layout_height="wrap_content"
             android:textIsSelectable="true"/>
 
+        <ImageView
+            android:id="@+id/imageBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

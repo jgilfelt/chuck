@@ -20,9 +20,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.readystatesoftware.chuck.Chuck;
 import com.readystatesoftware.chuck.ChuckInterceptor;
+import com.squareup.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Picasso;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -31,6 +34,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
+
+    private OkHttpClient client;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,14 +53,25 @@ public class MainActivity extends AppCompatActivity {
                 launchChuckDirectly();
             }
         });
+
+        findViewById(R.id.get_image).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getImage();
+            }
+        });
+
+        initClient(this);
     }
 
-    private OkHttpClient getClient(Context context) {
-        return new OkHttpClient.Builder()
+    private void initClient(Context context) {
+        client = new OkHttpClient.Builder()
                 // Add a ChuckInterceptor instance to your OkHttp client
                 .addInterceptor(new ChuckInterceptor(context))
                 .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                 .build();
+        OkHttp3Downloader downloader = new OkHttp3Downloader(client);
+        Picasso.setSingletonInstance(new Picasso.Builder(this).downloader(downloader).build());
     }
 
     private void launchChuckDirectly() {
@@ -63,8 +79,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(Chuck.getLaunchIntent(this));
     }
 
+    private void getImage(){
+        Picasso.with(this).load("http://wallpapercave.com/wp/KFCIXTK.jpg").into((ImageView) findViewById(R.id.image));
+    }
+
     private void doHttpActivity() {
-        SampleApiService.HttpbinApi api = SampleApiService.getInstance(getClient(this));
+        SampleApiService.HttpbinApi api = SampleApiService.getInstance(client);
         Callback<Void> cb = new Callback<Void>() {
             @Override public void onResponse(Call call, Response response) {}
             @Override public void onFailure(Call call, Throwable t) { t.printStackTrace(); }
