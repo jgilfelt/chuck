@@ -15,8 +15,10 @@
  */
 package com.readystatesoftware.chuck;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 
 /**
  * No-op implementation.
@@ -25,5 +27,11 @@ public class Chuck {
 
     public static Intent getLaunchIntent(Context context) {
         return new Intent();
+    }
+
+    @TargetApi(Build.VERSION_CODES.N_MR1)
+    @SuppressWarnings("WeakerAccess")
+    public static String addAppShortcut(Context context) {
+        return null;
     }
 }

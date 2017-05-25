@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
                 launchChuckDirectly();
             }
         });
+        Chuck.addAppShortcut(this);
     }
 
     private OkHttpClient getClient(Context context) {
