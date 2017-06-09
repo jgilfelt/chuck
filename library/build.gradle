@@ -6,19 +6,15 @@ android {
 
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
         consumerProguardFiles 'proguard-rules.pro'
     }
 }
 
 dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.squareup.okhttp3:okhttp:3.8.0'
+    compile "com.squareup.okhttp3:okhttp:$okhttp3Version"
     compile 'nl.qbusict:cupboard:2.2.0'
-    compile 'com.android.support:appcompat-v7:26.0.0-beta2'
-    compile 'com.android.support:support-v4:26.0.0-beta2'
-    compile 'com.android.support:recyclerview-v7:26.0.0-beta2'
-    compile 'com.android.support:design:26.0.0-beta2'
+    compile "com.android.support:design:$supportLibVersion"
 }
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

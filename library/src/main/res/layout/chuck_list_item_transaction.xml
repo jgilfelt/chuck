@@ -26,6 +26,7 @@
         android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:padding="2dp"
         android:textAppearance="@style/Chuck.TextAppearance.ListItem"
         tools:text="200"/>
@@ -35,6 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/code"
+        android:layout_toEndOf="@id/code"
         android:padding="2dp"
         android:textAppearance="@style/Chuck.TextAppearance.ListItem"
         tools:text="GET /path/to/some/resource?goes=here"/>
@@ -45,6 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/path"
         android:layout_toRightOf="@id/code"
+        android:layout_toEndOf="@id/code"
         android:padding="2dp"
         tools:text="example.com" />
 
@@ -53,14 +56,17 @@
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:layout_toRightOf="@id/host"
+        android:layout_toEndOf="@id/host"
         android:layout_below="@id/path"
         android:layout_marginTop="4dp"
+        android:contentDescription="@string/chuck_ssl"
         android:src="@drawable/chuck_ic_https_grey_24dp"/>
 
     <LinearLayout
         android:id="@+id/meta"
         android:layout_below="@id/host"
         android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -76,14 +82,14 @@
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:padding="2dp"
-            android:gravity="right"
+            android:gravity="end"
             tools:text="8023 ms" />
 
         <TextView
             android:id="@+id/size"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:gravity="right"
+            android:gravity="end"
             android:padding="2dp"
             tools:text="16.45 KB" />
 

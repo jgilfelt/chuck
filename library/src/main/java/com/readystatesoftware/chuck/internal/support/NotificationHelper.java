@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.LongSparseArray;
 
 import com.readystatesoftware.chuck.Chuck;
@@ -39,11 +40,11 @@ public class NotificationHelper {
     private static final int NOTIFICATION_ID = 1138;
     private static final int BUFFER_SIZE = 10;
 
-    private static LongSparseArray<HttpTransaction> transactionBuffer = new LongSparseArray<>();
+    private static final LongSparseArray<HttpTransaction> transactionBuffer = new LongSparseArray<>();
     private static int transactionCount;
 
-    private Context context;
-    private NotificationManager notificationManager;
+    private final Context context;
+    private final NotificationManager notificationManager;
 
     public static synchronized void clearBuffer() {
         transactionBuffer.clear();
@@ -84,8 +85,9 @@ public class NotificationHelper {
         if (!BaseChuckActivity.isInForeground()) {
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL)
                     .setContentIntent(PendingIntent.getActivity(context, 0, Chuck.getLaunchIntent(context), 0))
+                    .setLocalOnly(true)
                     .setSmallIcon(R.drawable.chuck_ic_notification_white_24dp)
-                    .setColor(context.getResources().getColor(R.color.chuck_colorPrimary))
+                    .setColor(ContextCompat.getColor(context, R.color.chuck_colorPrimary))
                     .setContentTitle(context.getString(R.string.chuck_notification_title));
             NotificationCompat.InboxStyle inboxStyle =
                     new NotificationCompat.InboxStyle();

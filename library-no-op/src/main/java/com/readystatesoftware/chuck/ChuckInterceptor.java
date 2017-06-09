@@ -42,6 +42,10 @@ public final class ChuckInterceptor implements Interceptor {
         return this;
     }
 
+    public ChuckInterceptor maxContentLength(long max) {
+        return this;
+    }
+
     public ChuckInterceptor retainDataFor(Period period) {
         return this;
     }

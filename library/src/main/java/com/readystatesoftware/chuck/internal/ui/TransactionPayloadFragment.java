@@ -53,15 +53,15 @@ public class TransactionPayloadFragment extends Fragment implements TransactionF
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         type = getArguments().getInt(ARG_TYPE);
         setRetainInstance(true);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.chuck_fragment_transaction_payload, container, false);
         headers = (TextView) view.findViewById(R.id.headers);
         body = (TextView) view.findViewById(R.id.body);
