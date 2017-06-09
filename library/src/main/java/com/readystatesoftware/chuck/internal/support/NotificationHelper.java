@@ -15,6 +15,8 @@
  */
 package com.readystatesoftware.chuck.internal.support;
 
+import android.annotation.TargetApi;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -29,8 +31,11 @@ import com.readystatesoftware.chuck.R;
 import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 import com.readystatesoftware.chuck.internal.ui.BaseChuckActivity;
 
+import static android.os.Build.VERSION_CODES.O;
+
 public class NotificationHelper {
 
+    private static final String NOTIFICATION_CHANNEL = "chuck";
     private static final int NOTIFICATION_ID = 1138;
     private static final int BUFFER_SIZE = 10;
 
@@ -58,12 +63,26 @@ public class NotificationHelper {
     public NotificationHelper(Context context) {
         this.context = context;
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        createNotificationChannelIfNecessary();
+    }
+
+    @TargetApi(O)
+    private void createNotificationChannelIfNecessary() {
+        if (Build.VERSION.SDK_INT >= O) {
+            if (notificationManager.getNotificationChannel(NOTIFICATION_CHANNEL) == null) {
+                NotificationChannel channel = new NotificationChannel(
+                        NOTIFICATION_CHANNEL,
+                        context.getString(R.string.chuck_notification_channel_description),
+                        NotificationManager.IMPORTANCE_DEFAULT);
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
     }
 
     public synchronized void show(HttpTransaction transaction) {
         addToBuffer(transaction);
         if (!BaseChuckActivity.isInForeground()) {
-            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL)
                     .setContentIntent(PendingIntent.getActivity(context, 0, Chuck.getLaunchIntent(context), 0))
                     .setSmallIcon(R.drawable.chuck_ic_notification_white_24dp)
                     .setColor(context.getResources().getColor(R.color.chuck_colorPrimary))
@@ -98,7 +117,7 @@ public class NotificationHelper {
         Intent deleteIntent = new Intent(context, ClearTransactionsService.class);
         PendingIntent intent = PendingIntent.getService(context, 11, deleteIntent, PendingIntent.FLAG_ONE_SHOT);
         return new NotificationCompat.Action(R.drawable.chuck_ic_delete_white_24dp,
-            clearTitle, intent);
+                clearTitle, intent);
     }
 
     public void dismiss() {
