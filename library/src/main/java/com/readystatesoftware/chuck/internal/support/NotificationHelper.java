@@ -31,6 +31,8 @@ import com.readystatesoftware.chuck.R;
 import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 import com.readystatesoftware.chuck.internal.ui.BaseChuckActivity;
 
+import java.lang.reflect.Method;
+
 public class NotificationHelper {
 
     private static final String CHANNEL_ID = "chuck";
@@ -42,6 +44,7 @@ public class NotificationHelper {
 
     private final Context context;
     private final NotificationManager notificationManager;
+    private Method setChannelId;
 
     public static synchronized void clearBuffer() {
         transactionBuffer.clear();
@@ -65,6 +68,9 @@ public class NotificationHelper {
             notificationManager.createNotificationChannel(
                     new NotificationChannel(CHANNEL_ID,
                             context.getString(R.string.notification_category), NotificationManager.IMPORTANCE_LOW));
+            try {
+                setChannelId = NotificationCompat.Builder.class.getMethod("setChannelId", String.class);
+            } catch (Exception ignored) {}
         }
     }
 
@@ -78,9 +84,9 @@ public class NotificationHelper {
                     .setColor(ContextCompat.getColor(context, R.color.chuck_colorPrimary))
                     .setContentTitle(context.getString(R.string.chuck_notification_title));
             NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-            try {
-                builder.setChannelId(CHANNEL_ID);
-            } catch (NoSuchMethodError ignored) {} // host app may override support lib version!
+            if (setChannelId != null) {
+                try { setChannelId.invoke(builder, CHANNEL_ID); } catch (Exception ignored) {}
+            }
             int count = 0;
             for (int i = transactionBuffer.size() - 1; i >= 0; i--) {
                 if (count < BUFFER_SIZE) {
