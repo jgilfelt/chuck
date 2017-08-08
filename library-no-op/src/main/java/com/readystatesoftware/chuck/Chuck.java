@@ -26,4 +26,9 @@ public class Chuck {
     public static Intent getLaunchIntent(Context context) {
         return new Intent();
     }
+
+    public static boolean isNoOp() {
+        return true;
+    }
+
 }

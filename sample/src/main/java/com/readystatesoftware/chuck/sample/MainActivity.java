@@ -21,6 +21,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import android.widget.Button;
 import com.readystatesoftware.chuck.Chuck;
 import com.readystatesoftware.chuck.ChuckInterceptor;
 
@@ -42,7 +43,11 @@ public class MainActivity extends AppCompatActivity {
                 doHttpActivity();
             }
         });
-        findViewById(R.id.launch_chuck_directly).setOnClickListener(new View.OnClickListener() {
+
+        Button launchChuckButton = (Button) findViewById(R.id.launch_chuck_directly);
+        launchChuckButton.setVisibility(Chuck.isNoOp() ? View.GONE : View.VISIBLE);
+
+        launchChuckButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 launchChuckDirectly();
