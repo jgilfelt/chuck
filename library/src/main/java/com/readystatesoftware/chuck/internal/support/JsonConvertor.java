@@ -31,12 +31,19 @@ public class JsonConvertor {
 
     public static Gson getInstance() {
         if (gson == null) {
-            gson = new GsonBuilder()
-                    .setPrettyPrinting()
-                    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                    .registerTypeAdapter(Date.class, new DateTypeAdapter())
-                    .create();
+            gson = getDefaultGsonBuilder().create();
         }
         return gson;
+    }
+
+    public static void setInstance(Gson gson) {
+        JsonConvertor.gson = gson;
+    }
+
+    public static GsonBuilder getDefaultGsonBuilder() {
+        return new GsonBuilder()
+                .setPrettyPrinting()
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .registerTypeAdapter(Date.class, new DateTypeAdapter());
     }
 }
