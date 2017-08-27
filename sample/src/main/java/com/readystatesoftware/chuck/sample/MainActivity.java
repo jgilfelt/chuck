@@ -17,13 +17,14 @@ package com.readystatesoftware.chuck.sample;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-
+import com.google.gson.Gson;
 import com.readystatesoftware.chuck.Chuck;
 import com.readystatesoftware.chuck.ChuckInterceptor;
-
+import com.readystatesoftware.chuck.internal.support.JsonConvertor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -53,9 +54,18 @@ public class MainActivity extends AppCompatActivity {
     private OkHttpClient getClient(Context context) {
         return new OkHttpClient.Builder()
                 // Add a ChuckInterceptor instance to your OkHttp client
-                .addInterceptor(new ChuckInterceptor(context))
+                .addInterceptor(createChuckInterceptor(context))
                 .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                 .build();
+    }
+
+    @NonNull
+    private ChuckInterceptor createChuckInterceptor(Context context) {
+        Gson gson = JsonConvertor.getDefaultGsonBuilder()
+                .serializeNulls()
+                .create();
+        JsonConvertor.setInstance(gson);
+        return new ChuckInterceptor(context);
     }
 
     private void launchChuckDirectly() {
