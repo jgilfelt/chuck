@@ -341,7 +341,7 @@ public class HttpTransaction {
             case Requested:
                 return " . . .  " + path;
             default:
-                return String.valueOf(responseCode) + " " + path;
+                return String.valueOf(responseCode) + " " + method + " " + path;
         }
     }
 
