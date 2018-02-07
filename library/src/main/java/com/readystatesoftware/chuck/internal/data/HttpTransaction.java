@@ -337,9 +337,9 @@ public class HttpTransaction {
     public String getNotificationText() {
         switch (getStatus()) {
             case Failed:
-                return " ! ! !  " + path;
+                return " ! ! !  " +  method + " " +path;
             case Requested:
-                return " . . .  " + path;
+                return " . . .  " +  method + " " + path;
             default:
                 return String.valueOf(responseCode) + " " + method + " " + path;
         }
