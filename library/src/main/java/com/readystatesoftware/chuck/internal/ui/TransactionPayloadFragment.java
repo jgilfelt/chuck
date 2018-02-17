@@ -18,17 +18,22 @@ package com.readystatesoftware.chuck.internal.ui;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SearchView;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.readystatesoftware.chuck.R;
 import com.readystatesoftware.chuck.internal.data.HttpTransaction;
+import com.readystatesoftware.chuck.internal.support.SearchHighlightUtil;
 
-public class TransactionPayloadFragment extends Fragment implements TransactionFragment {
+public class TransactionPayloadFragment extends Fragment implements TransactionFragment, SearchView.OnQueryTextListener {
 
     public static final int TYPE_REQUEST = 0;
     public static final int TYPE_RESPONSE = 1;
@@ -38,8 +43,10 @@ public class TransactionPayloadFragment extends Fragment implements TransactionF
     TextView headers;
     TextView body;
 
+
     private int type;
     private HttpTransaction transaction;
+    private String originalBody;
 
     public TransactionPayloadFragment() {
     }
@@ -57,6 +64,7 @@ public class TransactionPayloadFragment extends Fragment implements TransactionF
         super.onCreate(savedInstanceState);
         type = getArguments().getInt(ARG_TYPE);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -72,6 +80,19 @@ public class TransactionPayloadFragment extends Fragment implements TransactionF
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         populateUI();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if(type == TYPE_RESPONSE){
+            MenuItem searchMenuItem = menu.findItem(R.id.search);
+            searchMenuItem.setVisible(true);
+            SearchView searchView = (SearchView) searchMenuItem.getActionView();
+            searchView.setOnQueryTextListener(this);
+            searchView.setIconifiedByDefault(true);
+        }
+
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -103,5 +124,22 @@ public class TransactionPayloadFragment extends Fragment implements TransactionF
         } else {
             body.setText(bodyString);
         }
+        originalBody = body.getText().toString();
+
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        String text = body.getText().toString();
+        if (newText.trim().length() > 0 && text.contains(newText.trim()))
+            body.setText(SearchHighlightUtil.format(body.getText().toString(), newText));
+        else
+            body.setText(originalBody);
+        return true;
     }
 }

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
  ~ Copyright (C) 2017 Jeff Gilfelt.
  ~
  ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,16 +14,26 @@
  ~ limitations under the License.
  -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" >
-    <item android:title="@string/chuck_share"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/chuck_ic_search_white_24dp"
+        android:title="@string/chuck_search"
+        android:visible="false"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="collapseActionView|ifRoom" />
+    <item
         android:icon="@drawable/chuck_ic_share_white_24dp"
-        app:showAsAction="always" >
-        <menu >
-            <group >
-                <item android:title="@string/chuck_share_as_text"
-                    android:id="@+id/share_text"/>
-                <item android:title="@string/chuck_share_as_curl"
-                    android:id="@+id/share_curl"/>
+        android:title="@string/chuck_share"
+        app:showAsAction="always">
+        <menu>
+            <group>
+                <item
+                    android:id="@+id/share_text"
+                    android:title="@string/chuck_share_as_text" />
+                <item
+                    android:id="@+id/share_curl"
+                    android:title="@string/chuck_share_as_curl" />
             </group>
         </menu>
     </item>
