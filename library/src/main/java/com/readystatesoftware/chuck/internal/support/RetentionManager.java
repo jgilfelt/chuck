@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.readystatesoftware.chuck.ChuckCollector;
 import com.readystatesoftware.chuck.ChuckInterceptor;
 import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
 
@@ -23,11 +24,11 @@ public class RetentionManager {
     private final long cleanupFrequency;
     private final SharedPreferences prefs;
 
-    public RetentionManager(Context context, ChuckInterceptor.Period retentionPeriod) {
+    public RetentionManager(Context context, ChuckCollector.Period retentionPeriod) {
         this.context = context;
         period = toMillis(retentionPeriod);
         prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        cleanupFrequency = (retentionPeriod == ChuckInterceptor.Period.ONE_HOUR) ?
+        cleanupFrequency = (retentionPeriod == ChuckCollector.Period.ONE_HOUR) ?
                 TimeUnit.MINUTES.toMillis(30) : TimeUnit.HOURS.toMillis(2);
     }
 
@@ -68,7 +69,7 @@ public class RetentionManager {
         return (period == 0) ? now : now - period;
     }
 
-    private long toMillis(ChuckInterceptor.Period period) {
+    private long toMillis(ChuckCollector.Period period) {
         switch (period) {
             case ONE_HOUR:
                 return TimeUnit.HOURS.toMillis(1);

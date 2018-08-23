@@ -15,25 +15,20 @@
  */
 package com.readystatesoftware.chuck;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
-import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
 import com.readystatesoftware.chuck.internal.data.HttpTransaction;
-import com.readystatesoftware.chuck.internal.data.LocalCupboard;
-import com.readystatesoftware.chuck.internal.support.NotificationHelper;
+import com.readystatesoftware.chuck.internal.support.IOUtils;
 import com.readystatesoftware.chuck.internal.support.RetentionManager;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.Request;
@@ -43,41 +38,19 @@ import okhttp3.ResponseBody;
 import okhttp3.internal.http.HttpHeaders;
 import okio.Buffer;
 import okio.BufferedSource;
-import okio.GzipSource;
-import okio.Okio;
 
 /**
  * An OkHttp Interceptor which persists and displays HTTP activity in your application for later inspection.
  */
 public final class ChuckInterceptor implements Interceptor {
 
-    public enum Period {
-        /**
-         * Retain data for the last hour.
-         */
-        ONE_HOUR,
-        /**
-         * Retain data for the last day.
-         */
-        ONE_DAY,
-        /**
-         * Retain data for the last week.
-         */
-        ONE_WEEK,
-        /**
-         * Retain data forever.
-         */
-        FOREVER
-    }
-
-    private static final String LOG_TAG = "ChuckInterceptor";
-    private static final Period DEFAULT_RETENTION = Period.ONE_WEEK;
+    private static final String LOG_TAG = ChuckInterceptor.class.getSimpleName();
     private static final Charset UTF8 = Charset.forName("UTF-8");
 
     private final Context context;
-    private final NotificationHelper notificationHelper;
-    private RetentionManager retentionManager;
-    private boolean showNotification;
+    private final ChuckCollector collector;
+    private final IOUtils io;
+
     private long maxContentLength = 250000L;
 
     /**
@@ -85,9 +58,8 @@ public final class ChuckInterceptor implements Interceptor {
      */
     public ChuckInterceptor(Context context) {
         this.context = context.getApplicationContext();
-        notificationHelper = new NotificationHelper(this.context);
-        showNotification = true;
-        retentionManager = new RetentionManager(this.context, DEFAULT_RETENTION);
+        collector = new ChuckCollector(context);
+        io = new IOUtils(context);
     }
 
     /**
@@ -97,7 +69,7 @@ public final class ChuckInterceptor implements Interceptor {
      * @return The {@link ChuckInterceptor} instance.
      */
     public ChuckInterceptor showNotification(boolean show) {
-        showNotification = show;
+        collector.setShowNotification(show);
         return this;
     }
 
@@ -120,8 +92,8 @@ public final class ChuckInterceptor implements Interceptor {
      * @param period the peroid for which to retain HTTP transaction data.
      * @return The {@link ChuckInterceptor} instance.
      */
-    public ChuckInterceptor retainDataFor(Period period) {
-        retentionManager = new RetentionManager(context, period);
+    public ChuckInterceptor retainDataFor(ChuckCollector.Period period) {
+        collector.setRetentionManager(new RetentionManager(context, period));
         return this;
     }
 
@@ -147,11 +119,11 @@ public final class ChuckInterceptor implements Interceptor {
             }
         }
 
-        boolean encodignIsSupported = bodyHasSupportedEncoding(request.headers().get("Content-Encoding"));
+        boolean encodignIsSupported = collector.bodyHasSupportedEncoding(request.headers().get("Content-Encoding"));
         transaction.setRequestBodyIsPlainText(encodignIsSupported);
 
         if (hasRequestBody && encodignIsSupported) {
-            BufferedSource source = getNativeSource(new Buffer(), bodyGzipped(request.headers()));
+            BufferedSource source = io.getNativeSource(new Buffer(), collector.bodyGzipped(request.headers().get("Content-Encoding")));
             Buffer buffer = source.buffer();
             requestBody.writeTo(buffer);
             Charset charset = UTF8;
@@ -159,14 +131,15 @@ public final class ChuckInterceptor implements Interceptor {
             if (contentType != null) {
                 charset = contentType.charset(UTF8);
             }
-            if (isPlaintext(buffer)) {
-                transaction.setRequestBody(readFromBuffer(buffer, charset));
+            if (io.isPlaintext(buffer)) {
+                String content = io.readFromBuffer(buffer, charset, maxContentLength);
+                transaction.setRequestBody(content);
             } else {
                 transaction.setResponseBodyIsPlainText(false);
             }
         }
 
-        Uri transactionUri = create(transaction);
+        Uri transactionUri = collector.create(transaction);
 
         long startNs = System.nanoTime();
         Response response;
@@ -174,7 +147,7 @@ public final class ChuckInterceptor implements Interceptor {
             response = chain.proceed(request);
         } catch (Exception e) {
             transaction.setError(e.toString());
-            update(transaction, transactionUri);
+            collector.update(transaction, transactionUri);
             throw e;
         }
         long tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs);
@@ -194,7 +167,7 @@ public final class ChuckInterceptor implements Interceptor {
         }
         transaction.setResponseHeaders(response.headers());
 
-        boolean responseEncodingIsSupported = bodyHasSupportedEncoding(response.headers().get("Content-Encoding"));
+        boolean responseEncodingIsSupported = collector.bodyHasSupportedEncoding(response.headers().get("Content-Encoding"));
         transaction.setResponseBodyIsPlainText(responseEncodingIsSupported);
 
         if (HttpHeaders.hasBody(response) && responseEncodingIsSupported) {
@@ -207,107 +180,29 @@ public final class ChuckInterceptor implements Interceptor {
                 try {
                     charset = contentType.charset(UTF8);
                 } catch (UnsupportedCharsetException e) {
-                    update(transaction, transactionUri);
+                    collector.update(transaction, transactionUri);
                     return response;
                 }
             }
-            if (isPlaintext(buffer)) {
-                transaction.setResponseBody(readFromBuffer(buffer.clone(), charset));
+            if (io.isPlaintext(buffer)) {
+                String content = io.readFromBuffer(buffer.clone(), charset, maxContentLength);
+                transaction.setResponseBody(content);
             } else {
                 transaction.setResponseBodyIsPlainText(false);
             }
             transaction.setResponseContentLength(buffer.size());
         }
 
-        update(transaction, transactionUri);
+        collector.update(transaction, transactionUri);
 
         return response;
     }
 
-    private Uri create(HttpTransaction transaction) {
-        ContentValues values = LocalCupboard.getInstance().withEntity(HttpTransaction.class).toContentValues(transaction);
-        Uri uri = context.getContentResolver().insert(ChuckContentProvider.TRANSACTION_URI, values);
-        transaction.setId(Long.valueOf(uri.getLastPathSegment()));
-        if (showNotification) {
-            notificationHelper.show(transaction);
-        }
-        retentionManager.doMaintenance();
-        return uri;
-    }
-
-    private int update(HttpTransaction transaction, Uri uri) {
-        ContentValues values = LocalCupboard.getInstance().withEntity(HttpTransaction.class).toContentValues(transaction);
-        int updated = context.getContentResolver().update(uri, values, null, null);
-        if (showNotification && updated > 0) {
-            notificationHelper.show(transaction);
-        }
-        return updated;
-    }
-
-    /**
-     * Returns true if the body in question probably contains human readable text. Uses a small sample
-     * of code points to detect unicode control characters commonly used in binary file signatures.
-     */
-    private boolean isPlaintext(Buffer buffer) {
-        try {
-            Buffer prefix = new Buffer();
-            long byteCount = buffer.size() < 64 ? buffer.size() : 64;
-            buffer.copyTo(prefix, 0, byteCount);
-            for (int i = 0; i < 16; i++) {
-                if (prefix.exhausted()) {
-                    break;
-                }
-                int codePoint = prefix.readUtf8CodePoint();
-                if (Character.isISOControl(codePoint) && !Character.isWhitespace(codePoint)) {
-                    return false;
-                }
-            }
-            return true;
-        } catch (EOFException e) {
-            return false; // Truncated UTF-8 sequence.
-        }
-    }
-
-    private boolean bodyHasSupportedEncoding(String contentEncoding) {
-        return contentEncoding != null &&
-                (contentEncoding.equalsIgnoreCase("identity") ||
-                        contentEncoding.equalsIgnoreCase("gzip"));
-    }
-
-    private boolean bodyGzipped(Headers headers) {
-        String contentEncoding = headers.get("Content-Encoding");
-        return "gzip".equalsIgnoreCase(contentEncoding);
-    }
-
-    private String readFromBuffer(Buffer buffer, Charset charset) {
-        long bufferSize = buffer.size();
-        long maxBytes = Math.min(bufferSize, maxContentLength);
-        String body = "";
-        try {
-            body = buffer.readString(maxBytes, charset);
-        } catch (EOFException e) {
-            body += context.getString(R.string.chuck_body_unexpected_eof);
-        }
-        if (bufferSize > maxContentLength) {
-            body += context.getString(R.string.chuck_body_content_truncated);
-        }
-        return body;
-    }
-
-    private BufferedSource getNativeSource(BufferedSource input, boolean isGzipped) {
-        if (isGzipped) {
-            GzipSource source = new GzipSource(input);
-            return Okio.buffer(source);
-        } else {
-            return input;
-        }
-    }
-
     private BufferedSource getNativeSource(Response response) throws IOException {
-        if (bodyGzipped(response.headers())) {
+        if (collector.bodyGzipped(response.headers().get("Content-Encoding"))) {
             BufferedSource source = response.peekBody(maxContentLength).source();
             if (source.buffer().size() < maxContentLength) {
-                return getNativeSource(source, true);
+                return io.getNativeSource(source, true);
             } else {
                 Log.w(LOG_TAG, "gzip encoded response was too long");
             }
