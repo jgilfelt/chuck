@@ -86,48 +86,54 @@ public class HttpTransaction {
         return _id;
     }
 
-    public void setId(long id) {
+    public HttpTransaction setId(long id) {
         _id = id;
+        return this;
     }
 
     public Date getRequestDate() {
         return requestDate;
     }
 
-    public void setRequestDate(Date requestDate) {
+    public HttpTransaction setRequestDate(Date requestDate) {
         this.requestDate = requestDate;
+        return this;
     }
 
     public Date getResponseDate() {
         return responseDate;
     }
 
-    public void setResponseDate(Date responseDate) {
+    public HttpTransaction setResponseDate(Date responseDate) {
         this.responseDate = responseDate;
+        return this;
     }
 
     public String getError() {
         return error;
     }
 
-    public void setError(String error) {
+    public HttpTransaction setError(String error) {
         this.error = error;
+        return this;
     }
 
     public String getMethod() {
         return method;
     }
 
-    public void setMethod(String method) {
+    public HttpTransaction setMethod(String method) {
         this.method = method;
+        return this;
     }
 
     public String getProtocol() {
         return protocol;
     }
 
-    public void setProtocol(String protocol) {
+    public HttpTransaction setProtocol(String protocol) {
         this.protocol = protocol;
+        return this;
     }
 
     public String getRequestBody() {
@@ -138,32 +144,36 @@ public class HttpTransaction {
         return formatBody(requestBody, requestContentType);
     }
 
-    public void setRequestBody(String requestBody) {
+    public HttpTransaction setRequestBody(String requestBody) {
         this.requestBody = requestBody;
+        return this;
     }
 
     public boolean requestBodyIsPlainText() {
         return requestBodyIsPlainText;
     }
 
-    public void setRequestBodyIsPlainText(boolean requestBodyIsPlainText) {
+    public HttpTransaction setRequestBodyIsPlainText(boolean requestBodyIsPlainText) {
         this.requestBodyIsPlainText = requestBodyIsPlainText;
+        return this;
     }
 
     public Long getRequestContentLength() {
         return requestContentLength;
     }
 
-    public void setRequestContentLength(Long requestContentLength) {
+    public HttpTransaction setRequestContentLength(Long requestContentLength) {
         this.requestContentLength = requestContentLength;
+        return this;
     }
 
     public String getRequestContentType() {
         return requestContentType;
     }
 
-    public void setRequestContentType(String requestContentType) {
+    public HttpTransaction setRequestContentType(String requestContentType) {
         this.requestContentType = requestContentType;
+        return this;
     }
 
     public String getResponseBody() {
@@ -174,68 +184,76 @@ public class HttpTransaction {
         return formatBody(responseBody, responseContentType);
     }
 
-    public void setResponseBody(String responseBody) {
+    public HttpTransaction setResponseBody(String responseBody) {
         this.responseBody = responseBody;
+        return this;
     }
 
     public boolean responseBodyIsPlainText() {
         return responseBodyIsPlainText;
     }
 
-    public void setResponseBodyIsPlainText(boolean responseBodyIsPlainText) {
+    public HttpTransaction setResponseBodyIsPlainText(boolean responseBodyIsPlainText) {
         this.responseBodyIsPlainText = responseBodyIsPlainText;
+        return this;
     }
 
     public Integer getResponseCode() {
         return responseCode;
     }
 
-    public void setResponseCode(Integer responseCode) {
+    public HttpTransaction setResponseCode(Integer responseCode) {
         this.responseCode = responseCode;
+        return this;
     }
 
     public Long getResponseContentLength() {
         return responseContentLength;
     }
 
-    public void setResponseContentLength(Long responseContentLength) {
+    public HttpTransaction setResponseContentLength(Long responseContentLength) {
         this.responseContentLength = responseContentLength;
+        return this;
     }
 
     public String getResponseContentType() {
         return responseContentType;
     }
 
-    public void setResponseContentType(String responseContentType) {
+    public HttpTransaction setResponseContentType(String responseContentType) {
         this.responseContentType = responseContentType;
+        return this;
     }
 
     public String getResponseMessage() {
         return responseMessage;
     }
 
-    public void setResponseMessage(String responseMessage) {
+    public HttpTransaction setResponseMessage(String responseMessage) {
         this.responseMessage = responseMessage;
+        return this;
     }
 
     public Long getTookMs() {
         return tookMs;
     }
 
-    public void setTookMs(Long tookMs) {
+    public HttpTransaction setTookMs(Long tookMs) {
         this.tookMs = tookMs;
+        return this;
     }
 
     public String getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
+    public HttpTransaction setUrl(String url) {
         this.url = url;
         Uri uri = Uri.parse(url);
         host = uri.getHost();
         path = uri.getPath() + ((uri.getQuery() != null) ? "?" + uri.getQuery() : "");
         scheme = uri.getScheme();
+        return this;
     }
 
     public String getHost() {
@@ -250,12 +268,14 @@ public class HttpTransaction {
         return scheme;
     }
 
-    public void setRequestHeaders(Headers headers) {
+    public HttpTransaction setRequestHeaders(Headers headers) {
         setRequestHeaders(toHttpHeaderList(headers));
+        return this;
     }
 
-    public void setRequestHeaders(List<HttpHeader> headers) {
+    public HttpTransaction setRequestHeaders(List<HttpHeader> headers) {
         requestHeaders = JsonConvertor.getInstance().toJson(headers);
+        return this;
     }
 
     public List<HttpHeader> getRequestHeaders() {
@@ -267,12 +287,14 @@ public class HttpTransaction {
         return FormatUtils.formatHeaders(getRequestHeaders(), withMarkup);
     }
 
-    public void setResponseHeaders(Headers headers) {
+    public HttpTransaction setResponseHeaders(Headers headers) {
         setResponseHeaders(toHttpHeaderList(headers));
+        return this;
     }
 
-    public void setResponseHeaders(List<HttpHeader> headers) {
+    public HttpTransaction setResponseHeaders(List<HttpHeader> headers) {
         responseHeaders = JsonConvertor.getInstance().toJson(headers);
+        return this;
     }
 
     public List<HttpHeader> getResponseHeaders() {

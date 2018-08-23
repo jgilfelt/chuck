@@ -112,7 +112,7 @@ public final class ChuckInterceptor implements Interceptor {
         this.maxContentLength = max;
         return this;
     }
-  
+
     /**
      * Set the retention period for HTTP transaction data captured by this interceptor.
      * The default is one week.
@@ -125,19 +125,19 @@ public final class ChuckInterceptor implements Interceptor {
         return this;
     }
 
-    @Override public Response intercept(Chain chain) throws IOException {
+    @Override
+    public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
 
         RequestBody requestBody = request.body();
         boolean hasRequestBody = requestBody != null;
 
-        HttpTransaction transaction = new HttpTransaction();
-        transaction.setRequestDate(new Date());
+        HttpTransaction transaction = new HttpTransaction()
+                .setRequestDate(new Date())
+                .setMethod(request.method())
+                .setUrl(request.url().toString())
+                .setRequestHeaders(request.headers());
 
-        transaction.setMethod(request.method());
-        transaction.setUrl(request.url().toString());
-
-        transaction.setRequestHeaders(request.headers());
         if (hasRequestBody) {
             if (requestBody.contentType() != null) {
                 transaction.setRequestContentType(requestBody.contentType().toString());
@@ -147,8 +147,10 @@ public final class ChuckInterceptor implements Interceptor {
             }
         }
 
-        transaction.setRequestBodyIsPlainText(!bodyHasUnsupportedEncoding(request.headers()));
-        if (hasRequestBody && transaction.requestBodyIsPlainText()) {
+        boolean encodignIsSupported = bodyHasSupportedEncoding(request.headers().get("Content-Encoding"));
+        transaction.setRequestBodyIsPlainText(encodignIsSupported);
+
+        if (hasRequestBody && encodignIsSupported) {
             BufferedSource source = getNativeSource(new Buffer(), bodyGzipped(request.headers()));
             Buffer buffer = source.buffer();
             requestBody.writeTo(buffer);
@@ -179,12 +181,12 @@ public final class ChuckInterceptor implements Interceptor {
 
         ResponseBody responseBody = response.body();
 
-        transaction.setRequestHeaders(response.request().headers()); // includes headers added later in the chain
-        transaction.setResponseDate(new Date());
-        transaction.setTookMs(tookMs);
-        transaction.setProtocol(response.protocol().toString());
-        transaction.setResponseCode(response.code());
-        transaction.setResponseMessage(response.message());
+        transaction.setRequestHeaders(response.request().headers()) // includes headers added later in the chain
+                .setResponseDate(new Date())
+                .setTookMs(tookMs)
+                .setProtocol(response.protocol().toString())
+                .setResponseCode(response.code())
+                .setResponseMessage(response.message());
 
         transaction.setResponseContentLength(responseBody.contentLength());
         if (responseBody.contentType() != null) {
@@ -192,8 +194,10 @@ public final class ChuckInterceptor implements Interceptor {
         }
         transaction.setResponseHeaders(response.headers());
 
-        transaction.setResponseBodyIsPlainText(!bodyHasUnsupportedEncoding(response.headers()));
-        if (HttpHeaders.hasBody(response) && transaction.responseBodyIsPlainText()) {
+        boolean responseEncodingIsSupported = bodyHasSupportedEncoding(response.headers().get("Content-Encoding"));
+        transaction.setResponseBodyIsPlainText(responseEncodingIsSupported);
+
+        if (HttpHeaders.hasBody(response) && responseEncodingIsSupported) {
             BufferedSource source = getNativeSource(response);
             source.request(Long.MAX_VALUE);
             Buffer buffer = source.buffer();
@@ -264,11 +268,10 @@ public final class ChuckInterceptor implements Interceptor {
         }
     }
 
-    private boolean bodyHasUnsupportedEncoding(Headers headers) {
-        String contentEncoding = headers.get("Content-Encoding");
+    private boolean bodyHasSupportedEncoding(String contentEncoding) {
         return contentEncoding != null &&
-                !contentEncoding.equalsIgnoreCase("identity") &&
-                !contentEncoding.equalsIgnoreCase("gzip");
+                (contentEncoding.equalsIgnoreCase("identity") ||
+                        contentEncoding.equalsIgnoreCase("gzip"));
     }
 
     private boolean bodyGzipped(Headers headers) {
