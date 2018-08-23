@@ -30,8 +30,15 @@ Add the dependency in your `build.gradle` file. Add it alongside the `no-op` var
 In your application code, create an instance of `ChuckInterceptor` (you'll need to provide it with a `Context`, because Android) and add it as an interceptor when building your OkHttp client:
 
 ```java
+ChuckInterceptor chuckInterceptor = new ChuckInterceptor(context);
+
+// default values
+chuckInterceptor.showNotification(true);
+chuckInterceptor.retainDataFor(ChuckCollector.Period.ONE_HOUR);
+chuckInterceptor.maxContentLength(250000L);
+
 OkHttpClient client = new OkHttpClient.Builder()
-  .addInterceptor(new ChuckInterceptor(context))
+  .addInterceptor(chuckInterceptor)
   .build();
 ```
 

@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.readystatesoftware.chuck.Chuck;
+import com.readystatesoftware.chuck.ChuckCollector;
 import com.readystatesoftware.chuck.ChuckInterceptor;
 
 import okhttp3.OkHttpClient;
@@ -51,9 +52,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private OkHttpClient getClient(Context context) {
+        ChuckInterceptor chuckInterceptor = new ChuckInterceptor(context);
+        chuckInterceptor.showNotification(true);
+        chuckInterceptor.retainDataFor(ChuckCollector.Period.ONE_HOUR);
+        chuckInterceptor.maxContentLength(250000L);
+
         return new OkHttpClient.Builder()
                 // Add a ChuckInterceptor instance to your OkHttp client
-                .addInterceptor(new ChuckInterceptor(context))
+                .addInterceptor(chuckInterceptor)
                 .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                 .build();
     }
