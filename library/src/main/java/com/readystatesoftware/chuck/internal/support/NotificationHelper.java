@@ -29,6 +29,7 @@ import android.util.LongSparseArray;
 import com.readystatesoftware.chuck.Chuck;
 import com.readystatesoftware.chuck.R;
 import com.readystatesoftware.chuck.internal.data.HttpTransaction;
+import com.readystatesoftware.chuck.internal.data.RecordedThrowable;
 import com.readystatesoftware.chuck.internal.ui.BaseChuckActivity;
 
 import java.lang.reflect.Method;
@@ -36,7 +37,8 @@ import java.lang.reflect.Method;
 public class NotificationHelper {
 
     private static final String CHANNEL_ID = "chuck";
-    private static final int NOTIFICATION_ID = 1138;
+    private static final int TRANSACTION_NOTIFICATION_ID = 1138;
+    private static final int ERROR_NOTIFICATION_ID = 3546;
     private static final int BUFFER_SIZE = 10;
 
     private static final LongSparseArray<HttpTransaction> transactionBuffer = new LongSparseArray<>();
@@ -44,7 +46,6 @@ public class NotificationHelper {
 
     private final Context context;
     private final NotificationManager notificationManager;
-    private Method setChannelId;
 
     public static synchronized void clearBuffer() {
         transactionBuffer.clear();
@@ -67,26 +68,21 @@ public class NotificationHelper {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notificationManager.createNotificationChannel(
                     new NotificationChannel(CHANNEL_ID,
-                            context.getString(R.string.notification_category), NotificationManager.IMPORTANCE_LOW));
-            try {
-                setChannelId = NotificationCompat.Builder.class.getMethod("setChannelId", String.class);
-            } catch (Exception ignored) {}
+                            context.getString(R.string.notification_category),
+                            NotificationManager.IMPORTANCE_LOW));
         }
     }
 
     public synchronized void show(HttpTransaction transaction) {
         addToBuffer(transaction);
         if (!BaseChuckActivity.isInForeground()) {
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                     .setContentIntent(PendingIntent.getActivity(context, 0, Chuck.getLaunchIntent(context), 0))
                     .setLocalOnly(true)
                     .setSmallIcon(R.drawable.chuck_ic_notification_white_24dp)
                     .setColor(ContextCompat.getColor(context, R.color.chuck_colorPrimary))
-                    .setContentTitle(context.getString(R.string.chuck_notification_title));
+                    .setContentTitle(context.getString(R.string.chuck_http_notification_title));
             NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-            if (setChannelId != null) {
-                try { setChannelId.invoke(builder, CHANNEL_ID); } catch (Exception ignored) {}
-            }
             int count = 0;
             for (int i = transactionBuffer.size() - 1; i >= 0; i--) {
                 if (count < BUFFER_SIZE) {
@@ -105,7 +101,22 @@ public class NotificationHelper {
                 builder.setNumber(transactionCount);
             }
             builder.addAction(getClearAction());
-            notificationManager.notify(NOTIFICATION_ID, builder.build());
+            notificationManager.notify(TRANSACTION_NOTIFICATION_ID, builder.build());
+        }
+    }
+
+    public void show(RecordedThrowable throwable) {
+        if (!BaseChuckActivity.isInForeground()) {
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                    .setContentIntent(PendingIntent.getActivity(context, 0, Chuck.getLaunchIntent(context), 0))
+                    .setLocalOnly(true)
+                    .setSmallIcon(R.drawable.chuck_ic_subject_white_24dp)
+                    .setColor(ContextCompat.getColor(context, R.color.chuck_status_error))
+                    .setContentTitle(throwable.getClazz())
+                    .setAutoCancel(true)
+                    .setContentText(throwable.getMessage())
+                    .addAction(getClearAction());
+            notificationManager.notify(ERROR_NOTIFICATION_ID, builder.build());
         }
     }
 
@@ -119,6 +130,7 @@ public class NotificationHelper {
     }
 
     public void dismiss() {
-        notificationManager.cancel(NOTIFICATION_ID);
+        notificationManager.cancel(TRANSACTION_NOTIFICATION_ID);
+        notificationManager.cancel(ERROR_NOTIFICATION_ID);
     }
 }

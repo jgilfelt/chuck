@@ -7,6 +7,8 @@ import android.net.Uri;
 import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
 import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 import com.readystatesoftware.chuck.internal.data.LocalCupboard;
+import com.readystatesoftware.chuck.internal.data.RecordedThrowable;
+import com.readystatesoftware.chuck.internal.support.FormatUtils;
 import com.readystatesoftware.chuck.internal.support.NotificationHelper;
 import com.readystatesoftware.chuck.internal.support.RetentionManager;
 
@@ -61,6 +63,22 @@ public class ChuckCollector {
             notificationHelper.show(transaction);
         }
         return updated;
+    }
+
+    /**
+     *
+     * @param throwable
+     */
+    public void onError(Throwable throwable) {
+        RecordedThrowable recordedThrowable = new RecordedThrowable(throwable);
+        ContentValues values = LocalCupboard.getInstance()
+                .withEntity(RecordedThrowable.class)
+                .toContentValues(recordedThrowable);
+        context.getContentResolver().insert(ChuckContentProvider.ERROR_URI, values);
+        if (showNotification) {
+            notificationHelper.show(recordedThrowable);
+        }
+        retentionManager.doMaintenance();
     }
 
     public boolean bodyHasSupportedEncoding(String contentEncoding) {

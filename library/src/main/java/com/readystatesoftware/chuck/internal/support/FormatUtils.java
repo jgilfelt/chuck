@@ -28,6 +28,8 @@ import org.xml.sax.InputSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Locale;
 
@@ -138,6 +140,19 @@ public class FormatUtils {
         }
         curlCmd += ((compressed) ? " --compressed " : " ") + transaction.getUrl();
         return curlCmd;
+    }
+
+    /**
+     * Convert a stacktrace into a String.
+     *
+     * @param throwable The throwable to convert
+     * @return The String of the throwable
+     */
+    public static String formatThrowable(Throwable throwable) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        throwable.printStackTrace(pw);
+        return sw.toString();
     }
 
     private static String v(String string) {

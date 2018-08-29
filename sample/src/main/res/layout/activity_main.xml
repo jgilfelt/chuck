@@ -14,11 +14,12 @@
  ~ See the License for the specific language governing permissions and
  ~ limitations under the License.
  -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -26,19 +27,20 @@
     tools:context="com.readystatesoftware.chuck.sample.MainActivity">
 
     <Button
-        android:text="@string/do_http_activity"
+        android:id="@+id/do_http"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/do_http" />
+        android:text="@string/do_http_activity" />
 
     <Button
-        android:text="@string/launch_chuck_directly"
+        android:id="@+id/launch_chuck_directly"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/do_http"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/launch_chuck_directly" />
-</RelativeLayout>
+        android:text="@string/launch_chuck_directly" />
+
+    <Button
+        android:id="@+id/trigger_exception"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/trigger_exception" />
+</LinearLayout>

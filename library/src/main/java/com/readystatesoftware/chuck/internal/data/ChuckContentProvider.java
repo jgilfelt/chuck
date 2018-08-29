@@ -30,9 +30,12 @@ import android.support.annotation.Nullable;
 public class ChuckContentProvider extends ContentProvider {
 
     public static Uri TRANSACTION_URI;
+    public static Uri ERROR_URI;
 
     private static final int TRANSACTION = 0;
     private static final int TRANSACTIONS = 1;
+    private static final int ERROR = 2;
+
     private static final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     private ChuckDbOpenHelper databaseHelper;
@@ -41,8 +44,10 @@ public class ChuckContentProvider extends ContentProvider {
     public void attachInfo(Context context, ProviderInfo info) {
         super.attachInfo(context, info);
         TRANSACTION_URI = Uri.parse("content://" + info.authority + "/transaction");
+        ERROR_URI = Uri.parse("content://" + info.authority + "/error");
         matcher.addURI(info.authority, "transaction/#", TRANSACTION);
         matcher.addURI(info.authority, "transaction", TRANSACTIONS);
+        matcher.addURI(info.authority, "error", ERROR);
     }
 
     @Override
@@ -95,6 +100,14 @@ public class ChuckContentProvider extends ContentProvider {
                     getContext().getContentResolver().notifyChange(uri, null);
                     return ContentUris.withAppendedId(TRANSACTION_URI, id);
                 }
+                break;
+            case ERROR:
+                long errorId = db.insert(LocalCupboard.getInstance().getTable(RecordedThrowable.class), null, contentValues);
+                if (errorId > 0) {
+                    getContext().getContentResolver().notifyChange(uri, null);
+                    return ContentUris.withAppendedId(TRANSACTION_URI, errorId);
+                }
+                break;
         }
         return null;
     }
@@ -109,7 +122,13 @@ public class ChuckContentProvider extends ContentProvider {
                 break;
             case TRANSACTION:
                 result = db.delete(LocalCupboard.getInstance().getTable(HttpTransaction.class),
-                        "_id = ?", new String[]{ uri.getPathSegments().get(1) });
+                        "_id = ?", new String[]{uri.getPathSegments().get(1)});
+                break;
+            case ERROR:
+                result = db.delete(
+                        LocalCupboard.getInstance().getTable(RecordedThrowable.class),
+                        "_id = ?",
+                        new String[]{uri.getPathSegments().get(1)});
                 break;
         }
         if (result > 0) {
@@ -129,7 +148,7 @@ public class ChuckContentProvider extends ContentProvider {
                 break;
             case TRANSACTION:
                 result = db.update(LocalCupboard.getInstance().getTable(HttpTransaction.class), contentValues,
-                        "_id = ?", new String[]{ uri.getPathSegments().get(1) });
+                        "_id = ?", new String[]{uri.getPathSegments().get(1)});
                 break;
         }
         if (result > 0) {

@@ -33,6 +33,8 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ChuckCollector collector;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +51,13 @@ public class MainActivity extends AppCompatActivity {
                 launchChuckDirectly();
             }
         });
+        findViewById(R.id.trigger_exception).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                triggerException();
+            }
+        });
+        collector = new ChuckCollector(this);
     }
 
     private OkHttpClient getClient(Context context) {
@@ -102,5 +111,9 @@ public class MainActivity extends AppCompatActivity {
         api.deny().enqueue(cb);
         api.cache("Mon").enqueue(cb);
         api.cache(30).enqueue(cb);
+    }
+
+    private void triggerException() {
+        collector.onError(new RuntimeException("Exception triggered by the user"));
     }
 }
