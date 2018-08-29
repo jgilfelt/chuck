@@ -30,7 +30,13 @@ public class ChuckCollector {
         retentionManager = new RetentionManager(context, DEFAULT_RETENTION);
     }
 
-    public Uri create(HttpTransaction transaction) {
+    /**
+     * Call this method when you send an HTTP request.
+     *
+     * @param transaction The HTTP transaction sent
+     * @return The URI of the request in the provider, give it to {@link ChuckCollector#onResponseReceived}
+     */
+    public Uri onRequestSent(HttpTransaction transaction) {
         ContentValues values = LocalCupboard.getInstance().withEntity(HttpTransaction.class).toContentValues(transaction);
         Uri uri = context.getContentResolver().insert(ChuckContentProvider.TRANSACTION_URI, values);
         transaction.setId(Long.valueOf(uri.getLastPathSegment()));
@@ -41,7 +47,14 @@ public class ChuckCollector {
         return uri;
     }
 
-    public int update(HttpTransaction transaction, Uri uri) {
+    /**
+     * Call this method when you received the reponse of an HTTP request. It must be called after {@link ChuckCollector#onRequestSent}.
+     *
+     * @param transaction The sent HTTP transaction completed with the response
+     * @param uri The URI of the request in the provider
+     * @return 1 if the HTTP transaction is updated, 0 otherwise
+     */
+    public int onResponseReceived(HttpTransaction transaction, Uri uri) {
         ContentValues values = LocalCupboard.getInstance().withEntity(HttpTransaction.class).toContentValues(transaction);
         int updated = context.getContentResolver().update(uri, values, null, null);
         if (showNotification && updated > 0) {

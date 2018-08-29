@@ -139,7 +139,7 @@ public final class ChuckInterceptor implements Interceptor {
             }
         }
 
-        Uri transactionUri = collector.create(transaction);
+        Uri transactionUri = collector.onRequestSent(transaction);
 
         long startNs = System.nanoTime();
         Response response;
@@ -147,7 +147,7 @@ public final class ChuckInterceptor implements Interceptor {
             response = chain.proceed(request);
         } catch (Exception e) {
             transaction.setError(e.toString());
-            collector.update(transaction, transactionUri);
+            collector.onResponseReceived(transaction, transactionUri);
             throw e;
         }
         long tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs);
@@ -180,7 +180,7 @@ public final class ChuckInterceptor implements Interceptor {
                 try {
                     charset = contentType.charset(UTF8);
                 } catch (UnsupportedCharsetException e) {
-                    collector.update(transaction, transactionUri);
+                    collector.onResponseReceived(transaction, transactionUri);
                     return response;
                 }
             }
@@ -193,7 +193,7 @@ public final class ChuckInterceptor implements Interceptor {
             transaction.setResponseContentLength(buffer.size());
         }
 
-        collector.update(transaction, transactionUri);
+        collector.onResponseReceived(transaction, transactionUri);
 
         return response;
     }
