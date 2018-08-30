@@ -77,7 +77,7 @@ public class NotificationHelper {
         addToBuffer(transaction);
         if (!BaseChuckActivity.isInForeground()) {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                    .setContentIntent(PendingIntent.getActivity(context, 0, Chuck.getLaunchIntent(context), 0))
+                    .setContentIntent(PendingIntent.getActivity(context, TRANSACTION_NOTIFICATION_ID, Chuck.getLaunchIntent(context, Chuck.SCREEN_HTTP), PendingIntent.FLAG_UPDATE_CURRENT))
                     .setLocalOnly(true)
                     .setSmallIcon(R.drawable.chuck_ic_notification_white_24dp)
                     .setColor(ContextCompat.getColor(context, R.color.chuck_colorPrimary))
@@ -100,7 +100,6 @@ public class NotificationHelper {
             } else {
                 builder.setNumber(transactionCount);
             }
-            builder.addAction(getClearAction());
             notificationManager.notify(TRANSACTION_NOTIFICATION_ID, builder.build());
         }
     }
@@ -108,25 +107,15 @@ public class NotificationHelper {
     public void show(RecordedThrowable throwable) {
         if (!BaseChuckActivity.isInForeground()) {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                    .setContentIntent(PendingIntent.getActivity(context, 0, Chuck.getLaunchIntent(context), 0))
+                    .setContentIntent(PendingIntent.getActivity(context, ERROR_NOTIFICATION_ID, Chuck.getLaunchIntent(context, Chuck.SCREEN_ERROR), PendingIntent.FLAG_UPDATE_CURRENT))
                     .setLocalOnly(true)
                     .setSmallIcon(R.drawable.chuck_ic_subject_white_24dp)
                     .setColor(ContextCompat.getColor(context, R.color.chuck_status_error))
                     .setContentTitle(throwable.getClazz())
                     .setAutoCancel(true)
-                    .setContentText(throwable.getMessage())
-                    .addAction(getClearAction());
+                    .setContentText(throwable.getMessage());
             notificationManager.notify(ERROR_NOTIFICATION_ID, builder.build());
         }
-    }
-
-    @NonNull
-    private NotificationCompat.Action getClearAction() {
-        CharSequence clearTitle = context.getString(R.string.chuck_clear);
-        Intent deleteIntent = new Intent(context, ClearTransactionsService.class);
-        PendingIntent intent = PendingIntent.getService(context, 11, deleteIntent, PendingIntent.FLAG_ONE_SHOT);
-        return new NotificationCompat.Action(R.drawable.chuck_ic_delete_white_24dp,
-            clearTitle, intent);
     }
 
     public void dismiss() {

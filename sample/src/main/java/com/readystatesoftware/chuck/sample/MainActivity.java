@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void launchChuckDirectly() {
         // Optionally launch Chuck directly from your own app UI
-        startActivity(Chuck.getLaunchIntent(this));
+        startActivity(Chuck.getLaunchIntent(this, Chuck.SCREEN_HTTP));
     }
 
     private void doHttpActivity() {

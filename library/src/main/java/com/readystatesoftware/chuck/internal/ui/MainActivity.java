@@ -25,6 +25,8 @@ import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 
 public class MainActivity extends BaseChuckActivity implements TransactionListFragment.OnListFragmentInteractionListener {
 
+    public static final String EXTRA_SCREEN = "EXTRA_SCREEN";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
