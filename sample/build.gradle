@@ -1,12 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
         applicationId "com.readystatesoftware.chuck.sample"
         versionCode 1
         versionName "1.0"
@@ -25,11 +24,11 @@ android {
 }
 
 dependencies {
-    debugCompile project(':library')
-    releaseCompile project(':library-no-op')
-    compile "com.android.support:design:26.0.0"
-    compile "com.android.support:appcompat-v7:26.0.0"
-    compile "com.squareup.okhttp3:logging-interceptor:$okhttp3Version"
-    compile "com.squareup.retrofit2:retrofit:2.2.0"
-    compile "com.squareup.retrofit2:converter-gson:2.2.0"
+    debugImplementation project(':library')
+    releaseImplementation project(':library-no-op')
+    implementation "com.android.support:design:$supportLibVersion"
+    implementation "com.android.support:appcompat-v7:$supportLibVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3Version"
+    implementation "com.squareup.retrofit2:retrofit:2.3.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.3.0"
 }
