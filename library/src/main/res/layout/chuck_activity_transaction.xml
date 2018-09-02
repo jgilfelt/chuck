@@ -20,7 +20,7 @@
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".internal.ui.TransactionActivity">
+    tools:context=".internal.ui.transaction.TransactionActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"

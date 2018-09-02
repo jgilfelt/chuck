@@ -19,7 +19,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="vertical"
-    tools:context=".internal.ui.TransactionOverviewFragment">
+    tools:context=".internal.ui.transaction.TransactionOverviewFragment">
 
     <TableLayout
         android:layout_width="match_parent"

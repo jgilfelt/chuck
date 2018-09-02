@@ -27,7 +27,7 @@
             android:launchMode="singleTask"
             android:taskAffinity="com.readystatesoftware.chuck.task"
             android:theme="@style/Chuck.Theme" />
-        <activity android:name=".internal.ui.TransactionActivity"
+        <activity android:name=".internal.ui.transaction.TransactionActivity"
             android:theme="@style/Chuck.Theme"
             android:parentActivityName=".internal.ui.MainActivity"/>
         <service

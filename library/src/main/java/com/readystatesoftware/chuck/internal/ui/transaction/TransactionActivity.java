@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.readystatesoftware.chuck.internal.ui;
+package com.readystatesoftware.chuck.internal.ui.transaction;
 
 import android.content.ContentUris;
 import android.content.Context;
@@ -42,12 +42,13 @@ import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 import com.readystatesoftware.chuck.internal.data.LocalCupboard;
 import com.readystatesoftware.chuck.internal.support.FormatUtils;
 import com.readystatesoftware.chuck.internal.support.SimpleOnPageChangedListener;
+import com.readystatesoftware.chuck.internal.ui.BaseChuckActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.readystatesoftware.chuck.internal.ui.TransactionPayloadFragment.TYPE_REQUEST;
-import static com.readystatesoftware.chuck.internal.ui.TransactionPayloadFragment.TYPE_RESPONSE;
+import static com.readystatesoftware.chuck.internal.ui.transaction.TransactionPayloadFragment.TYPE_REQUEST;
+import static com.readystatesoftware.chuck.internal.ui.transaction.TransactionPayloadFragment.TYPE_RESPONSE;
 
 public class TransactionActivity extends BaseChuckActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
