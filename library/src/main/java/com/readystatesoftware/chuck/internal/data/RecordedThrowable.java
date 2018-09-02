@@ -11,6 +11,14 @@ import nl.qbusict.cupboard.annotation.Index;
  */
 public class RecordedThrowable {
 
+
+    public static final String[] PARTIAL_PROJECTION = new String[]{
+            "_id",
+            "clazz",
+            "message",
+            "date"
+    };
+
     private Long _id;
 
     @Index
@@ -21,6 +29,10 @@ public class RecordedThrowable {
     private String message;
 
     private String content;
+
+    @SuppressWarnings("unused")
+    public RecordedThrowable() {
+    }
 
     public RecordedThrowable(Throwable throwable) {
         date = new Date();

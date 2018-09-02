@@ -31,6 +31,8 @@ import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 import com.readystatesoftware.chuck.internal.data.LocalCupboard;
 import com.readystatesoftware.chuck.internal.ui.transaction.TransactionListFragment.OnListFragmentInteractionListener;
 
+import java.text.DateFormat;
+
 class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder> {
 
     private final Context context;
@@ -69,7 +71,7 @@ class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHol
                 final ViewHolder holder = (ViewHolder) view.getTag();
                 holder.path.setText(transaction.getMethod() + " " + transaction.getPath());
                 holder.host.setText(transaction.getHost());
-                holder.start.setText(transaction.getRequestStartTimeString());
+                holder.start.setText(DateFormat.getTimeInstance().format(transaction.getRequestDate()));
                 holder.ssl.setVisibility(transaction.isSsl() ? View.VISIBLE : View.GONE);
                 if (transaction.getStatus() == HttpTransaction.Status.Complete) {
                     holder.code.setText(String.valueOf(transaction.getResponseCode()));

@@ -40,13 +40,11 @@ public class MainActivity extends BaseChuckActivity implements TransactionListFr
         setSupportActionBar(toolbar);
         toolbar.setSubtitle(getApplicationName());
 
-        if (savedInstanceState == null) {
-            ViewPager viewPager = findViewById(R.id.viewPager);
-            viewPager.setAdapter(new HomePageAdapter(this, getSupportFragmentManager()));
+        ViewPager viewPager = findViewById(R.id.viewPager);
+        viewPager.setAdapter(new HomePageAdapter(this, getSupportFragmentManager()));
 
-            TabLayout tabLayout = findViewById(R.id.tabLayout);
-            tabLayout.setupWithViewPager(viewPager);
-        }
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override

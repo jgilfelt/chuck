@@ -76,6 +76,13 @@ public class ChuckContentProvider extends ContentProvider {
                         byId(ContentUris.parseId(uri)).
                         getCursor();
                 break;
+            case ERROR:
+                cursor = LocalCupboard.getInstance().withDatabase(db).query(RecordedThrowable.class)
+                        .withProjection(projection)
+                        .withSelection(selection, selectionArgs)
+                        .orderBy(sortOrder)
+                        .getCursor();
+                break;
         }
         if (cursor != null) {
             cursor.setNotificationUri(getContext().getContentResolver(), uri);

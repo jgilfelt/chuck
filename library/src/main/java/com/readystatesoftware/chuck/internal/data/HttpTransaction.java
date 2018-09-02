@@ -21,11 +21,9 @@ import com.google.gson.reflect.TypeToken;
 import com.readystatesoftware.chuck.internal.support.FormatUtils;
 import com.readystatesoftware.chuck.internal.support.JsonConvertor;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import nl.qbusict.cupboard.annotation.Index;
 import okhttp3.Headers;
@@ -51,8 +49,6 @@ public class HttpTransaction {
             "error",
             "responseContentLength"
     };
-
-    private static final SimpleDateFormat TIME_ONLY_FMT = new SimpleDateFormat("HH:mm:ss", Locale.US);
 
     private Long _id;
     @Index private Date requestDate;
@@ -314,10 +310,6 @@ public class HttpTransaction {
         } else {
             return Status.Complete;
         }
-    }
-
-    public String getRequestStartTimeString() {
-        return (requestDate != null) ? TIME_ONLY_FMT.format(requestDate) : null;
     }
 
     public String getRequestDateString() {
