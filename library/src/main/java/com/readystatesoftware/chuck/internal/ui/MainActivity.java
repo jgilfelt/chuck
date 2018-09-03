@@ -15,6 +15,7 @@
  */
 package com.readystatesoftware.chuck.internal.ui;
 
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,6 +23,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 
+import com.readystatesoftware.chuck.Chuck;
 import com.readystatesoftware.chuck.R;
 import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 import com.readystatesoftware.chuck.internal.ui.transaction.TransactionActivity;
@@ -30,6 +32,8 @@ import com.readystatesoftware.chuck.internal.ui.transaction.TransactionListFragm
 public class MainActivity extends BaseChuckActivity implements TransactionListFragment.OnListFragmentInteractionListener {
 
     public static final String EXTRA_SCREEN = "EXTRA_SCREEN";
+
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,11 +44,32 @@ public class MainActivity extends BaseChuckActivity implements TransactionListFr
         setSupportActionBar(toolbar);
         toolbar.setSubtitle(getApplicationName());
 
-        ViewPager viewPager = findViewById(R.id.viewPager);
+        viewPager = findViewById(R.id.viewPager);
         viewPager.setAdapter(new HomePageAdapter(this, getSupportFragmentManager()));
 
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
+
+        consumeIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        consumeIntent(intent);
+    }
+
+    /**
+     * Scroll to the right tab.
+     */
+    private void consumeIntent(Intent intent) {
+        // Get the screen to show, by default => HTTP
+        int screenToShow = intent.getIntExtra(EXTRA_SCREEN, Chuck.SCREEN_HTTP);
+        if (screenToShow == Chuck.SCREEN_HTTP) {
+            viewPager.setCurrentItem(0);
+        } else {
+            viewPager.setCurrentItem(1);
+        }
     }
 
     @Override
