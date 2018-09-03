@@ -4,8 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.readystatesoftware.chuck.ChuckCollector;
-import com.readystatesoftware.chuck.ChuckInterceptor;
+import com.readystatesoftware.chuck.api.ChuckCollector;
 import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
 
 import java.util.Date;

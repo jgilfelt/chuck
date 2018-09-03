@@ -1,4 +1,4 @@
-package com.readystatesoftware.chuck;
+package com.readystatesoftware.chuck.api;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,7 +8,6 @@ import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
 import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 import com.readystatesoftware.chuck.internal.data.LocalCupboard;
 import com.readystatesoftware.chuck.internal.data.RecordedThrowable;
-import com.readystatesoftware.chuck.internal.support.FormatUtils;
 import com.readystatesoftware.chuck.internal.support.NotificationHelper;
 import com.readystatesoftware.chuck.internal.support.RetentionManager;
 

@@ -27,7 +27,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.readystatesoftware.chuck.Chuck;
+import com.readystatesoftware.chuck.api.Chuck;
 
 public class ChuckContentProvider extends ContentProvider {
 

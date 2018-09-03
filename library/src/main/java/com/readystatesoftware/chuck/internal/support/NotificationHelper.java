@@ -24,7 +24,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.LongSparseArray;
 
-import com.readystatesoftware.chuck.Chuck;
+import com.readystatesoftware.chuck.api.Chuck;
 import com.readystatesoftware.chuck.R;
 import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 import com.readystatesoftware.chuck.internal.data.RecordedThrowable;

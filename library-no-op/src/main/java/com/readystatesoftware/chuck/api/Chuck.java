@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.readystatesoftware.chuck;
+package com.readystatesoftware.chuck.api;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,7 +23,16 @@ import android.content.Intent;
  */
 public class Chuck {
 
-    public static Intent getLaunchIntent(Context context) {
+    public static final int SCREEN_HTTP = 1;
+    public static final int SCREEN_ERROR = 2;
+
+    public static Intent getLaunchIntent(Context context, int screen) {
         return new Intent();
+    }
+
+    public static void dismissTransactionsNotification() {
+    }
+
+    public static void dismissErrorsNotification() {
     }
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.readystatesoftware.chuck;
+package com.readystatesoftware.chuck.api;
 
 import android.content.Context;
 
@@ -28,13 +28,6 @@ import okhttp3.Response;
  */
 public final class ChuckInterceptor implements Interceptor {
 
-    public enum Period {
-        ONE_HOUR,
-        ONE_DAY,
-        ONE_WEEK,
-        FOREVER
-    }
-
     public ChuckInterceptor(Context context) {
     }
 
@@ -46,7 +39,7 @@ public final class ChuckInterceptor implements Interceptor {
         return this;
     }
 
-    public ChuckInterceptor retainDataFor(Period period) {
+    public ChuckInterceptor retainDataFor(ChuckCollector.Period period) {
         return this;
     }
 
