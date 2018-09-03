@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.IntDef;
 
+import com.readystatesoftware.chuck.internal.support.NotificationHelper;
 import com.readystatesoftware.chuck.internal.ui.MainActivity;
 
 /**
@@ -28,6 +29,13 @@ public class Chuck {
 
     public static final int SCREEN_HTTP = 1;
     public static final int SCREEN_ERROR = 2;
+
+    private static Context context;
+
+    public static void init(Context context) {
+
+        Chuck.context = context;
+    }
 
     /**
      * Get an Intent to launch the Chuck UI directly.
@@ -40,6 +48,14 @@ public class Chuck {
         return new Intent(context, MainActivity.class)
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 .putExtra(MainActivity.EXTRA_SCREEN, screen);
+    }
+
+    public static void dismissTransactionsNotification() {
+        new NotificationHelper(context).dismissTransactionsNotification();
+    }
+
+    public static void dismissErrorsNotification() {
+        new NotificationHelper(context).dismissErrorsNotification();
     }
 
     @IntDef(value = {SCREEN_HTTP, SCREEN_ERROR})

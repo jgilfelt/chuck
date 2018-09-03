@@ -50,6 +50,17 @@ public class MainActivity extends BaseChuckActivity implements TransactionListFr
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
 
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout) {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                if (position == 0) {
+                    Chuck.dismissTransactionsNotification();
+                } else {
+                    Chuck.dismissErrorsNotification();
+                }
+            }
+        });
         consumeIntent(getIntent());
     }
 

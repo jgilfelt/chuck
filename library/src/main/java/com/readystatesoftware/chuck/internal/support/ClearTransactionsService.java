@@ -17,6 +17,7 @@ public class ClearTransactionsService extends IntentService {
         getContentResolver().delete(ChuckContentProvider.TRANSACTION_URI, null, null);
         NotificationHelper.clearBuffer();
         NotificationHelper notificationHelper = new NotificationHelper(this);
-        notificationHelper.dismiss();
+        notificationHelper.dismissTransactionsNotification();
+        notificationHelper.dismissErrorsNotification();
     }
 }

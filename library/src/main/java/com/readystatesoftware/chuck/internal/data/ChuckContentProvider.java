@@ -27,6 +27,8 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.readystatesoftware.chuck.Chuck;
+
 public class ChuckContentProvider extends ContentProvider {
 
     public static Uri TRANSACTION_URI;
@@ -43,6 +45,8 @@ public class ChuckContentProvider extends ContentProvider {
     @Override
     public void attachInfo(Context context, ProviderInfo info) {
         super.attachInfo(context, info);
+        Chuck.init(context);
+
         TRANSACTION_URI = Uri.parse("content://" + info.authority + "/transaction");
         ERROR_URI = Uri.parse("content://" + info.authority + "/error");
         matcher.addURI(info.authority, "transaction/#", TRANSACTION);

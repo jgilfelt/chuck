@@ -118,8 +118,11 @@ public class NotificationHelper {
         }
     }
 
-    public void dismiss() {
+    public void dismissTransactionsNotification() {
         notificationManager.cancel(TRANSACTION_NOTIFICATION_ID);
+    }
+
+    public void dismissErrorsNotification() {
         notificationManager.cancel(ERROR_NOTIFICATION_ID);
     }
 }
