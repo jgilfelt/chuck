@@ -13,10 +13,8 @@ import android.widget.TextView;
 import com.readystatesoftware.chuck.R;
 import com.readystatesoftware.chuck.internal.data.LocalCupboard;
 import com.readystatesoftware.chuck.internal.data.RecordedThrowable;
-import com.readystatesoftware.chuck.internal.support.FormatUtils;
 
 import java.text.DateFormat;
-import java.time.format.DateTimeFormatter;
 
 /**
  * @author Olivier Perez

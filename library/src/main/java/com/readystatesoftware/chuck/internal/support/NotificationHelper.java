@@ -19,9 +19,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.LongSparseArray;
@@ -31,8 +29,6 @@ import com.readystatesoftware.chuck.R;
 import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 import com.readystatesoftware.chuck.internal.data.RecordedThrowable;
 import com.readystatesoftware.chuck.internal.ui.BaseChuckActivity;
-
-import java.lang.reflect.Method;
 
 public class NotificationHelper {
 
