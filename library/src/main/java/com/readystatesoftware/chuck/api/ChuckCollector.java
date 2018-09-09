@@ -65,11 +65,13 @@ public class ChuckCollector {
     }
 
     /**
+     * Call this method when a throwable is triggered and you want to record it.
      *
-     * @param throwable
+     * @param tag A tag you choose
+     * @param throwable The triggered throwable
      */
-    public void onError(Throwable throwable) {
-        RecordedThrowable recordedThrowable = new RecordedThrowable(throwable);
+    public void onError(String tag, Throwable throwable) {
+        RecordedThrowable recordedThrowable = new RecordedThrowable(tag, throwable);
         ContentValues values = LocalCupboard.getInstance()
                 .withEntity(RecordedThrowable.class)
                 .toContentValues(recordedThrowable);

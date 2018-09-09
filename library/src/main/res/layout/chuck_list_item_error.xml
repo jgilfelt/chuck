@@ -20,7 +20,7 @@
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
     android:orientation="vertical"
-    android:padding="12dp">
+    android:padding="8dp">
 
     <TextView
         android:id="@+id/clazz"
@@ -31,21 +31,23 @@
         tools:text="java.lang.RuntimeException" />
 
     <TextView
+        android:id="@+id/tag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Chuck.TextAppearance.Label"
+        tools:text="A given tag" />
+
+    <TextView
         android:id="@+id/message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
-        android:layout_marginStart="40dp"
         tools:text="Something gone wrong!" />
 
     <TextView
         android:id="@+id/date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
-        android:layout_marginStart="40dp"
-        android:padding="2dp"
+        android:gravity="right|end"
         tools:text="18:29:07" />
-
 
 </LinearLayout>

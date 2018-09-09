@@ -23,7 +23,7 @@ public class ErrorAdapter extends RecyclerView.Adapter<ErrorAdapter.ErrorViewHol
     private final CursorAdapter cursorAdapter;
     private final Context context;
 
-    public ErrorAdapter(Context context) {
+    public ErrorAdapter(@NonNull Context context) {
         this.context = context;
         cursorAdapter = new CursorAdapter(context, null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER) {
             @Override
@@ -67,18 +67,21 @@ public class ErrorAdapter extends RecyclerView.Adapter<ErrorAdapter.ErrorViewHol
 
     public static class ErrorViewHolder extends RecyclerView.ViewHolder {
 
+        private final TextView tag;
         private final TextView clazz;
         private final TextView message;
         private final TextView date;
 
         public ErrorViewHolder(View itemView) {
             super(itemView);
+            tag = itemView.findViewById(R.id.tag);
             clazz = itemView.findViewById(R.id.clazz);
             message = itemView.findViewById(R.id.message);
             date = itemView.findViewById(R.id.date);
         }
 
         public void bind(RecordedThrowable throwable) {
+            tag.setText(throwable.getTag());
             clazz.setText(throwable.getClazz());
             message.setText(throwable.getMessage());
             date.setText(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(throwable.getDate()));

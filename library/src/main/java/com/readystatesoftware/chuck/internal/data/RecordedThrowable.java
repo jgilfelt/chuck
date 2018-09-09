@@ -14,12 +14,15 @@ public class RecordedThrowable {
 
     public static final String[] PARTIAL_PROJECTION = new String[]{
             "_id",
+            "tag",
             "clazz",
             "message",
             "date"
     };
 
     private Long _id;
+
+    private String tag;
 
     @Index
     private Date date;
@@ -34,11 +37,29 @@ public class RecordedThrowable {
     public RecordedThrowable() {
     }
 
-    public RecordedThrowable(Throwable throwable) {
+    public RecordedThrowable(String tag, Throwable throwable) {
+        this.tag = tag;
         date = new Date();
         clazz = throwable.getClass().getName();
         message = throwable.getMessage();
         content = FormatUtils.formatThrowable(throwable);
+    }
+
+    public Long getId() {
+        return _id;
+    }
+
+    public RecordedThrowable setId(Long _id) {
+        this._id = _id;
+        return this;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
     public Date getDate() {
@@ -64,15 +85,6 @@ public class RecordedThrowable {
 
     public RecordedThrowable setMessage(String message) {
         this.message = message;
-        return this;
-    }
-
-    public Long getId() {
-        return _id;
-    }
-
-    public RecordedThrowable setId(Long _id) {
-        this._id = _id;
         return this;
     }
 

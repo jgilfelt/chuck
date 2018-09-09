@@ -114,6 +114,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void triggerException() {
-        collector.onError(new RuntimeException("Exception triggered by the user"));
+        collector.onError("Example button pressed", new RuntimeException("User triggered the button"));
     }
 }
