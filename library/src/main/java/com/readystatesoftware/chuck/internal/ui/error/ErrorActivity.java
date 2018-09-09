@@ -8,12 +8,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -76,6 +79,38 @@ public class ErrorActivity extends AppCompatActivity implements LoaderManager.Lo
         getSupportLoaderManager().restartLoader(0, null, this);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.chuck_error, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.share_text) {
+            share(throwable);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void share(RecordedThrowable throwable) {
+        String text = getString(R.string.chuck_share_error_content,
+                DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(throwable.getDate()),
+                throwable.getClazz(),
+                throwable.getTag(),
+                throwable.getMessage(),
+                throwable.getContent());
+
+        startActivity(ShareCompat.IntentBuilder.from(this)
+                .setType("text/plain")
+                .setSubject(getString(R.string.chuck_share_error_title))
+                .setText(text)
+                .createChooserIntent());
+    }
+
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
@@ -92,11 +127,10 @@ public class ErrorActivity extends AppCompatActivity implements LoaderManager.Lo
 
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-
     }
 
     private void populateUI() {
-        if (throwable !=  null) {
+        if (throwable != null) {
             String dateStr = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(throwable.getDate());
             title.setText(dateStr);
             tag.setText(throwable.getTag());

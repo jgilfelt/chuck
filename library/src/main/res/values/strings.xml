@@ -45,4 +45,6 @@
     <string name="chuck_tab_network">Network</string>
     <string name="chuck_tab_errors">Errors</string>
     <string name="notification_category">Chuck HTTP notifications</string>
+    <string name="chuck_share_error_title">Error report</string>
+    <string name="chuck_share_error_content"><![CDATA[Date: %s\nException: %s\nTag: %s\nMessage: %s\n\n%s]]></string>
 </resources>
