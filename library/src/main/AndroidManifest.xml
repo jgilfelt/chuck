@@ -30,6 +30,10 @@
         <activity android:name=".internal.ui.transaction.TransactionActivity"
             android:theme="@style/Chuck.Theme"
             android:parentActivityName=".internal.ui.MainActivity"/>
+        <activity android:name=".internal.ui.error.ErrorActivity"
+            android:theme="@style/Chuck.Theme"
+            android:parentActivityName=".internal.ui.MainActivity" />
+
         <service
             android:name=".internal.support.ClearTransactionsService"
             android:exported="false" />

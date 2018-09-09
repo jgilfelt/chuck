@@ -26,10 +26,13 @@ import android.support.v7.widget.Toolbar;
 import com.readystatesoftware.chuck.api.Chuck;
 import com.readystatesoftware.chuck.R;
 import com.readystatesoftware.chuck.internal.data.HttpTransaction;
+import com.readystatesoftware.chuck.internal.data.RecordedThrowable;
+import com.readystatesoftware.chuck.internal.ui.error.ErrorActivity;
+import com.readystatesoftware.chuck.internal.ui.error.ErrorAdapter;
 import com.readystatesoftware.chuck.internal.ui.transaction.TransactionActivity;
 import com.readystatesoftware.chuck.internal.ui.transaction.TransactionListFragment;
 
-public class MainActivity extends BaseChuckActivity implements TransactionListFragment.OnListFragmentInteractionListener {
+public class MainActivity extends BaseChuckActivity implements TransactionListFragment.OnListFragmentInteractionListener, ErrorAdapter.ErrorListListener {
 
     public static final String EXTRA_SCREEN = "EXTRA_SCREEN";
 
@@ -88,9 +91,15 @@ public class MainActivity extends BaseChuckActivity implements TransactionListFr
         TransactionActivity.start(this, transaction.getId());
     }
 
+    @Override
+    public void onClick(RecordedThrowable throwable) {
+        ErrorActivity.start(this, throwable.getId());
+    }
+
     private String getApplicationName() {
         ApplicationInfo applicationInfo = getApplicationInfo();
         int stringId = applicationInfo.labelRes;
         return stringId == 0 ? applicationInfo.nonLocalizedLabel.toString() : getString(stringId);
     }
+
 }

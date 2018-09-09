@@ -1,5 +1,6 @@
 package com.readystatesoftware.chuck.internal.ui.error;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,9 +26,20 @@ import com.readystatesoftware.chuck.internal.data.RecordedThrowable;
 public class ErrorListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private ErrorAdapter adapter;
+    private ErrorAdapter.ErrorListListener listener;
 
     public static Fragment newInstance() {
         return new ErrorListFragment();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof ErrorAdapter.ErrorListListener) {
+            listener = (ErrorAdapter.ErrorListListener) context;
+        } else {
+            throw new IllegalArgumentException("Context must implement the listener.");
+        }
     }
 
     @Nullable
@@ -39,7 +51,7 @@ public class ErrorListFragment extends Fragment implements LoaderManager.LoaderC
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-            adapter = new ErrorAdapter(getContext());
+            adapter = new ErrorAdapter(getContext(), listener);
             recyclerView.setAdapter(adapter);
         }
 

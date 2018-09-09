@@ -21,10 +21,12 @@ import java.text.DateFormat;
  */
 public class ErrorAdapter extends RecyclerView.Adapter<ErrorAdapter.ErrorViewHolder> {
     private final CursorAdapter cursorAdapter;
+    private final ErrorListListener listener;
     private final Context context;
 
-    public ErrorAdapter(@NonNull Context context) {
+    public ErrorAdapter(@NonNull Context context, @NonNull ErrorListListener listener) {
         this.context = context;
+        this.listener = listener;
         cursorAdapter = new CursorAdapter(context, null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER) {
             @Override
             public View newView(Context context, Cursor cursor, ViewGroup parent) {
@@ -38,6 +40,12 @@ public class ErrorAdapter extends RecyclerView.Adapter<ErrorAdapter.ErrorViewHol
                 final RecordedThrowable throwable = LocalCupboard.getInstance().withCursor(cursor).get(RecordedThrowable.class);
                 final ErrorViewHolder holder = (ErrorViewHolder) view.getTag();
                 holder.bind(throwable);
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ErrorAdapter.this.listener.onClick(holder.throwable);
+                    }
+                });
             }
         };
     }
@@ -50,7 +58,7 @@ public class ErrorAdapter extends RecyclerView.Adapter<ErrorAdapter.ErrorViewHol
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ErrorViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ErrorViewHolder holder, final int position) {
         cursorAdapter.getCursor().moveToPosition(position);
         cursorAdapter.bindView(holder.itemView, context, cursorAdapter.getCursor());
     }
@@ -71,6 +79,7 @@ public class ErrorAdapter extends RecyclerView.Adapter<ErrorAdapter.ErrorViewHol
         private final TextView clazz;
         private final TextView message;
         private final TextView date;
+        private RecordedThrowable throwable;
 
         public ErrorViewHolder(View itemView) {
             super(itemView);
@@ -81,11 +90,16 @@ public class ErrorAdapter extends RecyclerView.Adapter<ErrorAdapter.ErrorViewHol
         }
 
         public void bind(RecordedThrowable throwable) {
+            this.throwable = throwable;
             tag.setText(throwable.getTag());
             clazz.setText(throwable.getClazz());
             message.setText(throwable.getMessage());
             date.setText(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(throwable.getDate()));
             date.setText(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(throwable.getDate()));
         }
+    }
+
+    public interface ErrorListListener {
+        void onClick(RecordedThrowable throwable);
     }
 }
