@@ -1,15 +1,44 @@
 package com.readystatesoftware.chuck.internal.ui.error;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
+import android.view.View;
+import android.widget.TextView;
+
+import com.readystatesoftware.chuck.R;
+import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
+import com.readystatesoftware.chuck.internal.data.LocalCupboard;
+import com.readystatesoftware.chuck.internal.data.RecordedThrowable;
+
+import java.text.DateFormat;
 
 /**
  * @author Olivier Perez
  */
-public class ErrorActivity extends AppCompatActivity {
+public class ErrorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String EXTRA_ID = "EXTRA_ID";
+    private long throwableId;
+    private RecordedThrowable throwable;
+
+    private TextView title;
+    private TextView tag;
+    private TextView clazz;
+    private TextView message;
+    private TextView date;
+    private TextView stacktrace;
 
     public static void start(Context context, Long id) {
         Intent intent = new Intent(context, ErrorActivity.class);
@@ -17,4 +46,63 @@ public class ErrorActivity extends AppCompatActivity {
         context.startActivity(intent);
     }
 
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.chuck_activity_error);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        title = findViewById(R.id.toolbar_title);
+
+        final ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
+
+        tag = findViewById(R.id.tag);
+        clazz = findViewById(R.id.clazz);
+        message = findViewById(R.id.message);
+        date = findViewById(R.id.date);
+        stacktrace = findViewById(R.id.stacktrace);
+
+        date.setVisibility(View.GONE);
+
+        throwableId = getIntent().getLongExtra(EXTRA_ID, 0);
+        getSupportLoaderManager().initLoader(0, null, this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getSupportLoaderManager().restartLoader(0, null, this);
+    }
+
+    @NonNull
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+        CursorLoader loader = new CursorLoader(this);
+        loader.setUri(ContentUris.withAppendedId(ChuckContentProvider.ERROR_URI, throwableId));
+        return loader;
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+        throwable = LocalCupboard.getInstance().withCursor(data).get(RecordedThrowable.class);
+        populateUI();
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+
+    }
+
+    private void populateUI() {
+        if (throwable !=  null) {
+            String dateStr = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(throwable.getDate());
+            title.setText(dateStr);
+            tag.setText(throwable.getTag());
+            clazz.setText(throwable.getClazz());
+            message.setText(throwable.getMessage());
+            stacktrace.setText(throwable.getContent());
+        }
+    }
 }

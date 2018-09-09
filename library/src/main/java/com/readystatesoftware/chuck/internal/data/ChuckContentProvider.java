@@ -51,6 +51,7 @@ public class ChuckContentProvider extends ContentProvider {
         ERROR_URI = Uri.parse("content://" + info.authority + "/error");
         matcher.addURI(info.authority, "transaction/#", TRANSACTION);
         matcher.addURI(info.authority, "transaction", TRANSACTIONS);
+        matcher.addURI(info.authority, "error/#", ERROR);
         matcher.addURI(info.authority, "error", ERROR);
     }
 
