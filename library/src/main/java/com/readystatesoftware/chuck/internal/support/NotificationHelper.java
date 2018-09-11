@@ -64,7 +64,7 @@ public class NotificationHelper {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notificationManager.createNotificationChannel(
                     new NotificationChannel(CHANNEL_ID,
-                            context.getString(R.string.notification_category),
+                            context.getString(R.string.chuck_notification_category),
                             NotificationManager.IMPORTANCE_LOW));
         }
     }
