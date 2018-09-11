@@ -1,6 +1,21 @@
 Change Log
 ==========
 
+Version 2.0.0 *(2018-xx-xx)*
+----------------------------
+
+ * New: Adds a class ChuckCollector that can be used out of ChuckInterceptor.
+ * New: Chuck can now collect throwables.
+ * New: Adds a notification for throwables.
+ * New: Adds screens for throwables.
+ * New: Transaction class offers a fluent writing.
+ * Breaking: Chuck.getLaunchIntent needs one more parameter.
+ * Breaking: Built with Android plugin 3.1.x.
+ * Breaking: Target SDK version 27.
+ * Breaking: Support library 27.1.1.
+ * Breaking: API classes are now in package `api`.
+ * Misc: Move some internal classes.
+
 Version 1.1.0 *(2017-08-06)*
 ----------------------------
 

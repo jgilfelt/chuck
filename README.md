@@ -21,10 +21,10 @@ Setup
 Add the dependency in your `build.gradle` file. Add it alongside the `no-op` variant to isolate Chuck from release builds as follows:
 
 ```gradle
- dependencies {
-   debugCompile 'com.readystatesoftware.chuck:library:1.1.0'
-   releaseCompile 'com.readystatesoftware.chuck:library-no-op:1.1.0'
- }
+dependencies {
+  debugCompile 'com.readystatesoftware.chuck:library:2.0.0'
+  releaseCompile 'com.readystatesoftware.chuck:library-no-op:2.0.0'
+}
 ```
 
 In your application code, create an instance of `ChuckInterceptor` (you'll need to provide it with a `Context`, because Android) and add it as an interceptor when building your OkHttp client:
