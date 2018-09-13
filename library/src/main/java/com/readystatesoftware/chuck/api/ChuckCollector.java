@@ -92,12 +92,27 @@ public class ChuckCollector {
         return "gzip".equalsIgnoreCase(contentEncoding);
     }
 
-    public void setShowNotification(boolean showNotification) {
+    /**
+     * Control whether a notification is shown while HTTP activity is recorded.
+     *
+     * @param showNotification true to show a notification, false to suppress it.
+     * @return The {@link ChuckInterceptor} instance.
+     */
+    public ChuckCollector showNotification(boolean showNotification) {
         this.showNotification = showNotification;
+        return this;
     }
 
-    public void setRetentionManager(RetentionManager retentionManager) {
+    /**
+     * Set the retention period for HTTP transaction data captured by this interceptor.
+     * The default is one week.
+     *
+     * @param retentionManager the manager of retention of stored transactions and errors.
+     * @return The {@link ChuckInterceptor} instance.
+     */
+    public ChuckCollector retentionManager(RetentionManager retentionManager) {
         this.retentionManager = retentionManager;
+        return this;
     }
 
     public enum Period {

@@ -24,6 +24,7 @@ import android.view.View;
 import com.readystatesoftware.chuck.api.Chuck;
 import com.readystatesoftware.chuck.api.ChuckInterceptor;
 import com.readystatesoftware.chuck.api.ChuckCollector;
+import com.readystatesoftware.chuck.internal.support.RetentionManager;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -57,14 +58,15 @@ public class MainActivity extends AppCompatActivity {
                 triggerException();
             }
         });
-        collector = new ChuckCollector(this);
+
+        collector = new ChuckCollector(this)
+                .showNotification(true)
+                .retentionManager(new RetentionManager(this, ChuckCollector.Period.ONE_HOUR));
     }
 
     private OkHttpClient getClient(Context context) {
-        ChuckInterceptor chuckInterceptor = new ChuckInterceptor(context);
-        chuckInterceptor.showNotification(true);
-        chuckInterceptor.retainDataFor(ChuckCollector.Period.ONE_HOUR);
-        chuckInterceptor.maxContentLength(250000L);
+        ChuckInterceptor chuckInterceptor = new ChuckInterceptor(context, collector)
+                .maxContentLength(250000L);
 
         return new OkHttpClient.Builder()
                 // Add a ChuckInterceptor instance to your OkHttp client
@@ -81,8 +83,14 @@ public class MainActivity extends AppCompatActivity {
     private void doHttpActivity() {
         SampleApiService.HttpbinApi api = SampleApiService.getInstance(getClient(this));
         Callback<Void> cb = new Callback<Void>() {
-            @Override public void onResponse(Call call, Response response) {}
-            @Override public void onFailure(Call call, Throwable t) { t.printStackTrace(); }
+            @Override
+            public void onResponse(Call call, Response response) {
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                t.printStackTrace();
+            }
         };
         api.get().enqueue(cb);
         api.post(new SampleApiService.Data("posted")).enqueue(cb);

@@ -21,7 +21,6 @@ import android.util.Log;
 
 import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 import com.readystatesoftware.chuck.internal.support.IOUtils;
-import com.readystatesoftware.chuck.internal.support.RetentionManager;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -47,30 +46,19 @@ public final class ChuckInterceptor implements Interceptor {
     private static final String LOG_TAG = ChuckInterceptor.class.getSimpleName();
     private static final Charset UTF8 = Charset.forName("UTF-8");
 
-    private final Context context;
     private final ChuckCollector collector;
     private final IOUtils io;
 
     private long maxContentLength = 250000L;
 
-    /**
-     * @param context The current Context.
-     */
     public ChuckInterceptor(Context context) {
-        this.context = context.getApplicationContext();
         collector = new ChuckCollector(context);
         io = new IOUtils(context);
     }
 
-    /**
-     * Control whether a notification is shown while HTTP activity is recorded.
-     *
-     * @param show true to show a notification, false to suppress it.
-     * @return The {@link ChuckInterceptor} instance.
-     */
-    public ChuckInterceptor showNotification(boolean show) {
-        collector.setShowNotification(show);
-        return this;
+    public ChuckInterceptor(Context context, ChuckCollector collector) {
+        this.collector = collector;
+        io = new IOUtils(context);
     }
 
     /**
@@ -82,18 +70,6 @@ public final class ChuckInterceptor implements Interceptor {
      */
     public ChuckInterceptor maxContentLength(long max) {
         this.maxContentLength = max;
-        return this;
-    }
-
-    /**
-     * Set the retention period for HTTP transaction data captured by this interceptor.
-     * The default is one week.
-     *
-     * @param period the peroid for which to retain HTTP transaction data.
-     * @return The {@link ChuckInterceptor} instance.
-     */
-    public ChuckInterceptor retainDataFor(ChuckCollector.Period period) {
-        collector.setRetentionManager(new RetentionManager(context, period));
         return this;
     }
 

@@ -31,15 +31,10 @@ public final class ChuckInterceptor implements Interceptor {
     public ChuckInterceptor(Context context) {
     }
 
-    public ChuckInterceptor showNotification(boolean show) {
-        return this;
+    public ChuckInterceptor(Context context, ChuckCollector collector) {
     }
 
     public ChuckInterceptor maxContentLength(long max) {
-        return this;
-    }
-
-    public ChuckInterceptor retainDataFor(ChuckCollector.Period period) {
         return this;
     }
 

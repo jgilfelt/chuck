@@ -33,10 +33,12 @@ public class ChuckCollector {
         return false;
     }
 
-    public void setShowNotification(boolean showNotification) {
+    public ChuckCollector showNotification(boolean showNotification) {
+        return this;
     }
 
-    public void setRetentionManager(Object object) {
+    public ChuckCollector retentionManager(Object object) {
+        return this;
     }
 
     public enum Period {
