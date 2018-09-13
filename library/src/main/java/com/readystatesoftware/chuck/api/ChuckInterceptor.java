@@ -95,10 +95,10 @@ public final class ChuckInterceptor implements Interceptor {
             }
         }
 
-        boolean encodignIsSupported = collector.bodyHasSupportedEncoding(request.headers().get("Content-Encoding"));
-        transaction.setRequestBodyIsPlainText(encodignIsSupported);
+        boolean encodingIsSupported = collector.bodyHasSupportedEncoding(request.headers().get("Content-Encoding"));
+        transaction.setRequestBodyIsPlainText(encodingIsSupported);
 
-        if (hasRequestBody && encodignIsSupported) {
+        if (hasRequestBody && encodingIsSupported) {
             BufferedSource source = io.getNativeSource(new Buffer(), collector.bodyGzipped(request.headers().get("Content-Encoding")));
             Buffer buffer = source.buffer();
             requestBody.writeTo(buffer);
