@@ -39,6 +39,11 @@ public class ChuckContentProvider extends ContentProvider {
     private static final int ERROR = 2;
     private static final int ERRORS = 3;
 
+    public static final int LOADER_TRANSACTION_DETAIL = 0;
+    public static final int LOADER_TRANSACTIONS = 1;
+    public static final int LOADER_ERROR_DETAIL = 2;
+    public static final int LOADER_ERRORS = 3;
+
     private static final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     private ChuckDbOpenHelper databaseHelper;

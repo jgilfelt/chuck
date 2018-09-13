@@ -47,6 +47,7 @@ import com.readystatesoftware.chuck.internal.ui.BaseChuckActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.readystatesoftware.chuck.internal.data.ChuckContentProvider.LOADER_TRANSACTION_DETAIL;
 import static com.readystatesoftware.chuck.internal.ui.transaction.TransactionPayloadFragment.TYPE_REQUEST;
 import static com.readystatesoftware.chuck.internal.ui.transaction.TransactionPayloadFragment.TYPE_RESPONSE;
 
@@ -89,13 +90,13 @@ public class TransactionActivity extends BaseChuckActivity implements LoaderMana
         tabLayout.setupWithViewPager(viewPager);
 
         transactionId = getIntent().getLongExtra(ARG_TRANSACTION_ID, 0);
-        getSupportLoaderManager().initLoader(0, null, this);
+        getSupportLoaderManager().initLoader(LOADER_TRANSACTION_DETAIL, null, this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        getSupportLoaderManager().restartLoader(0, null, this);
+        getSupportLoaderManager().restartLoader(LOADER_TRANSACTION_DETAIL, null, this);
     }
 
     @Override

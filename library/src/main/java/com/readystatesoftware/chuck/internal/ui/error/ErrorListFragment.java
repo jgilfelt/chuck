@@ -20,6 +20,8 @@ import com.readystatesoftware.chuck.R;
 import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
 import com.readystatesoftware.chuck.internal.data.RecordedThrowable;
 
+import static com.readystatesoftware.chuck.internal.data.ChuckContentProvider.LOADER_ERRORS;
+
 /**
  * @author Olivier Perez
  */
@@ -61,7 +63,7 @@ public class ErrorListFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(1, null, this);
+        getLoaderManager().initLoader(LOADER_ERRORS, null, this);
     }
 
     @NonNull

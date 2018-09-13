@@ -27,6 +27,8 @@ import com.readystatesoftware.chuck.internal.data.RecordedThrowable;
 
 import java.text.DateFormat;
 
+import static com.readystatesoftware.chuck.internal.data.ChuckContentProvider.LOADER_ERROR_DETAIL;
+
 /**
  * @author Olivier Perez
  */
@@ -70,13 +72,13 @@ public class ErrorActivity extends AppCompatActivity implements LoaderManager.Lo
         date.setVisibility(View.GONE);
 
         throwableId = getIntent().getLongExtra(EXTRA_ID, 0);
-        getSupportLoaderManager().initLoader(0, null, this);
+        getSupportLoaderManager().initLoader(LOADER_ERROR_DETAIL, null, this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        getSupportLoaderManager().restartLoader(0, null, this);
+        getSupportLoaderManager().restartLoader(LOADER_ERROR_DETAIL, null, this);
     }
 
     @Override

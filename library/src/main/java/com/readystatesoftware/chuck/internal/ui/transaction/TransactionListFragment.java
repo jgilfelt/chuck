@@ -42,6 +42,8 @@ import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 import com.readystatesoftware.chuck.internal.support.NotificationHelper;
 import com.readystatesoftware.chuck.internal.support.SQLiteUtils;
 
+import static com.readystatesoftware.chuck.internal.data.ChuckContentProvider.LOADER_TRANSACTIONS;
+
 public class TransactionListFragment extends Fragment implements
         SearchView.OnQueryTextListener, LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -80,7 +82,7 @@ public class TransactionListFragment extends Fragment implements
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(LOADER_TRANSACTIONS, null, this);
     }
 
     @Override
@@ -161,7 +163,7 @@ public class TransactionListFragment extends Fragment implements
     @Override
     public boolean onQueryTextChange(String newText) {
         currentFilter = newText;
-        getLoaderManager().restartLoader(0, null, this);
+        getLoaderManager().restartLoader(LOADER_TRANSACTIONS, null, this);
         return true;
     }
 
