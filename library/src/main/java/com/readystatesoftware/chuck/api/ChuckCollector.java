@@ -82,16 +82,6 @@ public class ChuckCollector {
         retentionManager.doMaintenance();
     }
 
-    public boolean bodyHasSupportedEncoding(String contentEncoding) {
-        return contentEncoding != null &&
-                (contentEncoding.equalsIgnoreCase("identity") ||
-                        contentEncoding.equalsIgnoreCase("gzip"));
-    }
-
-    public boolean bodyGzipped(String contentEncoding) {
-        return "gzip".equalsIgnoreCase(contentEncoding);
-    }
-
     /**
      * Control whether a notification is shown while HTTP activity is recorded.
      *

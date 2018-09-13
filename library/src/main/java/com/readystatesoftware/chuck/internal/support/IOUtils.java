@@ -70,4 +70,14 @@ public class IOUtils {
             return input;
         }
     }
+
+    public boolean bodyHasSupportedEncoding(String contentEncoding) {
+        return contentEncoding != null &&
+                (contentEncoding.equalsIgnoreCase("identity") ||
+                        contentEncoding.equalsIgnoreCase("gzip"));
+    }
+
+    public boolean bodyIsGzipped(String contentEncoding) {
+        return "gzip".equalsIgnoreCase(contentEncoding);
+    }
 }

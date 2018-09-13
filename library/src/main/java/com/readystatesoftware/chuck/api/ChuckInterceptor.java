@@ -95,11 +95,11 @@ public final class ChuckInterceptor implements Interceptor {
             }
         }
 
-        boolean encodingIsSupported = collector.bodyHasSupportedEncoding(request.headers().get("Content-Encoding"));
+        boolean encodingIsSupported = io.bodyHasSupportedEncoding(request.headers().get("Content-Encoding"));
         transaction.setRequestBodyIsPlainText(encodingIsSupported);
 
         if (hasRequestBody && encodingIsSupported) {
-            BufferedSource source = io.getNativeSource(new Buffer(), collector.bodyGzipped(request.headers().get("Content-Encoding")));
+            BufferedSource source = io.getNativeSource(new Buffer(), io.bodyIsGzipped(request.headers().get("Content-Encoding")));
             Buffer buffer = source.buffer();
             requestBody.writeTo(buffer);
             Charset charset = UTF8;
@@ -143,7 +143,7 @@ public final class ChuckInterceptor implements Interceptor {
         }
         transaction.setResponseHeaders(response.headers());
 
-        boolean responseEncodingIsSupported = collector.bodyHasSupportedEncoding(response.headers().get("Content-Encoding"));
+        boolean responseEncodingIsSupported = io.bodyHasSupportedEncoding(response.headers().get("Content-Encoding"));
         transaction.setResponseBodyIsPlainText(responseEncodingIsSupported);
 
         if (HttpHeaders.hasBody(response) && responseEncodingIsSupported) {
@@ -175,7 +175,7 @@ public final class ChuckInterceptor implements Interceptor {
     }
 
     private BufferedSource getNativeSource(Response response) throws IOException {
-        if (collector.bodyGzipped(response.headers().get("Content-Encoding"))) {
+        if (io.bodyIsGzipped(response.headers().get("Content-Encoding"))) {
             BufferedSource source = response.peekBody(maxContentLength).source();
             if (source.buffer().size() < maxContentLength) {
                 return io.getNativeSource(source, true);

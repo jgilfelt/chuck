@@ -25,14 +25,6 @@ public class ChuckCollector {
     public void onError(Object object) {
     }
 
-    public boolean bodyHasSupportedEncoding(String contentEncoding) {
-        return false;
-    }
-
-    public boolean bodyGzipped(String contentEncoding) {
-        return false;
-    }
-
     public ChuckCollector showNotification(boolean showNotification) {
         return this;
     }
