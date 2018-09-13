@@ -19,7 +19,9 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.LongSparseArray;
@@ -77,7 +79,8 @@ public class NotificationHelper {
                     .setLocalOnly(true)
                     .setSmallIcon(R.drawable.chuck_ic_notification_white_24dp)
                     .setColor(ContextCompat.getColor(context, R.color.chuck_colorPrimary))
-                    .setContentTitle(context.getString(R.string.chuck_http_notification_title));
+                    .setContentTitle(context.getString(R.string.chuck_http_notification_title))
+                    .addAction(createClearAction(ClearTransactionsService.CLEAR_TRANSACTIONS));
             NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
             int count = 0;
             for (int i = transactionBuffer.size() - 1; i >= 0; i--) {
@@ -109,9 +112,19 @@ public class NotificationHelper {
                     .setColor(ContextCompat.getColor(context, R.color.chuck_status_error))
                     .setContentTitle(throwable.getClazz())
                     .setAutoCancel(true)
-                    .setContentText(throwable.getMessage());
+                    .setContentText(throwable.getMessage())
+                    .addAction(createClearAction(ClearTransactionsService.CLEAR_ERRORS));
             notificationManager.notify(ERROR_NOTIFICATION_ID, builder.build());
         }
+    }
+
+    @NonNull
+    private NotificationCompat.Action createClearAction(@ClearTransactionsService.Clear int itemsToClear) {
+        CharSequence clearTitle = context.getString(R.string.chuck_clear);
+        Intent deleteIntent = new Intent(context, ClearTransactionsService.class);
+        deleteIntent.putExtra(ClearTransactionsService.EXTRA_ITEM_TO_CLEAR, itemsToClear);
+        PendingIntent intent = PendingIntent.getService(context, 11, deleteIntent, PendingIntent.FLAG_ONE_SHOT);
+        return new NotificationCompat.Action(R.drawable.chuck_ic_delete_white_24dp, clearTitle, intent);
     }
 
     public void dismissTransactionsNotification() {

@@ -37,6 +37,7 @@ public class ChuckContentProvider extends ContentProvider {
     private static final int TRANSACTION = 0;
     private static final int TRANSACTIONS = 1;
     private static final int ERROR = 2;
+    private static final int ERRORS = 3;
 
     private static final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -52,7 +53,7 @@ public class ChuckContentProvider extends ContentProvider {
         matcher.addURI(info.authority, "transaction/#", TRANSACTION);
         matcher.addURI(info.authority, "transaction", TRANSACTIONS);
         matcher.addURI(info.authority, "error/#", ERROR);
-        matcher.addURI(info.authority, "error", ERROR);
+        matcher.addURI(info.authority, "error", ERRORS);
     }
 
     @Override
@@ -81,12 +82,17 @@ public class ChuckContentProvider extends ContentProvider {
                         byId(ContentUris.parseId(uri)).
                         getCursor();
                 break;
-            case ERROR:
+            case ERRORS:
                 cursor = LocalCupboard.getInstance().withDatabase(db).query(RecordedThrowable.class)
                         .withProjection(projection)
                         .withSelection(selection, selectionArgs)
                         .orderBy(sortOrder)
                         .getCursor();
+                break;
+            case ERROR:
+                cursor = LocalCupboard.getInstance().withDatabase(db).query(RecordedThrowable.class).
+                        byId(ContentUris.parseId(uri)).
+                        getCursor();
                 break;
         }
         if (cursor != null) {
@@ -113,7 +119,7 @@ public class ChuckContentProvider extends ContentProvider {
                     return ContentUris.withAppendedId(TRANSACTION_URI, id);
                 }
                 break;
-            case ERROR:
+            case ERRORS:
                 long errorId = db.insert(LocalCupboard.getInstance().getTable(RecordedThrowable.class), null, contentValues);
                 if (errorId > 0) {
                     getContext().getContentResolver().notifyChange(uri, null);
@@ -136,11 +142,12 @@ public class ChuckContentProvider extends ContentProvider {
                 result = db.delete(LocalCupboard.getInstance().getTable(HttpTransaction.class),
                         "_id = ?", new String[]{uri.getPathSegments().get(1)});
                 break;
+            case ERRORS:
+                result = db.delete(LocalCupboard.getInstance().getTable(RecordedThrowable.class), selection, selectionArgs);
+                break;
             case ERROR:
-                result = db.delete(
-                        LocalCupboard.getInstance().getTable(RecordedThrowable.class),
-                        "_id = ?",
-                        new String[]{uri.getPathSegments().get(1)});
+                result = db.delete(LocalCupboard.getInstance().getTable(RecordedThrowable.class),
+                        "_id = ?", new String[]{uri.getPathSegments().get(1)});
                 break;
         }
         if (result > 0) {
