@@ -80,9 +80,9 @@ public class MainActivity extends BaseChuckActivity implements TransactionListFr
         // Get the screen to show, by default => HTTP
         int screenToShow = intent.getIntExtra(EXTRA_SCREEN, Chuck.SCREEN_HTTP);
         if (screenToShow == Chuck.SCREEN_HTTP) {
-            viewPager.setCurrentItem(0);
+            viewPager.setCurrentItem(HomePageAdapter.SCREEN_HTTP_INDEX);
         } else {
-            viewPager.setCurrentItem(1);
+            viewPager.setCurrentItem(HomePageAdapter.SCREEN_ERROR_INDEX);
         }
     }
 

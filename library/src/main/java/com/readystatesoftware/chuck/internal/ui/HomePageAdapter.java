@@ -14,6 +14,9 @@ import com.readystatesoftware.chuck.internal.ui.transaction.TransactionListFragm
  */
 class HomePageAdapter extends FragmentPagerAdapter {
 
+    public static final int SCREEN_HTTP_INDEX = 0;
+    public static final int SCREEN_ERROR_INDEX = 1;
+
     private final Context context;
 
     public HomePageAdapter(Context context, FragmentManager fragmentManager) {
@@ -23,7 +26,7 @@ class HomePageAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        if (position == 0) {
+        if (position == SCREEN_HTTP_INDEX) {
             return TransactionListFragment.newInstance();
         } else {
             return ErrorListFragment.newInstance();
@@ -37,7 +40,7 @@ class HomePageAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        if (position == 0) {
+        if (position == SCREEN_HTTP_INDEX) {
             return context.getString(R.string.chuck_tab_network);
         } else {
             return context.getString(R.string.chuck_tab_errors);
