@@ -13,12 +13,17 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.readystatesoftware.chuck.R;
 import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
 import com.readystatesoftware.chuck.internal.data.RecordedThrowable;
+import com.readystatesoftware.chuck.internal.support.NotificationHelper;
+import com.readystatesoftware.chuck.internal.support.SQLiteUtils;
 
 import static com.readystatesoftware.chuck.internal.data.ChuckContentProvider.LOADER_ERRORS;
 
@@ -32,6 +37,12 @@ public class ErrorListFragment extends Fragment implements LoaderManager.LoaderC
 
     public static Fragment newInstance() {
         return new ErrorListFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -64,6 +75,26 @@ public class ErrorListFragment extends Fragment implements LoaderManager.LoaderC
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getLoaderManager().initLoader(LOADER_ERRORS, null, this);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.chuck_errors_list, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.clear) {
+            getContext().getContentResolver().delete(ChuckContentProvider.ERROR_URI, null, null);
+            NotificationHelper.clearBuffer();
+            return true;
+        } else if (item.getItemId() == R.id.browse_sql) {
+            SQLiteUtils.browseDatabase(getContext());
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @NonNull
