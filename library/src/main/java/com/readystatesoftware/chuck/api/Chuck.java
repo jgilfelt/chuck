@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.IntDef;
 
+import com.readystatesoftware.chuck.internal.support.ChuckCrashHandler;
 import com.readystatesoftware.chuck.internal.support.NotificationHelper;
 import com.readystatesoftware.chuck.internal.ui.MainActivity;
 
@@ -48,6 +49,16 @@ public class Chuck {
         return new Intent(context, MainActivity.class)
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 .putExtra(MainActivity.EXTRA_SCREEN, screen);
+    }
+
+    /**
+     * Configure the default crash handler of the JVM to report all uncaught Throwable to Chuck.
+     * You may only use it for debugging purpose.
+     *
+     * @param collector the ChuckCollector
+     */
+    public static void registerDefaultCrashHanlder(final ChuckCollector collector) {
+        Thread.setDefaultUncaughtExceptionHandler(new ChuckCrashHandler(collector));
     }
 
     public static void dismissTransactionsNotification() {

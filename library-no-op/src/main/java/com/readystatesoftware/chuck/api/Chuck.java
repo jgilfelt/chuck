@@ -30,6 +30,9 @@ public class Chuck {
         return new Intent();
     }
 
+    public static void registerDefaultCrashHanlder(ChuckCollector collector) {
+    }
+
     public static void dismissTransactionsNotification() {
     }
 

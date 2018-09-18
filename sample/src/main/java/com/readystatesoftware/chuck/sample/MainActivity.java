@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
         collector = new ChuckCollector(this)
                 .showNotification(true)
                 .retentionManager(new RetentionManager(this, ChuckCollector.Period.ONE_HOUR));
+
+        Chuck.registerDefaultCrashHanlder(collector);
     }
 
     private OkHttpClient getClient(Context context) {
@@ -123,5 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void triggerException() {
         collector.onError("Example button pressed", new RuntimeException("User triggered the button"));
+        // You can also throw exception, it will be caught thanks to "Chuck.registerDefaultCrashHanlder"
+        // throw new RuntimeException("User triggered the button");
     }
 }
