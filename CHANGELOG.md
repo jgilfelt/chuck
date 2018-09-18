@@ -9,6 +9,7 @@ Version 2.0.0 *(2018-xx-xx)*
  * New: Adds a notification for throwables.
  * New: Adds screens for throwables.
  * New: Transaction class offers a fluent writing.
+ * New: Adds Chuck.registerDefaultCrashHanlder for **debugging purpose only**.
  * Breaking: Chuck.getLaunchIntent needs one more parameter.
  * Breaking: Built with Android plugin 3.1.x.
  * Breaking: Target SDK version 27.

@@ -1,11 +1,11 @@
 Chuck
 =====
 
-Chuck is a simple in-app HTTP inspector for Android OkHttp clients. Chuck intercepts and persists all HTTP requests and responses inside your application, and provides a UI for inspecting their content.
+Chuck simplifies the gathering of HTTP requests/responses, and Throwables. Chuck intercepts and persists all this events inside your application, and provides an UI for inspecting and sharing their content.
 
 ![Chuck](assets/chuck.gif)
 
-Apps using Chuck will display a notification showing a summary of ongoing HTTP activity. Tapping on the notification launches the full Chuck UI. Apps can optionally suppress the notification, and launch the Chuck UI directly from within their own interface. HTTP interactions and their contents can be exported via a share intent.
+Apps using Chuck will display a notifications showing a summary of ongoing HTTP activity and Throwables. Tapping on the notification launches the full Chuck UI. Apps can optionally suppress the notification, and launch the Chuck UI directly from within their own interface.
 
 The main Chuck activity is launched in its own task, allowing it to be displayed alongside the host app UI using Android 7.x multi-window support.
 
@@ -27,22 +27,39 @@ dependencies {
 }
 ```
 
-In your application code, create an instance of `ChuckInterceptor` (you'll need to provide it with a `Context`, because Android) and add it as an interceptor when building your OkHttp client:
+In your application code, create an instance of `ChuckInterceptor` and its `ChuckCollector` (you'll need to provide it with a `Context`, because Android) and add it as an interceptor when building your OkHttp client:
 
 ```java
-ChuckInterceptor chuckInterceptor = new ChuckInterceptor(context);
+// Collector
+ChuckCollector collector = new ChuckCollector(this)
+    .showNotification(true)
+    .retentionManager(new RetentionManager(this, ChuckCollector.Period.ONE_HOUR));
 
-// default values
-chuckInterceptor.showNotification(true);
-chuckInterceptor.retainDataFor(ChuckCollector.Period.ONE_HOUR);
-chuckInterceptor.maxContentLength(250000L);
+// Interceptor
+ChuckInterceptor chuckInterceptor = new ChuckInterceptor(context, collector)
+    .maxContentLength(250000L);
 
 OkHttpClient client = new OkHttpClient.Builder()
   .addInterceptor(chuckInterceptor)
   .build();
 ```
 
-That's it! Chuck will now record all HTTP interactions made by your OkHttp client. You can optionally disable the notification by calling `showNotification(false)` on the interceptor instance, and launch the Chuck UI directly within your app with the intent from `Chuck.getLaunchIntent()`.
+That's it! Chuck will now record all HTTP interactions made by your OkHttp client. You can optionally disable the notification by calling `showNotification(false)` on the collector object, and launch the Chuck UI directly within your app with the intent from `Chuck.getLaunchIntent()`.
+
+For errors gathering you can directly use the same collector:
+
+```java
+// Collector
+ChuckCollector collector = new ChuckCollector(this)
+    .showNotification(true)
+    .retentionManager(new RetentionManager(this, ChuckCollector.Period.ONE_HOUR));
+
+try {
+    // Do something risky
+} catch (IOException e) {
+    collector.onError("Failed to do something risky", e);
+}
+```
 
 FAQ
 ---
