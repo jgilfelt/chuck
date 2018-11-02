@@ -10,18 +10,15 @@ import android.text.style.UnderlineSpan;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by waleed on 17/02/2018.
- */
 
 public class SearchHighlightUtil {
 
     public static SpannableStringBuilder format(String text, String criteria) {
-        List<Integer> startIndexes = indexOf(text, criteria);
+        List<Integer> startIndexes = indexesOf(text, criteria);
         return applySpannable(text, startIndexes, criteria.length());
     }
 
-    private static List<Integer> indexOf(String text, String criteria) {
+    private static List<Integer> indexesOf(String text, String criteria) {
         List<Integer> startPositions = new ArrayList<>();
         int index = text.indexOf(criteria);
         do {
