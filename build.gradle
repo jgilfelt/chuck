@@ -6,7 +6,9 @@ buildscript {
         google()
     }
     dependencies {
+
         classpath 'com.android.tools.build:gradle:3.0.1'
+
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -18,7 +20,10 @@ allprojects {
 
     repositories {
         jcenter()
-        google()
+
+        maven {
+            url "https://maven.google.com"
+        }
     }
 }
 
@@ -28,10 +33,10 @@ task clean(type: Delete) {
 
 ext {
     minSdkVersion = 16
-    targetSdkVersion = 25
-    compileSdkVersion = 25
-    buildToolsVersion = '25.0.2'
+    targetSdkVersion = 26
+    compileSdkVersion = 26
+    buildToolsVersion = '26.0.1'
 
-    supportLibVersion = '25.3.0'
+    supportLibVersion = '25.3.1'
     okhttp3Version = '3.6.0'
 }
