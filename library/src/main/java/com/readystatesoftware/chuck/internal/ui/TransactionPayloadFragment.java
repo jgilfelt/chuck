@@ -80,6 +80,12 @@ public class TransactionPayloadFragment extends Fragment implements TransactionF
         populateUI();
     }
 
+    @Override
+    public void onQueryTextChange(String phrase) {
+        HighlightUtils.highlight(body, phrase);
+        HighlightUtils.highlight(headers, phrase);
+    }
+
     private void populateUI() {
         if (isAdded() && transaction != null) {
             switch (type) {

@@ -82,6 +82,11 @@ public class TransactionOverviewFragment extends Fragment implements Transaction
         populateUI();
     }
 
+    @Override
+    public void onQueryTextChange(String newText) {
+        HighlightUtils.highlight(url, newText);
+    }
+
     private void populateUI() {
         if (isAdded() && transaction != null) {
             url.setText(transaction.getUrl());
