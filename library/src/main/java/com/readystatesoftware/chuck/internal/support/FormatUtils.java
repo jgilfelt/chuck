@@ -73,8 +73,10 @@ public class FormatUtils {
 
     public static String formatXml(String xml) {
         try {
-            TransformerFactory transformerFactory = SAXTransformerFactory.newInstance();
+            SAXTransformerFactory transformerFactory = (SAXTransformerFactory) SAXTransformerFactory.newInstance();
             transformerFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            transformerFactory.setAttribute("http://javax.xml.XMLConstants/property/accessExternalDTD", "");
+            transformerFactory.setAttribute("http://javax.xml.XMLConstants/property/accessExternalStylesheet", "");
             Transformer serializer = transformerFactory.newTransformer();
             serializer.setOutputProperty(OutputKeys.INDENT, "yes");
             serializer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
