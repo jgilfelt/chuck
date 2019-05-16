@@ -19,6 +19,7 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -29,11 +30,12 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.readystatesoftware.chuck.R;
@@ -49,7 +51,7 @@ import java.util.List;
 import static com.readystatesoftware.chuck.internal.ui.TransactionPayloadFragment.TYPE_REQUEST;
 import static com.readystatesoftware.chuck.internal.ui.TransactionPayloadFragment.TYPE_RESPONSE;
 
-public class TransactionActivity extends BaseChuckActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class TransactionActivity extends BaseChuckActivity implements LoaderManager.LoaderCallbacks<Cursor>, SearchView.OnQueryTextListener {
 
     private static final String ARG_TRANSACTION_ID = "transaction_id";
 
@@ -61,11 +63,31 @@ public class TransactionActivity extends BaseChuckActivity implements LoaderMana
         context.startActivity(intent);
     }
 
+
     TextView title;
     Adapter adapter;
+    private String phrase;
+
+    private List<TransactionFragment> attachedTransactionFragments = new ArrayList<>(2);
 
     private long transactionId;
     private HttpTransaction transaction;
+
+    private FragmentManager.FragmentLifecycleCallbacks fragmentLifecycleCallbacks = new FragmentManager.FragmentLifecycleCallbacks() {
+        @Override
+        public void onFragmentViewCreated(FragmentManager fm, Fragment f, View v, Bundle savedInstanceState) {
+            if (f instanceof TransactionFragment) {
+                final TransactionFragment transactionFragment = (TransactionFragment) f;
+                attachedTransactionFragments.add(transactionFragment);
+                transactionFragment.onQueryTextChange(phrase);
+            }
+        }
+
+        @Override
+        public void onFragmentViewDestroyed(FragmentManager fm, Fragment f) {
+            attachedTransactionFragments.remove(f);
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,6 +111,14 @@ public class TransactionActivity extends BaseChuckActivity implements LoaderMana
 
         transactionId = getIntent().getLongExtra(ARG_TRANSACTION_ID, 0);
         getSupportLoaderManager().initLoader(0, null, this);
+
+        getSupportFragmentManager().registerFragmentLifecycleCallbacks(fragmentLifecycleCallbacks, true);
+    }
+
+    @Override
+    protected void onDestroy() {
+        getSupportFragmentManager().unregisterFragmentLifecycleCallbacks(fragmentLifecycleCallbacks);
+        super.onDestroy();
     }
 
     @Override
@@ -101,6 +131,10 @@ public class TransactionActivity extends BaseChuckActivity implements LoaderMana
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.chuck_transaction, menu);
+        MenuItem searchMenuItem = menu.findItem(R.id.transaction_search);
+        SearchView searchView = (SearchView) searchMenuItem.getActionView();
+        searchView.setOnQueryTextListener(this);
+        searchView.setIconifiedByDefault(true);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -164,6 +198,20 @@ public class TransactionActivity extends BaseChuckActivity implements LoaderMana
         sendIntent.putExtra(Intent.EXTRA_TEXT, content);
         sendIntent.setType("text/plain");
         startActivity(Intent.createChooser(sendIntent, null));
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String phrase) {
+        this.phrase = phrase;
+        for (TransactionFragment fragment : attachedTransactionFragments) {
+            fragment.onQueryTextChange(phrase);
+        }
+        return false;
     }
 
     static class Adapter extends FragmentPagerAdapter {
