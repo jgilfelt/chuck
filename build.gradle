@@ -13,6 +13,10 @@ buildscript {
     }
 }
 
+plugins {
+    id "org.shipkit.java" version "2.2.2"
+}
+
 allprojects {
     version = VERSION_NAME
     group = GROUP

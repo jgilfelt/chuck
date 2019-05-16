@@ -1,0 +1,24 @@
+shipkit {
+    gitHub.repository = "DroidsOnRoids/chuck"
+
+    gitHub.readOnlyAuthToken = System.getenv("GH_READ_TOKEN") ?: ""
+
+    gitHub.writeAuthToken = System.getenv("GH_WRITE_TOKEN")
+}
+
+allprojects {
+    plugins.withId("org.shipkit.bintray") {
+
+        bintray {
+
+            key = System.getenv("BINTRAY_API_KEY")
+
+            pkg {
+                repo = 'maven'
+                user = 'koral'
+                name = 'chuck'
+                licenses = ['Apache-2.0']
+            }
+        }
+    }
+}
