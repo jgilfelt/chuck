@@ -38,7 +38,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/do_http"
+        android:id="@+id/launch_chuck_directly"/>
+
+    <Button
+        android:id="@+id/export_json_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/launch_chuck_directly" />
+        android:layout_below="@+id/launch_chuck_directly"
+        android:text="@string/export_json_data"/>
 </RelativeLayout>

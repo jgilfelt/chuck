@@ -26,6 +26,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
+
+import com.readystatesoftware.chuck.internal.support.JsonConvertor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import nl.qbusict.cupboard.QueryResultIterable;
 
 public class ChuckContentProvider extends ContentProvider {
 
@@ -36,6 +44,26 @@ public class ChuckContentProvider extends ContentProvider {
     private static final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     private ChuckDbOpenHelper databaseHelper;
+
+
+    @WorkerThread
+    public static String export(Context context){
+        ChuckDbOpenHelper chuckDbOpenHelper = new ChuckDbOpenHelper(context);
+        SQLiteDatabase readableDatabase = chuckDbOpenHelper.getReadableDatabase();
+        QueryResultIterable<HttpTransaction> iterable = LocalCupboard.getInstance().withDatabase(readableDatabase).query(HttpTransaction.class).query();
+        List<HttpTransaction> list = getListFromQueryResultIterator(iterable);
+        return JsonConvertor.getInstance().toJson(list);
+    }
+
+    private static List<HttpTransaction> getListFromQueryResultIterator(QueryResultIterable<HttpTransaction> iter) {
+
+        final List<HttpTransaction> transactionArrayList = new ArrayList<>();
+        for (HttpTransaction bunny : iter) {
+            transactionArrayList.add(bunny);
+        }
+        iter.close();
+        return transactionArrayList;
+    }
 
     @Override
     public void attachInfo(Context context, ProviderInfo info) {

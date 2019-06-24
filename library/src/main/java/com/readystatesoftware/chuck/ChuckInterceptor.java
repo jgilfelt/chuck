@@ -31,7 +31,10 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.Headers;
 import okhttp3.Interceptor;
@@ -78,6 +81,10 @@ public final class ChuckInterceptor implements Interceptor {
     private final NotificationHelper notificationHelper;
     private RetentionManager retentionManager;
     private boolean showNotification;
+    private List<String> filterUrlList;
+    private List<String> filterHeaderList;
+    private boolean filterBody;
+
     private long maxContentLength = 250000L;
 
     /**
@@ -102,6 +109,36 @@ public final class ChuckInterceptor implements Interceptor {
     }
 
     /**
+     * set all the http response body should be filtered.
+     * @param filterBody true if you want to filter all http response body.
+     */
+    public ChuckInterceptor setFilterBody(boolean filterBody) {
+        this.filterBody = filterBody;
+        return this;
+    }
+
+    /**
+     * set the url key word list to stop chuck from caching its data.
+     * @param keyWordUrlList the url level key word list that is to stop chuck from caching its data. All of these data including
+     *                       request headers, request params, request url params, response header, response body will not be cached.
+     * @return The {@link ChuckInterceptor} instance.
+     */
+    public ChuckInterceptor setFilterUrlList(List<String> keyWordUrlList) {
+        this.filterUrlList = keyWordUrlList;
+        return this;
+    }
+
+     /**
+      * set the header key word list to stop chuck from caching its data.
+      * @param keyWordHeaderList the header level key word list that is to stop chuck from caching the value of such header.
+      * @return The {@link ChuckInterceptor} instance.
+     */
+    public ChuckInterceptor setFilterHeaderList(List<String> keyWordHeaderList) {
+        this.filterHeaderList = keyWordHeaderList;
+        return this;
+    }
+
+    /**
      * Set the maximum length for request and response content before it is truncated.
      * Warning: setting this value too high may cause unexpected results.
      *
@@ -112,7 +149,7 @@ public final class ChuckInterceptor implements Interceptor {
         this.maxContentLength = max;
         return this;
     }
-  
+
     /**
      * Set the retention period for HTTP transaction data captured by this interceptor.
      * The default is one week.
@@ -125,6 +162,25 @@ public final class ChuckInterceptor implements Interceptor {
         return this;
     }
 
+    private String replacedUrl(String url) {
+        if (this.filterUrlList ==null){
+            return null;
+        }
+        for (String keyWord : filterUrlList) {
+            if (matches(url, keyWord)){
+                int endIndex = url.lastIndexOf("?");
+                return endIndex > 0 ? url.substring(0, endIndex) : url;
+            }
+        }
+        return null;
+    }
+
+    private boolean matches(String url, String regex) {
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(url);
+        return m.find();
+    }
+
     @Override public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
 
@@ -135,9 +191,18 @@ public final class ChuckInterceptor implements Interceptor {
         transaction.setRequestDate(new Date());
 
         transaction.setMethod(request.method());
-        transaction.setUrl(request.url().toString());
 
-        transaction.setRequestHeaders(request.headers());
+        String url = request.url().toString();
+        String replacedUrl = replacedUrl(url);
+        boolean urlNeedToBeFiltered = replacedUrl!=null;
+        if (!urlNeedToBeFiltered){
+            transaction.setUrl(url);
+        }else {
+            transaction.setUrl(replacedUrl);
+        }
+        if (!urlNeedToBeFiltered){
+            transaction.setRequestHeaders(request.headers(), filterHeaderList);
+        }
         if (hasRequestBody) {
             if (requestBody.contentType() != null) {
                 transaction.setRequestContentType(requestBody.contentType().toString());
@@ -158,7 +223,9 @@ public final class ChuckInterceptor implements Interceptor {
                 charset = contentType.charset(UTF8);
             }
             if (isPlaintext(buffer)) {
-                transaction.setRequestBody(readFromBuffer(buffer, charset));
+                if (!urlNeedToBeFiltered){
+                    transaction.setRequestBody(readFromBuffer(buffer, charset));
+                }
             } else {
                 transaction.setResponseBodyIsPlainText(false);
             }
@@ -179,19 +246,21 @@ public final class ChuckInterceptor implements Interceptor {
 
         ResponseBody responseBody = response.body();
 
-        transaction.setRequestHeaders(response.request().headers()); // includes headers added later in the chain
+        if (!urlNeedToBeFiltered) {
+            transaction.setRequestHeaders(response.request().headers(), filterHeaderList); // includes headers added later in the chain
+        }
         transaction.setResponseDate(new Date());
         transaction.setTookMs(tookMs);
         transaction.setProtocol(response.protocol().toString());
         transaction.setResponseCode(response.code());
         transaction.setResponseMessage(response.message());
-
         transaction.setResponseContentLength(responseBody.contentLength());
         if (responseBody.contentType() != null) {
             transaction.setResponseContentType(responseBody.contentType().toString());
         }
-        transaction.setResponseHeaders(response.headers());
-
+        if (!urlNeedToBeFiltered) {
+            transaction.setResponseHeaders(response.headers(), filterHeaderList);
+        }
         transaction.setResponseBodyIsPlainText(!bodyHasUnsupportedEncoding(response.headers()));
         if (HttpHeaders.hasBody(response) && transaction.responseBodyIsPlainText()) {
             BufferedSource source = getNativeSource(response);
@@ -208,7 +277,13 @@ public final class ChuckInterceptor implements Interceptor {
                 }
             }
             if (isPlaintext(buffer)) {
-                transaction.setResponseBody(readFromBuffer(buffer.clone(), charset));
+                if (!urlNeedToBeFiltered) {
+                    if (!filterBody){
+                        transaction.setResponseBody(readFromBuffer(buffer.clone(), charset));
+                    }else {
+                        transaction.setResponseBody("****** body has been hidden ******");
+                    }
+                }
             } else {
                 transaction.setResponseBodyIsPlainText(false);
             }

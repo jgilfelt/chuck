@@ -19,10 +19,15 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.readystatesoftware.chuck.Chuck;
 import com.readystatesoftware.chuck.ChuckInterceptor;
+import com.readystatesoftware.chuck.internal.data.ChuckContentProvider;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -48,14 +53,51 @@ public class MainActivity extends AppCompatActivity {
                 launchChuckDirectly();
             }
         });
+        findViewById(R.id.export_json_data).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                exportJsonData();
+            }
+        });
+    }
+
+    private void exportJsonData() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String export = ChuckContentProvider.export(MainActivity.this);
+                Log.v("MainActivity", "Exported json:" + export);
+            }
+        }).run();
     }
 
     private OkHttpClient getClient(Context context) {
+
+        ChuckInterceptor interceptor = new ChuckInterceptor(context)
+                .retainDataFor(ChuckInterceptor.Period.ONE_DAY)
+                .showNotification(true);
+        addFilters(interceptor);
+
         return new OkHttpClient.Builder()
                 // Add a ChuckInterceptor instance to your OkHttp client
-                .addInterceptor(new ChuckInterceptor(context))
+                .addInterceptor(interceptor)
                 .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                 .build();
+    }
+
+    private void addFilters(ChuckInterceptor interceptor) {
+        List<String> keyWordHeaderList = new ArrayList<>();
+        keyWordHeaderList.add("Access-Control-Allow-Credentials");
+        keyWordHeaderList.add("Access-Control-Allow-Origin");
+
+        List<String> keyWordUrlList = new ArrayList<>();
+        keyWordUrlList.add("cookies");
+        keyWordUrlList.add("auth");
+
+
+        interceptor.setFilterBody(true)
+                .setFilterHeaderList(keyWordHeaderList)
+                .setFilterUrlList(keyWordUrlList);
     }
 
     private void launchChuckDirectly() {

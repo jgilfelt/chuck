@@ -25,11 +25,13 @@ android {
 }
 
 dependencies {
-    debugCompile project(':library')
-    releaseCompile project(':library-no-op')
-    compile "com.android.support:design:26.0.0"
-    compile "com.android.support:appcompat-v7:26.0.0"
-    compile "com.squareup.okhttp3:logging-interceptor:$okhttp3Version"
-    compile "com.squareup.retrofit2:retrofit:2.2.0"
-    compile "com.squareup.retrofit2:converter-gson:2.2.0"
+    debugImplementation project(':library')
+    releaseImplementation project(':library-no-op')
+    implementation "com.android.support:design:28.0.0"
+    implementation "com.android.support:appcompat-v7:28.0.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3Version"
+    implementation "com.squareup.retrofit2:retrofit:2.5.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.5.0"
+    implementation("com.google.code.gson:gson:2.8.4")
+
 }
