@@ -11,10 +11,10 @@ android {
 }
 
 dependencies {
-    compile 'com.google.code.gson:gson:2.8.0'
-    compile "com.squareup.okhttp3:okhttp:$okhttp3Version"
-    compile 'nl.qbusict:cupboard:2.2.0'
-    compile "com.android.support:design:$supportLibVersion"
+    implementation 'com.google.code.gson:gson:2.8.4'
+    implementation "com.squareup.okhttp3:okhttp:$okhttp3Version"
+    implementation 'nl.qbusict:cupboard:2.2.0'
+    implementation "com.android.support:design:$supportLibVersion"
 }
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

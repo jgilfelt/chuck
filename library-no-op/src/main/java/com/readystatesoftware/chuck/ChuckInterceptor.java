@@ -18,6 +18,7 @@ package com.readystatesoftware.chuck;
 import android.content.Context;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -27,6 +28,18 @@ import okhttp3.Response;
  * No-op implementation.
  */
 public final class ChuckInterceptor implements Interceptor {
+
+    public ChuckInterceptor setFilterBody(boolean filterBoby) {
+        return this;
+    }
+
+    public ChuckInterceptor setFilterHeaderList(List<String> keyWordHeaderList) {
+        return this;
+    }
+
+    public ChuckInterceptor setFilterUrlList(List<String> keyWordUrlList) {
+        return this;
+    }
 
     public enum Period {
         ONE_HOUR,

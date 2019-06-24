@@ -250,8 +250,8 @@ public class HttpTransaction {
         return scheme;
     }
 
-    public void setRequestHeaders(Headers headers) {
-        setRequestHeaders(toHttpHeaderList(headers));
+    public void setRequestHeaders(Headers headers, List<String> filterHeaderList) {
+        setRequestHeaders(toHttpHeaderList(headers, filterHeaderList));
     }
 
     public void setRequestHeaders(List<HttpHeader> headers) {
@@ -267,8 +267,8 @@ public class HttpTransaction {
         return FormatUtils.formatHeaders(getRequestHeaders(), withMarkup);
     }
 
-    public void setResponseHeaders(Headers headers) {
-        setResponseHeaders(toHttpHeaderList(headers));
+    public void setResponseHeaders(Headers headers, List<String> filterHeaderList) {
+        setResponseHeaders(toHttpHeaderList(headers, filterHeaderList));
     }
 
     public void setResponseHeaders(List<HttpHeader> headers) {
@@ -349,13 +349,28 @@ public class HttpTransaction {
         return scheme.toLowerCase().equals("https");
     }
 
-    private List<HttpHeader> toHttpHeaderList(Headers headers) {
+    private List<HttpHeader> toHttpHeaderList(Headers headers, List<String> filterHeaderList) {
         List<HttpHeader> httpHeaders = new ArrayList<>();
         for (int i = 0, count = headers.size(); i < count; i++) {
-            httpHeaders.add(new HttpHeader(headers.name(i), headers.value(i)));
+            httpHeaders.add(new HttpHeader(headers.name(i), headerFiltered(filterHeaderList, headers.name(i)) ? "*****" : headers.value(i)));
         }
         return httpHeaders;
     }
+
+    private boolean headerFiltered(List<String> filterHeaderList, String name) {
+        return filterHeaderList!=null && containsCaseInsensitive(filterHeaderList, name);
+    }
+
+    public boolean containsCaseInsensitive(List<String> stringList, String name){
+        for (String string : stringList){
+            if (string.equalsIgnoreCase(name)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 
     private String formatBody(String body, String contentType) {
         if (contentType != null && contentType.toLowerCase().contains("json")) {
