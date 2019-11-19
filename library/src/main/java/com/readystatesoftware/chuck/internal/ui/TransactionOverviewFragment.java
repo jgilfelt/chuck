@@ -47,13 +47,13 @@ public class TransactionOverviewFragment extends Fragment implements Transaction
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.chuck_fragment_transaction_overview, container, false);
         url = (TextView) view.findViewById(R.id.url);
         method = (TextView) view.findViewById(R.id.method);
