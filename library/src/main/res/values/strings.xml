@@ -43,4 +43,8 @@
     <string name="chuck_body_unexpected_eof">\n\n--- Unexpected end of content ---</string>
     <string name="chuck_body_content_truncated">\n\n--- Content truncated ---</string>
     <string name="notification_category">Chuck HTTP notifications</string>
+    <string name="expand">Expand</string>
+    <string name="collapse">Collapse</string>
+    <string name="plain">Plain</string>
+    <string name="highlighted">Highlighted</string>
 </resources>

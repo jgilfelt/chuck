@@ -23,8 +23,14 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.dandan.jsonhandleview.library.JsonViewLayout;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+import com.readystatesoftware.chuck.GsonInstance;
 import com.readystatesoftware.chuck.R;
 import com.readystatesoftware.chuck.internal.data.HttpTransaction;
 
@@ -35,8 +41,15 @@ public class TransactionPayloadFragment extends Fragment implements TransactionF
 
     private static final String ARG_TYPE = "type";
 
+    boolean plain = false;
+    String response = "";
+
     TextView headers;
-    TextView body;
+    JsonViewLayout body;
+    TextView plainBody;
+    Button expandBtn;
+    Button collapseBtn;
+    Button plainHighlightedToggle;
 
     private int type;
     private HttpTransaction transaction;
@@ -63,8 +76,12 @@ public class TransactionPayloadFragment extends Fragment implements TransactionF
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.chuck_fragment_transaction_payload, container, false);
-        headers = (TextView) view.findViewById(R.id.headers);
-        body = (TextView) view.findViewById(R.id.body);
+        headers = view.findViewById(R.id.headers);
+        body = view.findViewById(R.id.body);
+        plainBody = view.findViewById(R.id.plain_body);
+        expandBtn = view.findViewById(R.id.expandBtn);
+        collapseBtn = view.findViewById(R.id.collapseBtn);
+        plainHighlightedToggle = view.findViewById(R.id.plainHighlightedToggle);
         return view;
     }
 
@@ -72,6 +89,44 @@ public class TransactionPayloadFragment extends Fragment implements TransactionF
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         populateUI();
+        expandBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                expand();
+            }
+        });
+        collapseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                collapse();
+            }
+        });
+        plainHighlightedToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                togglePlainHighlighted();
+            }
+        });
+    }
+
+    private void expand() {
+        expandBtn.setEnabled(false);
+        body.expandAll();
+        expandBtn.setEnabled(true);
+    }
+
+    private void collapse() {
+        collapseBtn.setEnabled(false);
+        body.collapseAll();
+        collapseBtn.setEnabled(true);
+    }
+
+    private void togglePlainHighlighted() {
+        if (plain) {
+            bindJson(response);
+        } else {
+            bindText(response);
+        }
     }
 
     @Override
@@ -98,10 +153,63 @@ public class TransactionPayloadFragment extends Fragment implements TransactionF
     private void setText(String headersString, String bodyString, boolean isPlainText) {
         headers.setVisibility((TextUtils.isEmpty(headersString) ? View.GONE : View.VISIBLE));
         headers.setText(Html.fromHtml(headersString));
+        response = bodyString;
         if (!isPlainText) {
-            body.setText(getString(R.string.chuck_body_omitted));
+            bindText(getString(R.string.chuck_body_omitted));
+        } else if (bodyString != null && isJson(bodyString)) {
+            bindJson(bodyString);
+            body.bindJson(bodyString);
+            body.setTextSize(13);
         } else {
-            body.setText(bodyString);
+            bindText(bodyString);
         }
+    }
+
+    private void bindJson(String bodyString) {
+        if (bodyString == null) return;
+        plainBody.setVisibility(View.GONE);
+        body.setVisibility(View.VISIBLE);
+        plain = false;
+        plainHighlightedToggle.setText(R.string.plain);
+        expandBtn.setVisibility(View.VISIBLE);
+        collapseBtn.setVisibility(View.VISIBLE);
+    }
+
+    private void bindText(String bodyString) {
+        if (bodyString == null) return;
+        if (isJson(bodyString)) {
+            plainBody.setText(prettyPrint(bodyString));
+        } else {
+            plainBody.setText(bodyString);
+        }
+
+        plainBody.setVisibility(View.VISIBLE);
+        body.setVisibility(View.GONE);
+        plain = true;
+        plainHighlightedToggle.setText(R.string.highlighted);
+
+        expandBtn.setVisibility(View.GONE);
+        collapseBtn.setVisibility(View.GONE);
+    }
+
+    private boolean isJson(String body) {
+        try {
+            JsonElement element = new JsonParser().parse(body);
+            return element.isJsonObject() || element.isJsonArray();
+        } catch (JsonSyntaxException e) {
+            return false;
+        }
+    }
+
+    private String prettyPrint(String str) {
+        JsonElement parser = new JsonParser().parse(str);
+        if (parser.isJsonObject()) {
+            return GsonInstance.get().toJson(parser.getAsJsonObject());
+        } else if (parser.isJsonArray()) {
+            return GsonInstance.get().toJson(parser.getAsJsonArray());
+        } else {
+            return str;
+        }
+
     }
 }
