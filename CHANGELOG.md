@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+Version 1.2.0 *(2019-12-18)*
+----------------------------
+
+ * New: Now Json response supports highlighting and expand/collapse
+
+
 Version 1.1.0 *(2017-08-06)*
 ----------------------------
 
