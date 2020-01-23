@@ -1,3 +1,7 @@
+# DEPRECATED! FURTHER DEVELOPMENT AND SUPPORT IS DISCONTINUED.
+
+There is an active fork of this library, which can be found here: https://github.com/ChuckerTeam/chucker
+
 Chuck
 =====
 
