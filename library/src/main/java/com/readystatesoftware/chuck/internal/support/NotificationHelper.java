@@ -78,7 +78,7 @@ public class NotificationHelper {
         addToBuffer(transaction);
         if (!BaseChuckActivity.isInForeground()) {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-                    .setContentIntent(PendingIntent.getActivity(context, 0, Chuck.getLaunchIntent(context), 0))
+                    .setContentIntent(PendingIntent.getActivity(context, 0, Chuck.getLaunchIntent(context), PendingIntent.FLAG_IMMUTABLE))
                     .setLocalOnly(true)
                     .setSmallIcon(R.drawable.chuck_ic_notification_white_24dp)
                     .setColor(ContextCompat.getColor(context, R.color.chuck_colorPrimary))
@@ -113,7 +113,7 @@ public class NotificationHelper {
     private NotificationCompat.Action getClearAction() {
         CharSequence clearTitle = context.getString(R.string.chuck_clear);
         Intent deleteIntent = new Intent(context, ClearTransactionsService.class);
-        PendingIntent intent = PendingIntent.getService(context, 11, deleteIntent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent intent = PendingIntent.getService(context, 11, deleteIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_ONE_SHOT);
         return new NotificationCompat.Action(R.drawable.chuck_ic_delete_white_24dp,
             clearTitle, intent);
     }
