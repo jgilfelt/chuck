@@ -1,9 +1,12 @@
 Chuck
 =====
 
+[![Maintainability](https://cloud.quality-gate.com/dashboard/api/badge?projectName=jgilfelt_chuck&branchName=master)](https://cloud.quality-gate.com/dashboard/branches/456312#overview)
+
 Chuck is a simple in-app HTTP inspector for Android OkHttp clients. Chuck intercepts and persists all HTTP requests and responses inside your application, and provides a UI for inspecting their content.
 
 ![Chuck](assets/chuck.gif)
+
 
 Apps using Chuck will display a notification showing a summary of ongoing HTTP activity. Tapping on the notification launches the full Chuck UI. Apps can optionally suppress the notification, and launch the Chuck UI directly from within their own interface. HTTP interactions and their contents can be exported via a share intent.
 
